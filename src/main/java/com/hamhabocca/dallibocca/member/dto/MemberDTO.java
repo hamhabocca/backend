@@ -1,60 +1,35 @@
-package com.hamhabocca.dallibocca.member.entity;
+package com.hamhabocca.dallibocca.member.dto;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.validator.constraints.UniqueElements;
+import com.hamhabocca.dallibocca.member.entity.RiderProfile;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
-@Entity(name = "Member")
-@Table(name = "member")
-//@SequenceGenerator(
-//		name = "member_sequence_generator",
-//		sequenceName = "sequence_member_id",
-//		initialValue = 1,
-//		allocationSize = 50
-//)
-public class Member {
+public class MemberDTO {
 
-	@Id
-//	@GeneratedValue(
-//			strategy = GenerationType.IDENTITY,
-//			generator = "member_sequence_generator"
-//	)
-//	@OneToOne(mappedBy = "RiderProfile")
-	@Column(name = "member_id")
 	private String memberId;
 
-	@Column(name = "nickname", unique = true, nullable = false)
 	private String nickname;
 
-	@Column(name = "report_count", nullable = false)
-	@ColumnDefault("0")
 	private int reportCount;
 
-	@Column(name = "social_login", nullable = false)
 	private String socialLogin;
 
-	@Column(name = "login_token", nullable = false)
 	private String loginToken;
 
-	@Column(name = "is_deleted", nullable = false)
-	@ColumnDefault("N")
 	private boolean isDeleted;
 
-	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL,
-			fetch = FetchType.LAZY, optional = false)
-	private RiderProfile riderProfile;
+	private RiderProfileDTO riderProfile;
 
-	public Member() {}
+	public MemberDTO() {}
 
-	public Member(String memberId, String nickname, int reportCount, String socialLogin, String loginToken, boolean isDeleted) {
+	public MemberDTO(String memberId, String nickname, int reportCount, String socialLogin, String loginToken, boolean isDeleted, RiderProfileDTO riderProfile) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.reportCount = reportCount;
 		this.socialLogin = socialLogin;
 		this.loginToken = loginToken;
 		this.isDeleted = isDeleted;
+		this.riderProfile = riderProfile;
 	}
 
 	public String getMemberId() {
@@ -105,15 +80,24 @@ public class Member {
 		isDeleted = deleted;
 	}
 
+	public RiderProfileDTO getRiderProfile() {
+		return riderProfile;
+	}
+
+	public void setRiderProfile(RiderProfileDTO riderProfile) {
+		this.riderProfile = riderProfile;
+	}
+
 	@Override
 	public String toString() {
-		return "Member{" +
+		return "MemberDTO{" +
 				"memberId='" + memberId + '\'' +
 				", nickname='" + nickname + '\'' +
 				", reportCount=" + reportCount +
 				", socialLogin='" + socialLogin + '\'' +
 				", loginToken='" + loginToken + '\'' +
 				", isDeleted=" + isDeleted +
+				", riderProfile=" + riderProfile +
 				'}';
 	}
 }

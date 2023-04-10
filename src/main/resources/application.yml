@@ -1,5 +1,5 @@
 server:
-  port: 3306
+  port: 3307
 
 spring:
   datasource:
@@ -16,3 +16,5 @@ spring:
     properties:
       hibernate:
         '[format_sql]': true
+        hbm2ddl:
+          auto: update

@@ -1,41 +1,32 @@
-package com.hamhabocca.dallibocca.member.entity;
+package com.hamhabocca.dallibocca.member.dto;
+
+import com.hamhabocca.dallibocca.member.entity.Member;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
-@Entity(name = "RiderProfile")
-@Table(name = "rider_profile")
-public class RiderProfile {
+public class RiderProfileDTO {
 
-	@Id
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
 	private String memberId;
 
-	@Column(name = "level", nullable = false)
 	private int level;
 
-	@Column(name = "mileage", nullable = false)
 	private int mileage;
 
-	@Column(name = "preferred_location")
 	private String preferredLocation;
 
-	@Column(name = "preferred_type")
 	private String preferredType;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@MapsId
-	private Member member;
+	private MemberDTO member;
 
-	public RiderProfile() {}
+	public RiderProfileDTO() {}
 
-	public RiderProfile(String memberId, int level, int mileage, String preferredLocation, String preferredType) {
+	public RiderProfileDTO(String memberId, int level, int mileage, String preferredLocation, String preferredType, MemberDTO member) {
 		this.memberId = memberId;
 		this.level = level;
 		this.mileage = mileage;
 		this.preferredLocation = preferredLocation;
 		this.preferredType = preferredType;
+		this.member = member;
 	}
 
 	public String getMemberId() {
@@ -78,14 +69,23 @@ public class RiderProfile {
 		this.preferredType = preferredType;
 	}
 
+	public MemberDTO getMember() {
+		return member;
+	}
+
+	public void setMember(MemberDTO member) {
+		this.member = member;
+	}
+
 	@Override
 	public String toString() {
-		return "RiderProfile{" +
+		return "RiderProfileDTO{" +
 				"memberId='" + memberId + '\'' +
 				", level=" + level +
 				", mileage=" + mileage +
 				", preferredLocation='" + preferredLocation + '\'' +
 				", preferredType='" + preferredType + '\'' +
+				", member=" + member +
 				'}';
 	}
 }
