@@ -7,8 +7,8 @@ import javax.persistence.*;
 public class RiderProfile {
 
 	@Id
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
+//	@OneToOne(cascade = CascadeType.ALL)
+//	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
 	private String memberId;
 
 	@Column(name = "level")
@@ -22,6 +22,10 @@ public class RiderProfile {
 
 	@Column(name = "preferred_type")
 	private String preferredType;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	@MapsId
+	private Member member;
 
 	public RiderProfile() {}
 

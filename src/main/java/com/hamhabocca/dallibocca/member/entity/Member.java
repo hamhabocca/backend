@@ -17,7 +17,7 @@ public class Member {
 //			strategy = GenerationType.IDENTITY,
 //			generator = "member_sequence_generator"
 //	)
-	@OneToOne(mappedBy = "RiderProfile")
+//	@OneToOne(mappedBy = "RiderProfile")
 	@Column(name = "member_id")
 	private String memberId;
 
@@ -35,6 +35,10 @@ public class Member {
 
 	@Column(name = "is_deleted")
 	private boolean isDeleted;
+
+	@OneToOne(mappedBy = "member", cascade = CascadeType.ALL,
+			fetch = FetchType.LAZY, optional = false)
+	private RiderProfile riderProfile;
 
 	public Member() {}
 
