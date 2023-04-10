@@ -1,0 +1,18 @@
+server:
+  port: 3306
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://@mysql.team-greedy.com:3306/dallibocca?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: hamhabocca
+    password: hamhabocca
+    hikari:
+      auto-commit: false
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    database: mysql
+    properties:
+      hibernate:
+        '[format_sql]': true
