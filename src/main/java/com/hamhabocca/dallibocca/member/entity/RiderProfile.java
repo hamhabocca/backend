@@ -1,20 +1,24 @@
 package com.hamhabocca.dallibocca.member.entity;
 
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity(name = "RiderProfile")
 @Table(name = "rider_profile")
 public class RiderProfile {
 
 	@Id
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "member_id", referencedColumnName = "member_id")
-	private String memberId;
+	@Column(name = "member_id")
+	private int memberId;
 
 	@Column(name = "level")
+	@ColumnDefault("1")
 	private int level;
 
 	@Column(name = "mileage")
+	@ColumnDefault("0")
 	private int mileage;
 
 	@Column(name = "preferred_location")
@@ -23,13 +27,14 @@ public class RiderProfile {
 	@Column(name = "preferred_type")
 	private String preferredType;
 
-	@OneToOne(fetch = FetchType.LAZY)
 	@MapsId
+	@OneToOne
+	@JoinColumn(name = "member_id")
 	private Member member;
 
 	public RiderProfile() {}
 
-	public RiderProfile(String memberId, int level, int mileage, String preferredLocation, String preferredType) {
+	public RiderProfile(int memberId, int level, int mileage, String preferredLocation, String preferredType) {
 		this.memberId = memberId;
 		this.level = level;
 		this.mileage = mileage;
@@ -37,11 +42,11 @@ public class RiderProfile {
 		this.preferredType = preferredType;
 	}
 
-	public String getMemberId() {
+	public int getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(String memberId) {
+	public void setMemberId(int memberId) {
 		this.memberId = memberId;
 	}
 
