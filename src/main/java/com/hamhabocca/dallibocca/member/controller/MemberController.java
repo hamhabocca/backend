@@ -62,10 +62,10 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-//        MemberSimpleDTO member = memberService.findMemberByIdSimple(memberId);
+        MemberSimpleDTO member = memberService.findMemberByIdSimple(memberId);
 
         Map<String, Object> responseMap = new HashMap<>();
-//        responseMap.put("member", member);
+        responseMap.put("member", member);
 
         return ResponseEntity
                 .ok()
@@ -93,12 +93,15 @@ public class MemberController {
 
     @ApiOperation(value = "멤버 전체 조회")
     @GetMapping("/members")
-    public ResponseEntity<ResponseMessage> findAllMembers() {
+    public ResponseEntity<ResponseMessage> findAllMembers(@PageableDefault Pageable pageable) {
+
+        System.out.println("pageable = " + pageable);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<MemberDTO> memberList = memberService.findAllMembers();
+//        List<MemberDTO> memberList = memberService.findAllMembers();
+        Page<MemberDTO> memberList = memberService.findAllMembers(pageable);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("members", memberList);
@@ -115,12 +118,47 @@ public class MemberController {
             @ApiResponse(code = 400, message = "잘못된 파라미터....")
     })
     @PutMapping("/members/{memberId}")
-    public ResponseEntity<?> modifyMember(@RequestBody MemberDTO modifyInfo, @PathVariable int memberId) {
+    public ResponseEntity<?> modifyMember(@RequestBody MemberDTO modifyInfo, @PathVariable int memberId, String type) {
 
-        memberService.modifyMember(modifyInfo, memberId);
+//        modifyInfo.setIsDeleted("Y");
+
+        System.out.println("modifyInfo = " + modifyInfo);
+
+        memberService.modifyMember(modifyInfo, memberId, type);
 
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @ApiOperation(value = "멤버 탈퇴 조치")
+    @ApiResponses({
+            @ApiResponse(code = 201, message = "수정성공..."),
+            @ApiResponse(code = 400, message = "잘못된 파라미터....")
+    })
+    @DeleteMapping("/members/{memberId}")
+    public ResponseEntity<?> deleteMember(@PathVariable int memberId) {
+
+        memberService.deleteMember(memberId);
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @ApiOperation(value = "닉네임 중복 체크")
+    @GetMapping("/members/duplicate/{nickname}")
+    public ResponseEntity<ResponseMessage> checkIfRepeated(@PathVariable String nickname) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("result", memberService.checkIfRepeated(nickname));
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new ResponseMessage(200, "중복 검사 결과", responseMap));
     }
 }

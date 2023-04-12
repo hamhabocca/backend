@@ -12,6 +12,11 @@ public class MemberSimpleDTO {
 
     public MemberSimpleDTO() {}
 
+    public MemberSimpleDTO(int memberId, String nickname) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+    }
+
     public MemberSimpleDTO(int memberId, String nickname, String linkToMyPage) {
         this.memberId = memberId;
         this.nickname = nickname;

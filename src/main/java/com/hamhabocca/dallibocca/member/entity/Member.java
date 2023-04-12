@@ -1,11 +1,32 @@
 package com.hamhabocca.dallibocca.member.entity;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+
+//@SqlResultSetMapping(
+//        name = "SimpleMapping",
+//        entities = {@EntityResult(entityClass = Member.class,
+//        fields = {
+//                @FieldResult(name = "memberId", column = "member_id"),
+//                @FieldResult(name = "nickname", column = "nickname")
+//        })}
+////        ,
+////        columns = {@ColumnResult(name = "member_id"),
+////                @ColumnResult(name = "nickname")}
+//)
+//@NamedNativeQueries(
+//        @NamedNativeQuery(
+//                name = "Member.findMemberByIdSimple",
+//                query = "SELECT A.member_id, A.nickname FROM member A WHERE A.member_id = :memberId",
+//                resultSetMapping = "SimpleMapping"
+//        )
+//)
 
 @Entity(name = "Member")
 @Table(name = "member")
@@ -14,20 +35,6 @@ import java.sql.Date;
         sequenceName = "sequence_member_id",
         initialValue = 1,
         allocationSize = 50
-)
-@SqlResultSetMapping(
-        name = "findMemberByIdSimple",
-        entities = {@EntityResult(entityClass = Member.class)},
-        columns = {@ColumnResult(name = "MEMBER_ID"),
-                @ColumnResult(name = "NICKNAME")}
-)
-@NamedNativeQueries(
-        @NamedNativeQuery(
-                name = "findMemberByIdSimple",
-                query = "SELECT A.MEMBER_ID, A.NICKNAME FROM MEMBER A WHERE A.MEMBER_ID = :memberId",
-                resultSetMapping = "findMemberByIdSimple"
-        )
-
 )
 public class Member {
 
@@ -42,8 +49,7 @@ public class Member {
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
 
-    @Column(name = "report_count")
-    @ColumnDefault("0")
+    @Column(name = "report_count", nullable = false)
     private int reportCount;
 
     @Column(name = "social_login", nullable = false)
@@ -52,8 +58,7 @@ public class Member {
     @Column(name = "login_token", nullable = false)
     private String loginToken;
 
-    @Column(name = "is_deleted", columnDefinition = "varchar (2)")
-    @ColumnDefault("'N'")
+    @Column(name = "is_deleted", columnDefinition = "varchar (2)", nullable = false)
     private String isDeleted;
 
     @Column(name = "sign_up_date", nullable = false)
@@ -62,11 +67,10 @@ public class Member {
     @Column(name = "deleted_date")
     private java.sql.Date deletedDate;
 
-    @Column(name = "level")
-    @ColumnDefault("1")
+    @Column(name = "level", nullable = false)
     private int level;
 
-    @Column(name = "mileage")
+    @Column(name = "mileage", nullable = false)
     @ColumnDefault("0")
     private int mileage;
 
@@ -77,8 +81,7 @@ public class Member {
     private String preferredType;
 
 
-    public Member() {
-    }
+    public Member() {}
 
     public Member(int memberId, String nickname, int reportCount, String socialLogin, String loginToken, String isDeleted, Date signUpDate, Date deletedDate, int level, int mileage, String preferredLocation, String preferredType) {
         this.memberId = memberId;
