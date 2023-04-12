@@ -37,14 +37,14 @@ public class MemberService {
         return modelMapper.map(member, MemberDTO.class);
     }
 
-    public MemberSimpleDTO findMemberByIdSimple(int memberId) {
-
-        MemberSimpleDTO member = memberRepository.findByIdSimple(memberId);
-
-        member.setLinkToMyPage("/mypage/" + member.getMemberId());  //마이페이지 링크 기억안나서 아직 예시
-
-        return member;
-    }
+//    public MemberSimpleDTO findMemberByIdSimple(int memberId) {
+//
+////        MemberSimpleDTO member = memberRepository.findByIdSimple(memberId);
+//
+//        member.setLinkToMyPage("/mypage/" + member.getMemberId());  //마이페이지 링크 기억안나서 아직 예시
+//
+//        return member;
+//    }
 
     public List<MemberDTO> findAllMembers() {
 

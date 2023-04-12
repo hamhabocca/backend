@@ -62,10 +62,10 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        MemberSimpleDTO member = memberService.findMemberByIdSimple(memberId);
+//        MemberSimpleDTO member = memberService.findMemberByIdSimple(memberId);
 
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("member", member);
+//        responseMap.put("member", member);
 
         return ResponseEntity
                 .ok()

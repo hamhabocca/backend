@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Integer> {
 
-    @Query(value = "SELECT A.MEMBER_ID, A.NICKNAME FROM MEMBER A WHERE A.MEMBER_ID = :paramId", nativeQuery = true)
+
     MemberSimpleDTO findByIdSimple(@Param("paramId") int memberId);
 }
