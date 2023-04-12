@@ -1,12 +1,16 @@
 package com.hamhabocca.dallibocca.member.dto;
 
-import com.hamhabocca.dallibocca.member.entity.RiderProfile;
+import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.sql.Date;
 
 public class MemberDTO {
 
-	private String memberId;
+	private int memberId;
 
 	private String nickname;
 
@@ -16,27 +20,42 @@ public class MemberDTO {
 
 	private String loginToken;
 
-	private boolean isDeleted;
+	private String isDeleted;
 
-	private RiderProfileDTO riderProfile;
+	private java.sql.Date signUpDate;
+
+	private java.sql.Date deletedDate;
+
+	private int level;
+
+	private int mileage;
+
+	private String preferredLocation;
+
+	private String preferredType;
 
 	public MemberDTO() {}
 
-	public MemberDTO(String memberId, String nickname, int reportCount, String socialLogin, String loginToken, boolean isDeleted, RiderProfileDTO riderProfile) {
+	public MemberDTO(int memberId, String nickname, int reportCount, String socialLogin, String loginToken, String isDeleted, Date signUpDate, Date deletedDate, int level, int mileage, String preferredLocation, String preferredType) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.reportCount = reportCount;
 		this.socialLogin = socialLogin;
 		this.loginToken = loginToken;
 		this.isDeleted = isDeleted;
-		this.riderProfile = riderProfile;
+		this.signUpDate = signUpDate;
+		this.deletedDate = deletedDate;
+		this.level = level;
+		this.mileage = mileage;
+		this.preferredLocation = preferredLocation;
+		this.preferredType = preferredType;
 	}
 
-	public String getMemberId() {
+	public int getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(String memberId) {
+	public void setMemberId(int memberId) {
 		this.memberId = memberId;
 	}
 
@@ -72,32 +91,77 @@ public class MemberDTO {
 		this.loginToken = loginToken;
 	}
 
-	public boolean isDeleted() {
+	public String getIsDeleted() {
 		return isDeleted;
 	}
 
-	public void setDeleted(boolean deleted) {
-		isDeleted = deleted;
+	public void setIsDeleted(String isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
-	public RiderProfileDTO getRiderProfile() {
-		return riderProfile;
+	public Date getSignUpDate() {
+		return signUpDate;
 	}
 
-	public void setRiderProfile(RiderProfileDTO riderProfile) {
-		this.riderProfile = riderProfile;
+	public void setSignUpDate(Date signUpDate) {
+		this.signUpDate = signUpDate;
+	}
+
+	public Date getDeletedDate() {
+		return deletedDate;
+	}
+
+	public void setDeletedDate(Date deletedDate) {
+		this.deletedDate = deletedDate;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public int getMileage() {
+		return mileage;
+	}
+
+	public void setMileage(int mileage) {
+		this.mileage = mileage;
+	}
+
+	public String getPreferredLocation() {
+		return preferredLocation;
+	}
+
+	public void setPreferredLocation(String preferredLocation) {
+		this.preferredLocation = preferredLocation;
+	}
+
+	public String getPreferredType() {
+		return preferredType;
+	}
+
+	public void setPreferredType(String preferredType) {
+		this.preferredType = preferredType;
 	}
 
 	@Override
 	public String toString() {
 		return "MemberDTO{" +
-				"memberId='" + memberId + '\'' +
+				"memberId=" + memberId +
 				", nickname='" + nickname + '\'' +
 				", reportCount=" + reportCount +
 				", socialLogin='" + socialLogin + '\'' +
 				", loginToken='" + loginToken + '\'' +
-				", isDeleted=" + isDeleted +
-				", riderProfile=" + riderProfile +
+				", isDeleted='" + isDeleted + '\'' +
+				", signUpDate=" + signUpDate +
+				", deletedDate=" + deletedDate +
+				", level=" + level +
+				", mileage=" + mileage +
+				", preferredLocation='" + preferredLocation + '\'' +
+				", preferredType='" + preferredType + '\'' +
 				'}';
 	}
 }
