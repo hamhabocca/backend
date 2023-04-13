@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -121,6 +122,20 @@ public class RallyController {
         rallyService.removeRally(rallyId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    public ResponseEntity<ResponseMessage> findRalliesByFilter() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+//        List<RallySimpleDTO> foundRally = rallyService.findRallyBy(rallyId);
+
+        Map<String, Object> responseMap = new HashMap<>();
+//        responseMap.put("rally", foundRally);
+
+        return ResponseEntity.ok().headers(headers)
+            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
     }
 
 }
