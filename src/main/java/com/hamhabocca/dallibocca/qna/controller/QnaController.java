@@ -34,6 +34,10 @@ public class QnaController {
 	}
 
 	@ApiOperation(value = "모든 건의 목록 조회")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "[Ok]"),
+		@ApiResponse(code = 400, message = "[Bad Reuest]")
+	})
 	@GetMapping("/qnas")
 	public ResponseEntity<ResponseMessage> findAllUQnas() {
 
@@ -53,6 +57,10 @@ public class QnaController {
 	}
 
 	@ApiOperation(value = "건의 번호로 건의 조회")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "[Ok]"),
+		@ApiResponse(code = 400, message = "[Bad Reuest]")
+	})
 	@GetMapping("/qnas/{qnaId}")
 	public ResponseEntity<ResponseMessage> findQnaByNo(@PathVariable int qnaId) {
 
@@ -74,6 +82,11 @@ public class QnaController {
 	}
 
 	@ApiOperation(value = "신규 건의 추가")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "[Created]"),
+		@ApiResponse(code = 400, message = "[Bad Request]"),
+		@ApiResponse(code = 403, message = "[Forbidden]")
+	})
 	@PostMapping("/qnas")
 	public ResponseEntity<?> registNewQna(@RequestBody QnaDTO newQna) {
 
@@ -85,6 +98,11 @@ public class QnaController {
 	}
 
 	@ApiOperation(value = "건의 수정")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "[Created]"),
+		@ApiResponse(code = 400, message = "[Bad Request]"),
+		@ApiResponse(code = 403, message = "[Forbidden]")
+	})
 	@PutMapping("/qnas/{qnaId}")
 	public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
 
@@ -96,6 +114,11 @@ public class QnaController {
 	}
 
 	@ApiOperation(value = "건의 삭제")
+	@ApiResponses({
+		@ApiResponse(code = 204, message = "[No Content]"),
+		@ApiResponse(code = 400, message = "[Bad Request]"),
+		@ApiResponse(code = 404, message = "[Not Found]")
+	})
 	@DeleteMapping("/qnas/{qnaId}")
 	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
 
