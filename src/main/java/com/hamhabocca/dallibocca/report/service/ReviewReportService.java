@@ -17,6 +17,8 @@ public class ReviewReportService {
     private final ReviewReportRepository reviewReportRepository;
     private final ModelMapper modelMapper;
 
+    private Integer reportCode;
+
     @Autowired
     public ReviewReportService(ReviewReportRepository reviewReportRepository, ModelMapper modelMapper){
         this.reviewReportRepository = reviewReportRepository;
@@ -33,6 +35,13 @@ public class ReviewReportService {
     public List<ReviewReportDTO> findAllReviewReport() {
         List<ReviewReport> reviewReposts = reviewReportRepository.findAllReviewReport();
         return reviewReposts.stream().map(reviewRepost -> modelMapper.map(reviewRepost, ReviewReportDTO.class)).collect(Collectors.toList());
+    }
+
+    /*일부 조회*/
+    @Transactional
+    public ReviewReportDTO findReportbyCode(int reportCode){
+        ReviewReport reviewReport = reviewReportRepository.findById(this.reportCode).get();
+        return modelMapper.map(reviewReport, ReviewReportDTO.class);
     }
 }
 
