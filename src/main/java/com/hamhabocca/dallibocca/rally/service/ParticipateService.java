@@ -2,6 +2,7 @@ package com.hamhabocca.dallibocca.rally.service;
 
 import com.hamhabocca.dallibocca.rally.dto.RallyMateDTO;
 import com.hamhabocca.dallibocca.rally.entity.RallyMate;
+import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyMateRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,12 @@ public class ParticipateService {
 
     /* 현재 랠리 신청 */
     public void participateByMate(int rallyId, @RequestHeader("memberId") int memberId) {
+
+        boolean checkDuplicate =  rallyMateRepository.existsByRallyIdAndMemberId(rallyId, memberId);
+
+        if (checkDuplicate) {
+            throw new RallyException("이미 참가 신청한 회원입니다.");
+        }
 
         RallyMateDTO rallyMate = new RallyMateDTO();
 

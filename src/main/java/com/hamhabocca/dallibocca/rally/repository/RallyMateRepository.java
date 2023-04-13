@@ -12,4 +12,6 @@ public interface RallyMateRepository extends JpaRepository<RallyMate, Integer> {
     RallyMate findByRallyIdAndMemberId(int rallyId, int memberId);
 
     List<RallyMate> findAllByMemberId(int currentMemberId);
+
+    boolean existsByRallyIdAndMemberId(int rallyId, int memberId);
 }
