@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class RallyService {
@@ -42,6 +43,24 @@ public class RallyService {
         Rally foundRally = rallyRepository.findById(rallyId).get();
 
         return modelMapper.map(foundRally, RallyDTO.class);
+    }
+
+    /* 랠리글 추가 */
+    @Transactional
+    public int postNewRally(RallyDTO newRally) {
+
+        /* 기본값 설정 */
+        newRally.setRallyStatus("모집중");
+
+        if (newRally.getRallyMinimum() == 0) {
+            newRally.setRallyMinimum(2);
+        }
+
+        if (newRally.getRallyMaximum() == 0) {
+            newRally.setRallyMaximum(5);
+        }
+
+        return rallyRepository.save(modelMapper.map(newRally, Rally.class)).getRallyId();
     }
 
 }

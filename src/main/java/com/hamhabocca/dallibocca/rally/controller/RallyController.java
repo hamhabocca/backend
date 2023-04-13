@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.net.URI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -78,6 +79,20 @@ public class RallyController {
 
         return ResponseEntity.ok().headers(headers)
             .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
+    }
+
+    @ApiOperation(value = "랠리글 추가 API")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "[Created]"),
+        @ApiResponse(code = 400, message = "[Bad Request]"),
+        @ApiResponse(code = 403, message = "[Forbidden]")
+    })
+    @PostMapping("/rallies")
+    public ResponseEntity<?> postRally(@RequestBody RallyDTO newRally) {
+
+        int currentId = rallyService.postNewRally(newRally);
+
+        return ResponseEntity.created(URI.create("/api/v1/rallies/" + currentId)).build();
     }
 
 }
