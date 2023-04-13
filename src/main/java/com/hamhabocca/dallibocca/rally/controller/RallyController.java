@@ -95,4 +95,19 @@ public class RallyController {
         return ResponseEntity.created(URI.create("/api/v1/rallies/" + currentId)).build();
     }
 
+    @ApiOperation(value = "랠리글 수정 API")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "[Created]"),
+        @ApiResponse(code = 400, message = "[Bad Request]"),
+        @ApiResponse(code = 403, message = "[Forbidden]")
+    })
+    @PutMapping("/rallies/{rallyId}")
+    public ResponseEntity<?> modifyRally(@RequestBody RallyDTO modifyRally,
+        @PathVariable int rallyId) {
+
+        rallyService.modifyRally(modifyRally, rallyId);
+
+        return ResponseEntity.created(URI.create("/api/v1/rallies/" + rallyId)).build();
+    }
+
 }

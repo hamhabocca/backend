@@ -63,4 +63,27 @@ public class RallyService {
         return rallyRepository.save(modelMapper.map(newRally, Rally.class)).getRallyId();
     }
 
+    /* 랠리글 수정 */
+    @Transactional
+    public void modifyRally(RallyDTO modifyRally, int rallyId) {
+
+        /* 변경할 기존 랠리 가져오기 */
+        Rally foundRally = rallyRepository.findById(rallyId).get();
+
+        /* (글조회에서) 랠리상태만 변경 혹은 (글수정화면에서) 랠리 정보 변경 */
+        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus()))) {
+            foundRally.setRallyStatus(modifyRally.getRallyStatus());
+        } else {
+            foundRally.setRallyName(modifyRally.getRallyName());
+            foundRally.setRallyDetail(modifyRally.getRallyDetail());
+            foundRally.setRallyStartLocation(modifyRally.getRallyStartLocation());
+            foundRally.setRallyEndLocation(modifyRally.getRallyEndLocation());
+            foundRally.setRallyType(modifyRally.getRallyType());
+            foundRally.setRallyMaximum(modifyRally.getRallyMaximum());
+            foundRally.setRallyMinimum(modifyRally.getRallyMinimum());
+            foundRally.setRallyDistance(modifyRally.getRallyDistance());
+            foundRally.setRallyDate(modifyRally.getRallyDate());
+        }
+    }
+
 }
