@@ -2,7 +2,7 @@ package com.hamhabocca.dallibocca.report.service;
 
 import com.hamhabocca.dallibocca.report.entity.ReviewReport;
 import com.hamhabocca.dallibocca.report.repository.ReviewReportRepository;
-import com.hamhabocca.dallibocca.report.reviewReportDto.ReviewReportDTO;
+import com.hamhabocca.dallibocca.report.dto.ReviewReportDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

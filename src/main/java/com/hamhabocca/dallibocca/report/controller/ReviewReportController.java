@@ -3,7 +3,7 @@ package com.hamhabocca.dallibocca.report.controller;
 
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 
-import com.hamhabocca.dallibocca.report.reviewReportDto.ReviewReportDTO;
+import com.hamhabocca.dallibocca.report.dto.ReviewReportDTO;
 import com.hamhabocca.dallibocca.report.service.ReviewReportService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -26,24 +26,25 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1")
 public class ReviewReportController {
+
     private final ReviewReportService reviewReportService;
 
     @Autowired
-    public ReviewReportController(ReviewReportService reviewReportService){
+    public ReviewReportController(ReviewReportService reviewReportService) {
         this.reviewReportService = reviewReportService;
     }
 
     @ApiOperation(value = "테스트용 리뷰 신고 추가")
-    @PostMapping("registreports")
-    public ResponseEntity<ResponseMessage> registReviewReportForTesting(@RequestBody ReviewReportDTO newReviewReport){
+    @PostMapping(value = "regist")
+    public ResponseEntity<ResponseMessage> registReviewReportForTesting(
+        @RequestBody ReviewReportDTO newReviewReport) {
 
         reviewReportService.registNewReviewReport(newReviewReport);
 
         return ResponseEntity
-                .created(URI.create("/swagger/reviewreports" + newReviewReport.getReportCode()))
-                .build();
+            .created(URI.create("/swagger/reviewReposts" + newReviewReport.getReportCode()))
+            .build();
     }
-
 
     @ApiOperation(value = "리뷰 신고 전체 조회")
     @GetMapping("/reports")
@@ -58,9 +59,9 @@ public class ReviewReportController {
         responseMap.put("reports", reviewReports);
 
         return new ResponseEntity<>(
-                new ResponseMessage(200, "조회성공", responseMap),
-                headers,
-                HttpStatus.OK
+            new ResponseMessage(200, "조회성공", responseMap),
+            headers,
+            HttpStatus.OK
         );
 
     }

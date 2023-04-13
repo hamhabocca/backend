@@ -2,7 +2,7 @@ package com.hamhabocca.dallibocca.review.controller;
 
 
 import com.hamhabocca.dallibocca.common.ResponseMessage;
-import com.hamhabocca.dallibocca.review.reviewdto.ReviewDTO;
+import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import com.hamhabocca.dallibocca.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,7 +34,7 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "테스트용 리뷰 추가하기")
-    @PostMapping("regist")
+    @PostMapping("/regists")
     public ResponseEntity<ResponseMessage> registReviewForTesting(@RequestBody ReviewDTO newReview){
 
         reviewService.registNewReviewTest(newReview);

@@ -31,9 +31,11 @@ public class ReviewReport {
     @Column(name = "IS_PROCESSED")
     private String isProcessed;
 
-    public ReviewReport() {}
+    public ReviewReport() {
+    }
 
-    public ReviewReport(int reportCode, String reportWriter, String reportTarget, Date reportDate, String reportReason, String reportReasonDetail, String isProcessed) {
+    public ReviewReport(int reportCode, String reportWriter, String reportTarget, Date reportDate,
+        String reportReason, String reportReasonDetail, String isProcessed) {
         this.reportCode = reportCode;
         this.reportWriter = reportWriter;
         this.reportTarget = reportTarget;
@@ -103,13 +105,13 @@ public class ReviewReport {
     @Override
     public String toString() {
         return "ReviewReport{" +
-                "reportCode=" + reportCode +
-                ", reportWriter='" + reportWriter + '\'' +
-                ", reportTarget='" + reportTarget + '\'' +
-                ", reportDate=" + reportDate +
-                ", reportReason='" + reportReason + '\'' +
-                ", reportReasonDetail='" + reportReasonDetail + '\'' +
-                ", isProcessed='" + isProcessed + '\'' +
-                '}';
+            "reportCode=" + reportCode +
+            ", reportWriter='" + reportWriter + '\'' +
+            ", reportTarget='" + reportTarget + '\'' +
+            ", reportDate=" + reportDate +
+            ", reportReason='" + reportReason + '\'' +
+            ", reportReasonDetail='" + reportReasonDetail + '\'' +
+            ", isProcessed='" + isProcessed + '\'' +
+            '}';
     }
 }

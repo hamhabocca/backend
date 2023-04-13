@@ -1,4 +1,4 @@
-package com.hamhabocca.dallibocca.report.reviewReportDto;
+package com.hamhabocca.dallibocca.report.dto;
 
 import java.util.Date;
 
