@@ -6,6 +6,8 @@ import com.hamhabocca.dallibocca.rally.entity.Rally;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -97,6 +99,15 @@ public class RallyService {
             throw new RallyException("취소 상태인 랠리가 아닙니다. 삭제할 수 없습니다.");
         }
         rallyRepository.deleteById(rallyId);
+    }
+
+    /* 본인이 모집한 랠리 찾기 */
+    public List<RallyDTO> findRecruitRallyList(int currentMemberId) {
+
+        List<Rally> rallyList = rallyRepository.findAllByRallyMasterId(currentMemberId);
+
+        return rallyList.stream().map(rally -> modelMapper.map(rally, RallyDTO.class)).collect(
+            Collectors.toList());
     }
 
 }
