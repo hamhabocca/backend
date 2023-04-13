@@ -5,6 +5,8 @@ import com.hamhabocca.dallibocca.comment.service.CommentService;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -34,6 +36,10 @@ public class CommentController {
 	}
 
 	@ApiOperation(value = "전체 답변 조회 ")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "[Ok]"),
+		@ApiResponse(code = 400, message = "[Bad Request]"),
+	})
 	@GetMapping("/comments")
 	public ResponseEntity<ResponseMessage> findAllComments() {
 
@@ -53,6 +59,11 @@ public class CommentController {
 	}
 
 	@ApiOperation(value = "답변 작성 추가")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "[Created]"),
+		@ApiResponse(code = 400, message = "[Bad Request]"),
+		@ApiResponse(code = 403, message = "[Forbidden]")
+	})
 	@PostMapping("/comments")
 	public ResponseEntity<?> registNewComment(@RequestBody CommenetDTO newComment) {
 
