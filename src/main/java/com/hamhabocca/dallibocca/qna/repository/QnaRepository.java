@@ -8,9 +8,12 @@ import java.util.List;
 
 public interface QnaRepository extends JpaRepository<Qna, Integer> {
 
-    @Query(value = "SELECT A.QNA_ID, A.QNA_DETAIL, A.QNA_TITLE, A.QNA_WRITE_DATE, A.QNA_WRITER, A.QNA_CATEGORY FROM QNA A ORDER BY A.QNA_ID ASC",
-            nativeQuery = true)
-    List<Qna> findAllQna();
-    List<Qna> findByQnaTitleContaining(String qnaTitle);
+	@Query(value = "SELECT A.QNA_ID, A.QNA_DETAIL, A.QNA_TITLE, A.QNA_WRITE_DATE, A.QNA_WRITER, A.QNA_CATEGORY FROM QNA A ORDER BY A.QNA_ID ASC",
+		nativeQuery = true)
+	List<Qna> findAllQna();
+
+	@Query(value = "SELECT A.QNA_ID, A.QNA_DETAIL, A.QNA_TITLE, A.QNA_WRITE_DATE, A.QNA_WRITER, A.QNA_CATEGORY FROM QNA A ORDER BY A.QNA_ID ASC",
+		nativeQuery = true)
+	List<Qna> findOneQna();
 
 }

@@ -25,62 +25,84 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/v1/")
 public class QnaController {
-    private final QnaService qnaService;
 
-    @Autowired
-    public QnaController(QnaService qnaService) {
-        this.qnaService = qnaService;
-    }
+	private final QnaService qnaService;
 
-    @ApiOperation(value = "모든 회원 목록 조회")
-    @GetMapping("/qnas")
-    public ResponseEntity<ResponseMessage> findAllUQnas() {
+	@Autowired
+	public QnaController(QnaService qnaService) {
+		this.qnaService = qnaService;
+	}
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+	@ApiOperation(value = "모든 건의 목록 조회")
+	@GetMapping("/qnas")
+	public ResponseEntity<ResponseMessage> findAllUQnas() {
 
-        Map<String, Object> responseMap = new HashMap<>();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<QnaDTO> qnas = qnaService.findAllQna();
-        responseMap.put("qnas", qnas);
+		Map<String, Object> responseMap = new HashMap<>();
 
-        return new ResponseEntity<>(
-                new ResponseMessage(200, "조회성공", responseMap),
-                headers,
-                HttpStatus.OK
-        );
-    }
+		List<QnaDTO> qnas = qnaService.findAllQna();
+		responseMap.put("qnas", qnas);
 
-    @ApiOperation(value = "신규 건의 추가")
-    @PostMapping("/qnas")
-    public ResponseEntity<?> registNewQna(@RequestBody QnaDTO newQna) {
+		return new ResponseEntity<>(
+			new ResponseMessage(200, "조회성공", responseMap),
+			headers,
+			HttpStatus.OK
+		);
+	}
 
-        qnaService.registNewQna(newQna);
+	@ApiOperation(value = "건의 번호로 건의 조회")
+	@GetMapping("/qnas/{qnaId}")
+	public ResponseEntity<ResponseMessage> findQnaByNo(@PathVariable int qnaId) {
 
-        return ResponseEntity
-                .created(URI.create("/swagger/qnas" + newQna.getQnaId()))
-                .build();
-    }
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-    @ApiOperation(value = "건의 수정")
-    @PutMapping("/qnas/{qnaId}")
-    public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+		Map<String, Object> responseMap = new HashMap<>();
 
-        QnaDTO foundQna = qnaService.modifyQna(modifyInfo);
+		List<QnaDTO> qnas = qnaService.findOneQna();
 
-        return ResponseEntity
-                .created(URI.create("/swagger/qnas" + qnaId))
-                .build();
-    }
+		QnaDTO foundUser = qnas.stream().filter(qna -> qna.getQnaId() == qnaId)
+			.collect(Collectors.toList()).get(0);
+		responseMap.put("qnas", foundUser);
 
-    @ApiOperation(value = "건의 삭제")
-    @DeleteMapping("/qnas/{qnaId}")
-    public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+		return ResponseEntity
+			.ok()
+			.headers(headers)
+			.body(new ResponseMessage(200, "조회성공", responseMap));
+	}
 
-        QnaDTO foundQna = qnaService.removeQna(modifyInfo, qnaId);
+	@ApiOperation(value = "신규 건의 추가")
+	@PostMapping("/qnas")
+	public ResponseEntity<?> registNewQna(@RequestBody QnaDTO newQna) {
 
-        return ResponseEntity
-                .noContent()
-                .build();
-    }
+		qnaService.registNewQna(newQna);
+
+		return ResponseEntity
+			.created(URI.create("/swagger/qnas" + newQna.getQnaId()))
+			.build();
+	}
+
+	@ApiOperation(value = "건의 수정")
+	@PutMapping("/qnas/{qnaId}")
+	public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+
+		QnaDTO foundQna = qnaService.modifyQna(modifyInfo);
+
+		return ResponseEntity
+			.created(URI.create("/swagger/qnas" + qnaId))
+			.build();
+	}
+
+	@ApiOperation(value = "건의 삭제")
+	@DeleteMapping("/qnas/{qnaId}")
+	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+
+		QnaDTO foundQna = qnaService.removeQna(modifyInfo, qnaId);
+
+		return ResponseEntity
+			.noContent()
+			.build();
+	}
 }
