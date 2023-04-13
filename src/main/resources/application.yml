@@ -1,15 +1,16 @@
 server:
-  port: 3307
+#  port: 3307
+  port: 3000
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://@mysql.team-greedy.com:3306/dallibocca?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-    url: jdbc:mysql://@localhost:3306/test?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
-#    username: hamhabocca
-#    password: hamhabocca
-    username: TEST
-    password: TEST
+    url: jdbc:mysql://@mysql.team-greedy.com:3306/dallibocca?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+#    url: jdbc:mysql://@localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+    username: hamhabocca
+    password: hamhabocca
+#    username: TEST
+#    password: TEST
     hikari:
       auto-commit: false
   jpa:
@@ -21,3 +22,7 @@ spring:
         '[format_sql]': true
         hbm2ddl:
           auto: update
+
+# 스웨거 비번 끄기 위해 잠시 사용
+  autoconfigure:
+    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
