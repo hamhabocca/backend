@@ -1,6 +1,8 @@
 package com.hamhabocca.dallibocca.rally.service;
 
+import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
+import com.hamhabocca.dallibocca.rally.entity.Rally;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
 import org.modelmapper.ModelMapper;
@@ -32,6 +34,14 @@ public class RallyService {
             Sort.by("rallyId"));
 
         return rallyRepository.findSimpleRallyList(pageable);
+    }
+
+    /* 랠리글 상세 조회 */
+    public RallyDTO findRallyById(int rallyId) {
+
+        Rally foundRally = rallyRepository.findById(rallyId).get();
+
+        return modelMapper.map(foundRally, RallyDTO.class);
     }
 
 }

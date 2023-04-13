@@ -3,6 +3,7 @@ package com.hamhabocca.dallibocca.rally.controller;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
+import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
 import com.hamhabocca.dallibocca.rally.service.RallyService;
 import io.swagger.annotations.Api;
@@ -55,6 +56,28 @@ public class RallyController {
 
         return ResponseEntity.ok().headers(headers)
             .body(new ResponseMessage(200, "전체 조회 성공", responseMap));
+    }
+
+    @ApiOperation(value = "랠리글 상세 조회 API")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "[Ok]"),
+        @ApiResponse(code = 400, message = "[Bad Request]"),
+        @ApiResponse(code = 403, message = "[Forbidden]"),
+        @ApiResponse(code = 404, message = "[Not Found]")
+    })
+    @GetMapping("/rallies/{rallyId}")
+    public ResponseEntity<ResponseMessage> findRallyById(@PathVariable int rallyId) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        RallyDTO foundRally = rallyService.findRallyById(rallyId);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("rally", foundRally);
+
+        return ResponseEntity.ok().headers(headers)
+            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
     }
 
 }
