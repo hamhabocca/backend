@@ -52,7 +52,7 @@ public class ReviewReportController {
         reviewReportService.registNewReviewReport(newReviewReport);
 
         return ResponseEntity
-            .created(URI.create("/swagger/reviewReposts" + newReviewReport.getReportCode()))
+            .created(URI.create("/api/v1/reviewReposts" + newReviewReport.getReportId()))
             .build();
     }
 
@@ -81,15 +81,15 @@ public class ReviewReportController {
 
     /*특정 리뷰 조회*/
     @ApiOperation("리뷰 신고 코드로 특정 리뷰 조회")
-    @GetMapping("reposts/{reportCode}")
-    public ResponseEntity<ResponseMessage> findReportByCode(@PathVariable int reportCode){
+    @GetMapping("reposts/{reportId}")
+    public ResponseEntity<ResponseMessage> findReportByCode(@PathVariable Long reportId){
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         List<ReviewReportDTO> reviewReports = reviewReportService.findAllReviewReport();
 
-        ReviewReportDTO foundReviewReport = reviewReports.stream().filter(reviewReport -> reviewReport.getReportCode() == reportCode)
+        ReviewReportDTO foundReviewReport = reviewReports.stream().filter(reviewReport -> reviewReport.getReportId() == reportId)
             .collect(Collectors.toList()).get(0);
 
         Map<String, Object> responseMap = new HashMap<>();

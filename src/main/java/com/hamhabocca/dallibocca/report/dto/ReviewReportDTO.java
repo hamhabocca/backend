@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReviewReportDTO {
 
-    private int reportCode;
+    private Long reportId;
 
     private String reportWriter;
 
@@ -20,8 +20,10 @@ public class ReviewReportDTO {
 
     public ReviewReportDTO() {}
 
-    public ReviewReportDTO(int reportCode, String reportWriter, String reportTarget, Date reportDate, String reportReason, String reportReasonDetail, String isProcessed) {
-        this.reportCode = reportCode;
+
+    public ReviewReportDTO(Long reportId, String reportWriter, String reportTarget, Date reportDate,
+        String reportReason, String reportReasonDetail, String isProcessed) {
+        this.reportId = reportId;
         this.reportWriter = reportWriter;
         this.reportTarget = reportTarget;
         this.reportDate = reportDate;
@@ -30,12 +32,12 @@ public class ReviewReportDTO {
         this.isProcessed = isProcessed;
     }
 
-    public int getReportCode() {
-        return reportCode;
+    public Long getReportId() {
+        return reportId;
     }
 
-    public void setReportCode(int reportCode) {
-        this.reportCode = reportCode;
+    public void setReportId(Long reportId) {
+        this.reportId = reportId;
     }
 
     public String getReportWriter() {
@@ -89,13 +91,13 @@ public class ReviewReportDTO {
     @Override
     public String toString() {
         return "ReviewReportDTO{" +
-                "reportCode=" + reportCode +
-                ", reportWriter='" + reportWriter + '\'' +
-                ", reportTarget='" + reportTarget + '\'' +
-                ", reportDate=" + reportDate +
-                ", reportReason='" + reportReason + '\'' +
-                ", reportReasonDetail='" + reportReasonDetail + '\'' +
-                ", isProcessed='" + isProcessed + '\'' +
-                '}';
+            "reportId=" + reportId +
+            ", reportWriter='" + reportWriter + '\'' +
+            ", reportTarget='" + reportTarget + '\'' +
+            ", reportDate=" + reportDate +
+            ", reportReason='" + reportReason + '\'' +
+            ", reportReasonDetail='" + reportReasonDetail + '\'' +
+            ", isProcessed='" + isProcessed + '\'' +
+            '}';
     }
 }

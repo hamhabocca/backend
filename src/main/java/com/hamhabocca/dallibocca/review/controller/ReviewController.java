@@ -40,7 +40,7 @@ public class ReviewController {
         reviewService.registNewReviewTest(newReview);
 
         return ResponseEntity
-                .created(URI.create("/swagger/reviews" + newReview.getReviewCode()))
+                .created(URI.create("/api/v1/reviews" + newReview.getReviewId()))
                 .build();
     }
 
@@ -64,15 +64,15 @@ public class ReviewController {
     }
 
     @ApiOperation("리뷰코드로 리뷰 조회")
-    @GetMapping("/reviews/{reviewCode}")
-    public ResponseEntity<ResponseMessage> findMenuByCode(@PathVariable int reviewCode) {
+    @GetMapping("/reviews/{reviewId}")
+    public ResponseEntity<ResponseMessage> findMenuByCode(@PathVariable Long reviewId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         List<ReviewDTO> reviews = reviewService.findAllReview();
 
-        ReviewDTO foundReview = reviews.stream().filter(review -> review.getReviewCode() == reviewCode).collect(Collectors.toList()).get(0);
+        ReviewDTO foundReview = reviews.stream().filter(review -> review.getReviewId() == reviewId).collect(Collectors.toList()).get(0);
 
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("review", foundReview);
@@ -90,11 +90,11 @@ public class ReviewController {
             @ApiResponse(code = 204, message = "리뷰 삭제 성공"),
             @ApiResponse(code = 400, message = "잘못된 파라미터")
     })
-    @DeleteMapping("/reviews/{reviewCode}")
-    public ResponseEntity<?> removeReview(@RequestBody ReviewDTO deleteInfo, @PathVariable int reviewCode){
+    @DeleteMapping("/reviews/{reviewId}")
+    public ResponseEntity<?> removeReview(@RequestBody ReviewDTO deleteInfo, @PathVariable Long reviewId){
 
 
-        ReviewDTO foundReview = reviewService.removeReview(deleteInfo, reviewCode);
+        ReviewDTO foundReview = reviewService.removeReview(deleteInfo, reviewId);
 
         return  ResponseEntity
                 .noContent()
@@ -102,13 +102,13 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "리뷰 수정")
-    @PutMapping("/reviews/{reviewCode}")
-    public ResponseEntity<?> modifyReview(@RequestBody ReviewDTO modifyInfo, @PathVariable int reviewCode){
+    @PutMapping("/reviews/{reviewId}")
+    public ResponseEntity<?> modifyReview(@RequestBody ReviewDTO modifyInfo, @PathVariable Long reviewId){
 
         ReviewDTO foundReview = reviewService.modifyReview(modifyInfo);
 
         return ResponseEntity
-                .created(URI.create("/swagger/reviews" + reviewCode))
+                .created(URI.create("/api/v1/reviews" + reviewId))
                 .build();
     }
 }

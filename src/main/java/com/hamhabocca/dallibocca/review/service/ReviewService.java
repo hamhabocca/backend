@@ -21,7 +21,7 @@ public class ReviewService {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private Integer reviewCode;
+    private Long reviewId;
 
 
     @Autowired
@@ -33,16 +33,14 @@ public class ReviewService {
 
     /*전체 조회*/
     public List<ReviewDTO> findAllReview() {
-        List<Review> reviews = reviewRepository.findAllReview();
+        List<Review> reviews = reviewRepository.findAll();
         return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class)).collect(Collectors.toList());
     }
 
     /*일부 조회*/
     @Transactional
-    public ReviewDTO findReviewByCode(int reviewCode) {
-
-        Review review = reviewRepository.findById(this.reviewCode).get();
-
+    public ReviewDTO findReviewByCode(Long reviewId) {
+        Review review = reviewRepository.findById(this.reviewId).get();
         return modelMapper.map(review, ReviewDTO.class);
 
     }
@@ -57,9 +55,9 @@ public class ReviewService {
 
     /*삭제*/
     @Transactional
-    public ReviewDTO removeReview(ReviewDTO deleteInfo, int reviewCode) {
+    public ReviewDTO removeReview(ReviewDTO deleteInfo, Long reviewId) {
 
-        Review foundReview = reviewRepository.findById(reviewCode).get();
+        Review foundReview = reviewRepository.findById(reviewId).get();
         reviewRepository.delete(foundReview);
 
         ReviewDTO reviewDTO = new ReviewDTO();
@@ -71,14 +69,13 @@ public class ReviewService {
     @Transactional
     public ReviewDTO modifyReview(ReviewDTO modifyInfo){
 
-        Review foundReview = reviewRepository.findById(modifyInfo.getReviewCode()).get();
+        Review foundReview = reviewRepository.findById(modifyInfo.getReviewId()).get();
 
         foundReview.setReviewTitle(modifyInfo.getReviewTitle());
         foundReview.setReviewWriter(modifyInfo.getReviewWriter());
         foundReview.setReviewWriteDate(modifyInfo.getReviewWriteDate());
         foundReview.setReviewDetail(modifyInfo.getReviewDetail());
-        foundReview.setReviewCode(modifyInfo.getReviewCode());
-        foundReview.setRallyCode(modifyInfo.getRallyCode());
+        foundReview.setReviewId(modifyInfo.getReviewId());
 
         ReviewDTO reviewDTO = new ReviewDTO();
 

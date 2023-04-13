@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReviewDTO {
 
-    private int reviewCode;
+    private Long reviewId;
 
     private String reviewTitle;
 
@@ -12,26 +12,27 @@ public class ReviewDTO {
 
     private String reviewDetail;
 
-    private String rallyCode;
+    private Long rallyId;
 
     private Date reviewWriteDate;
     public ReviewDTO() {}
 
-    public ReviewDTO(int reviewCode, String reviewTitle, String reviewWriter, String reviewDetail, String rallyCode, Date reviewWriteDate) {
-        this.reviewCode = reviewCode;
+    public ReviewDTO(Long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
+        Long rallyId, Date reviewWriteDate) {
+        this.reviewId = reviewId;
         this.reviewTitle = reviewTitle;
         this.reviewWriter = reviewWriter;
         this.reviewDetail = reviewDetail;
-        this.rallyCode = rallyCode;
+        this.rallyId = rallyId;
         this.reviewWriteDate = reviewWriteDate;
     }
 
-    public int getReviewCode() {
-        return reviewCode;
+    public Long getReviewId() {
+        return reviewId;
     }
 
-    public void setReviewCode(int reviewCode) {
-        this.reviewCode = reviewCode;
+    public void setReviewId(Long reviewId) {
+        this.reviewId = reviewId;
     }
 
     public String getReviewTitle() {
@@ -58,12 +59,12 @@ public class ReviewDTO {
         this.reviewDetail = reviewDetail;
     }
 
-    public String getRallyCode() {
-        return rallyCode;
+    public Long getRallyId() {
+        return rallyId;
     }
 
-    public void setRallyCode(String rallyCode) {
-        this.rallyCode = rallyCode;
+    public void setRallyId(Long rallyId) {
+        this.rallyId = rallyId;
     }
 
     public Date getReviewWriteDate() {
@@ -77,12 +78,12 @@ public class ReviewDTO {
     @Override
     public String toString() {
         return "ReviewDTO{" +
-                "reviewCode=" + reviewCode +
-                ", reviewTitle='" + reviewTitle + '\'' +
-                ", reviewWriter='" + reviewWriter + '\'' +
-                ", reviewDetail='" + reviewDetail + '\'' +
-                ", rallyCode='" + rallyCode + '\'' +
-                ", reviewWriteDate=" + reviewWriteDate +
-                '}';
+            "reviewId=" + reviewId +
+            ", reviewTitle='" + reviewTitle + '\'' +
+            ", reviewWriter='" + reviewWriter + '\'' +
+            ", reviewDetail='" + reviewDetail + '\'' +
+            ", rallyId=" + rallyId +
+            ", reviewWriteDate=" + reviewWriteDate +
+            '}';
     }
 }

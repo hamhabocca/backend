@@ -17,30 +17,33 @@ public class ReviewReportService {
     private final ReviewReportRepository reviewReportRepository;
     private final ModelMapper modelMapper;
 
-    private Integer reportCode;
+    private Long reportId;
 
     @Autowired
-    public ReviewReportService(ReviewReportRepository reviewReportRepository, ModelMapper modelMapper){
+    public ReviewReportService(ReviewReportRepository reviewReportRepository,
+        ModelMapper modelMapper) {
         this.reviewReportRepository = reviewReportRepository;
         this.modelMapper = modelMapper;
     }
 
     /*등록*/
     @Transactional
-    public void registNewReviewReport(ReviewReportDTO newReviewReport){
+    public void registNewReviewReport(ReviewReportDTO newReviewReport) {
         reviewReportRepository.save(modelMapper.map(newReviewReport, ReviewReport.class));
     }
 
     /*전체 조회*/
     public List<ReviewReportDTO> findAllReviewReport() {
-        List<ReviewReport> reviewReposts = reviewReportRepository.findAllReviewReport();
-        return reviewReposts.stream().map(reviewRepost -> modelMapper.map(reviewRepost, ReviewReportDTO.class)).collect(Collectors.toList());
+        List<ReviewReport> reviewReposts = reviewReportRepository.findAll();
+        return reviewReposts.stream()
+            .map(reviewRepost -> modelMapper.map(reviewRepost, ReviewReportDTO.class))
+            .collect(Collectors.toList());
     }
 
     /*일부 조회*/
     @Transactional
-    public ReviewReportDTO findReportbyCode(int reportCode){
-        ReviewReport reviewReport = reviewReportRepository.findById(this.reportCode).get();
+    public ReviewReportDTO findReportbyCode(Long reportId) {
+        ReviewReport reviewReport = reviewReportRepository.findById(this.reportId).get();
         return modelMapper.map(reviewReport, ReviewReportDTO.class);
     }
 }

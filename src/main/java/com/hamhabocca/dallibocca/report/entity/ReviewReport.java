@@ -5,13 +5,22 @@ import java.util.Date;
 
 @Entity(name = "ReviewReport")
 @Table(name = "reviewReport")
+@SequenceGenerator(
+    name = "report_sequence_generator",
+    sequenceName = "sequence_report_id",
+    initialValue = 1,
+    allocationSize = 50
+)
 
 public class ReviewReport {
 
     @Id
-//    @GeneratedValue
-    @Column(name = "REPORT_CODE")
-    private int reportCode;
+    @GeneratedValue(
+        strategy = GenerationType.SEQUENCE,
+        generator = "report_sequence_generator"
+    )
+    @Column(name = "REPORT_ID")
+    private Long reportId;
 
     @Column(name = "REPORT_WRITER")
     private String reportWriter;
@@ -34,9 +43,9 @@ public class ReviewReport {
     public ReviewReport() {
     }
 
-    public ReviewReport(int reportCode, String reportWriter, String reportTarget, Date reportDate,
+    public ReviewReport(Long reportId, String reportWriter, String reportTarget, Date reportDate,
         String reportReason, String reportReasonDetail, String isProcessed) {
-        this.reportCode = reportCode;
+        this.reportId = reportId;
         this.reportWriter = reportWriter;
         this.reportTarget = reportTarget;
         this.reportDate = reportDate;
@@ -45,12 +54,12 @@ public class ReviewReport {
         this.isProcessed = isProcessed;
     }
 
-    public int getReportCode() {
-        return reportCode;
+    public Long getReportId() {
+        return reportId;
     }
 
-    public void setReportCode(int reportCode) {
-        this.reportCode = reportCode;
+    public void setReportId(Long reportId) {
+        this.reportId = reportId;
     }
 
     public String getReportWriter() {
@@ -99,13 +108,12 @@ public class ReviewReport {
 
     public void setIsProcessed(String isProcessed) {
         this.isProcessed = isProcessed;
-
     }
 
     @Override
     public String toString() {
         return "ReviewReport{" +
-            "reportCode=" + reportCode +
+            "reportId=" + reportId +
             ", reportWriter='" + reportWriter + '\'' +
             ", reportTarget='" + reportTarget + '\'' +
             ", reportDate=" + reportDate +
