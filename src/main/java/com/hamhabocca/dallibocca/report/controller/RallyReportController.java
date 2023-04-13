@@ -7,6 +7,8 @@ import com.hamhabocca.dallibocca.report.entity.RallyReport;
 import com.hamhabocca.dallibocca.report.service.RallyReportService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,10 @@ public class RallyReportController {
 	}
 
 	@ApiOperation(value = "신고글 추가")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "[Created]"),
+		@ApiResponse(code = 403, message = "[Forbidden]")
+	})
 	@PostMapping("/reports")
 	public ResponseEntity<?> registNewRallyReport(@RequestBody RallyReportDTO newRallyReport) {
 
@@ -38,6 +44,10 @@ public class RallyReportController {
 	}
 
 	@ApiOperation(value = "신고 승낙/거절")
+	@ApiResponses({
+		@ApiResponse(code = 201, message = "[Created]"),
+		@ApiResponse(code = 401, message = "[Unauthorized]")
+	})
 	@PutMapping("/reports/{reportId}")
 	public ResponseEntity<?> modifyRallyReport(@PathVariable int reportId, String type) {
 
