@@ -3,15 +3,28 @@ package com.hamhabocca.dallibocca.comment.entity;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "Comment")
 @Table(name = "comment")
+@SequenceGenerator(
+        name = "member_sequence_generator",
+        sequenceName = "sequence_member_id",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class Comment {
 
 	@Id
 	@Column(name = "member_id")
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "member_sequence_generator"
+	)
 	private int memberId;
 
 	@Column(name = "nickname")
