@@ -3,6 +3,7 @@ package com.hamhabocca.dallibocca.rally.service;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
 import com.hamhabocca.dallibocca.rally.entity.Rally;
+import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
 import org.modelmapper.ModelMapper;
@@ -84,6 +85,18 @@ public class RallyService {
             foundRally.setRallyDistance(modifyRally.getRallyDistance());
             foundRally.setRallyDate(modifyRally.getRallyDate());
         }
+    }
+
+    /* 취소상태인 랠리글 삭제 */
+    @Transactional
+    public void removeRally(int rallyId) {
+
+        Rally foundRally = rallyRepository.findById(rallyId).get();
+
+        if (!(foundRally.getRallyStatus().equals("취소됨"))) {
+            throw new RallyException("취소 상태인 랠리가 아닙니다. 삭제할 수 없습니다.");
+        }
+        rallyRepository.deleteById(rallyId);
     }
 
 }

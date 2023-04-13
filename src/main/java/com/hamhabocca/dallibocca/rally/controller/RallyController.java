@@ -110,4 +110,17 @@ public class RallyController {
         return ResponseEntity.created(URI.create("/api/v1/rallies/" + rallyId)).build();
     }
 
+    @ApiOperation(value = "취소된 랠리글 삭제 API")
+    @ApiResponses({
+        @ApiResponse(code = 204, message = "[No Content]"),
+        @ApiResponse(code = 400, message = "[Bad Request]")
+    })
+    @DeleteMapping("/rallies/{rallyId}")
+    public ResponseEntity<?> removeRally(@PathVariable int rallyId) {
+
+        rallyService.removeRally(rallyId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }
