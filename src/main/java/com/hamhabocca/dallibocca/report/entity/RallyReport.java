@@ -2,26 +2,28 @@ package com.hamhabocca.dallibocca.report.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.Date;
 
 @Entity(name = "RallyReport")
 @Table(name = "rallyReport")
-//@SequenceGenerator(
-//        name = "MENU_SEQ_GENERATOR",
-//        sequenceName = "SEQ_MENU_CODE",
-//        initialValue = 1,
-//        allocationSize = 1
-//)
+@SequenceGenerator(
+        name = "report_sequence_generator",
+        sequenceName = "sequence_report_id",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class RallyReport {
 
 	@Id
-//	@GeneratedValue(
-//			strategy = GenerationType.IDENTITY,
-//			generator = "member_sequence_generator"
-//	)
-//	@OneToOne(mappedBy = "RiderProfile")
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "report_sequence_generator"
+	)
 	@Column(name = "report_id")
 	private int reportId;
 
