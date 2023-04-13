@@ -5,21 +5,20 @@ import java.util.Date;
 
 @Entity(name = "Qna")
 @Table(name = "qna")
-//@SequenceGenerator(
-//        name = "MENU_SEQ_GENERATOR",
-//        sequenceName = "SEQ_MENU_CODE",
-//        initialValue = 1,
-//        allocationSize = 1
-//)
+@SequenceGenerator(
+        name = "qna_sequence_generator",
+        sequenceName = "sequence_qna_id",
+        initialValue = 1,
+        allocationSize = 50
+)
 public class Qna {
 
 	@Id
-//	@GeneratedValue(
-//			strategy = GenerationType.IDENTITY,
-//			generator = "member_sequence_generator"
-//	)
-//	@OneToOne(mappedBy = "RiderProfile")
 	@Column(name = "qna_id")
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "qna_sequence_generator"
+	)
 	private int qnaId;
 
 	@Column(name = "qna_title")
