@@ -62,18 +62,15 @@ public class QnaController {
 		@ApiResponse(code = 400, message = "[Bad Reuest]")
 	})
 	@GetMapping("/qnas/{qnaId}")
-	public ResponseEntity<ResponseMessage> findQnaByNo(@PathVariable int qnaId) {
+	public ResponseEntity<ResponseMessage> findQnaById(@PathVariable long qnaId) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
+		QnaDTO foundQna = qnaService.findQnaById(qnaId);
+
 		Map<String, Object> responseMap = new HashMap<>();
-
-		List<QnaDTO> qnas = qnaService.findOneQna();
-
-		QnaDTO foundUser = qnas.stream().filter(qna -> qna.getQnaId() == qnaId)
-			.collect(Collectors.toList()).get(0);
-		responseMap.put("qnas", foundUser);
+		responseMap.put("qnas", foundQna);
 
 		return ResponseEntity
 			.ok()
@@ -93,7 +90,7 @@ public class QnaController {
 		qnaService.registNewQna(newQna);
 
 		return ResponseEntity
-			.created(URI.create("/swagger/qnas" + newQna.getQnaId()))
+			.created(URI.create("/api/v1/qnas" + newQna.getQnaId()))
 			.build();
 	}
 
@@ -104,12 +101,12 @@ public class QnaController {
 		@ApiResponse(code = 403, message = "[Forbidden]")
 	})
 	@PutMapping("/qnas/{qnaId}")
-	public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+	public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable long qnaId) {
 
-		QnaDTO foundQna = qnaService.modifyQna(modifyInfo);
+		qnaService.modifyQna(modifyInfo);
 
 		return ResponseEntity
-			.created(URI.create("/swagger/qnas" + qnaId))
+			.created(URI.create("/api/v1/qnas" + qnaId))
 			.build();
 	}
 
@@ -120,9 +117,9 @@ public class QnaController {
 		@ApiResponse(code = 404, message = "[Not Found]")
 	})
 	@DeleteMapping("/qnas/{qnaId}")
-	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable int qnaId) {
+	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable long qnaId) {
 
-		QnaDTO foundQna = qnaService.removeQna(modifyInfo, qnaId);
+		qnaService.removeQna(modifyInfo, qnaId);
 
 		return ResponseEntity
 			.noContent()

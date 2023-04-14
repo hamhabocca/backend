@@ -6,9 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface QnaRepository extends JpaRepository<Qna, Integer> {
-	List<Qna> findAllQna();
-	
-	List<Qna> findOneQna();
+public interface QnaRepository extends JpaRepository<Qna, Long> {
+
 
 }

@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class QnaDTO {
 
-	private int qnaId;
+	private long qnaId;
 	private String qnaTitle;
 	private String qnaCategory;
 	private String qnaWriter;
@@ -14,8 +14,9 @@ public class QnaDTO {
 	public QnaDTO() {
 	}
 
-	public QnaDTO(int qnaId, String qnaTitle, String qnaCategory, String qnaWriter,
-		String qnaDetail, Date qnaWriteDate) {
+	public QnaDTO(long qnaId, String qnaTitle, String qnaCategory, String qnaWriter,
+		String qnaDetail,
+		Date qnaWriteDate) {
 		this.qnaId = qnaId;
 		this.qnaTitle = qnaTitle;
 		this.qnaCategory = qnaCategory;
@@ -24,11 +25,11 @@ public class QnaDTO {
 		this.qnaWriteDate = qnaWriteDate;
 	}
 
-	public int getQnaId() {
+	public long getQnaId() {
 		return qnaId;
 	}
 
-	public void setQnaId(int qnaId) {
+	public void setQnaId(long qnaId) {
 		this.qnaId = qnaId;
 	}
 

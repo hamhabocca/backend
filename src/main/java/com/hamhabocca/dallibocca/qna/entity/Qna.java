@@ -6,20 +6,20 @@ import java.util.Date;
 @Entity(name = "Qna")
 @Table(name = "qna")
 @SequenceGenerator(
-        name = "qna_sequence_generator",
-        sequenceName = "sequence_qna_id",
-        initialValue = 1,
-        allocationSize = 50
+	name = "qna_sequence_generator",
+	sequenceName = "sequence_qna_id",
+	initialValue = 1,
+	allocationSize = 50
 )
 public class Qna {
 
 	@Id
 	@Column(name = "qna_id")
 	@GeneratedValue(
-			strategy = GenerationType.SEQUENCE,
-			generator = "qna_sequence_generator"
+		strategy = GenerationType.SEQUENCE,
+		generator = "qna_sequence_generator"
 	)
-	private int qnaId;
+	private long qnaId;
 
 	@Column(name = "qna_title")
 	private String qnaTitle;
@@ -36,11 +36,10 @@ public class Qna {
 	@Column(name = "qna_write_date")
 	private Date qnaWriteDate;
 
-
 	public Qna() {
 	}
 
-	public Qna(int qnaId, String qnaTitle, String qnaCategory, String qnaWriter, String qnaDetail,
+	public Qna(long qnaId, String qnaTitle, String qnaCategory, String qnaWriter, String qnaDetail,
 		Date qnaWriteDate) {
 		this.qnaId = qnaId;
 		this.qnaTitle = qnaTitle;
@@ -50,11 +49,11 @@ public class Qna {
 		this.qnaWriteDate = qnaWriteDate;
 	}
 
-	public int getQnaId() {
+	public long getQnaId() {
 		return qnaId;
 	}
 
-	public void setQnaId(int qnaId) {
+	public void setQnaId(long qnaId) {
 		this.qnaId = qnaId;
 	}
 
@@ -100,9 +99,13 @@ public class Qna {
 
 	@Override
 	public String toString() {
-		return "Qna{" + "qnaId=" + qnaId + ", qnaTitle='" + qnaTitle + '\'' + ", qnaCategory='"
-			+ qnaCategory + '\'' + ", qnaWriter='" + qnaWriter + '\'' + ", qnaDetail='" + qnaDetail
-			+ '\'' + ", qnaWriteDate=" + qnaWriteDate + '}';
+		return "Qna{" +
+			"qnaId=" + qnaId +
+			", qnaTitle='" + qnaTitle + '\'' +
+			", qnaCategory='" + qnaCategory + '\'' +
+			", qnaWriter='" + qnaWriter + '\'' +
+			", qnaDetail='" + qnaDetail + '\'' +
+			", qnaWriteDate=" + qnaWriteDate +
+			'}';
 	}
-
 }

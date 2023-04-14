@@ -25,16 +25,16 @@ public class QnaService {
 	}
 
 	public List<QnaDTO> findAllQna() {
-		List<Qna> qnas = qnaRepository.findAllQna();
+		List<Qna> qnas = qnaRepository.findAll();
 		return qnas.stream().map(qna -> modelMapper.map(qna, QnaDTO.class))
 			.collect(Collectors.toList());
 	}
 
-	public List<QnaDTO> findOneQna() {
-		List<Qna> qnas = qnaRepository.findOneQna();
-		return qnas.stream().map(qna -> modelMapper.map(qna, QnaDTO.class))
-			.collect(Collectors.toList());
+	public QnaDTO findQnaById(long qnaId) {
 
+		Qna foundQna = qnaRepository.findById(qnaId).get();
+
+		return modelMapper.map(foundQna, QnaDTO.class);
 	}
 
 	@Transactional
@@ -64,7 +64,7 @@ public class QnaService {
 	}
 
 	@Transactional
-	public QnaDTO removeQna(QnaDTO modifyInfo, int qnaId) {
+	public QnaDTO removeQna(QnaDTO modifyInfo, long qnaId) {
 
 		Qna foundQna = qnaRepository.findById(qnaId).get();
 		qnaRepository.delete(foundQna);
