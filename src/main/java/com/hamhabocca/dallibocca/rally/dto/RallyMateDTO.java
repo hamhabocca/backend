@@ -4,43 +4,44 @@ import java.util.Date;
 
 public class RallyMateDTO {
 
-	private int rallyMateId;
-	private int rallyId;
-	private int memberId;
+	private long id;
+	private long rallyId;
+	private long memberId;
 	private java.util.Date participationDate;
 	private String isAccepted;
 
 	public RallyMateDTO() {}
 
-	public RallyMateDTO(int rallyMateId, int rallyId, int memberId, Date participationDate, String isAccepted) {
-		this.rallyMateId = rallyMateId;
+	public RallyMateDTO(long id, long rallyId, long memberId, Date participationDate,
+		String isAccepted) {
+		this.id = id;
 		this.rallyId = rallyId;
 		this.memberId = memberId;
 		this.participationDate = participationDate;
 		this.isAccepted = isAccepted;
 	}
 
-	public int getRallyMateId() {
-		return rallyMateId;
+	public long getId() {
+		return id;
 	}
 
-	public void setRallyMateId(int rallyMateId) {
-		this.rallyMateId = rallyMateId;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public int getRallyId() {
+	public long getRallyId() {
 		return rallyId;
 	}
 
-	public void setRallyId(int rallyId) {
+	public void setRallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 
@@ -63,11 +64,11 @@ public class RallyMateDTO {
 	@Override
 	public String toString() {
 		return "RallyMateDTO{" +
-				"rallyMateId=" + rallyMateId +
-				", rallyId=" + rallyId +
-				", memberId=" + memberId +
-				", participationDate=" + participationDate +
-				", isAccepted='" + isAccepted + '\'' +
-				'}';
+			"id=" + id +
+			", rallyId=" + rallyId +
+			", memberId=" + memberId +
+			", participationDate=" + participationDate +
+			", isAccepted='" + isAccepted + '\'' +
+			'}';
 	}
 }

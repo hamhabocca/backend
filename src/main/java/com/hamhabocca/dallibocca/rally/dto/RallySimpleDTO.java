@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class RallySimpleDTO {
 
-	private int rallyId;
+	private long rallyId;
 	private String rallyStatus;
 	private String rallyName;
 	private java.util.Date rallyDate;
@@ -13,7 +13,7 @@ public class RallySimpleDTO {
 
 	public RallySimpleDTO() {}
 
-	public RallySimpleDTO(int rallyId, String rallyStatus, String rallyName, Date rallyDate, String rallyStartLocation, Date rallyWriteDate) {
+	public RallySimpleDTO(long rallyId, String rallyStatus, String rallyName, Date rallyDate, String rallyStartLocation, Date rallyWriteDate) {
 		this.rallyId = rallyId;
 		this.rallyStatus = rallyStatus;
 		this.rallyName = rallyName;
@@ -22,11 +22,11 @@ public class RallySimpleDTO {
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
-	public int getrallyId() {
+	public long getrallyId() {
 		return rallyId;
 	}
 
-	public void setrallyId(int rallyId) {
+	public void setrallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 

@@ -41,7 +41,7 @@ public class RallyService {
     }
 
     /* 랠리글 상세 조회 */
-    public RallyDTO findRallyById(int rallyId) {
+    public RallyDTO findRallyById(long rallyId) {
 
         Rally foundRally = rallyRepository.findById(rallyId).get();
 
@@ -50,7 +50,7 @@ public class RallyService {
 
     /* 랠리글 추가 */
     @Transactional
-    public int postNewRally(RallyDTO newRally) {
+    public long postNewRally(RallyDTO newRally) {
 
         /* 기본값 설정 */
         newRally.setRallyStatus("모집중");
@@ -68,7 +68,7 @@ public class RallyService {
 
     /* 랠리글 수정 */
     @Transactional
-    public void modifyRally(RallyDTO modifyRally, int rallyId) {
+    public void modifyRally(RallyDTO modifyRally, long rallyId) {
 
         /* 변경할 기존 랠리 가져오기 */
         Rally foundRally = rallyRepository.findById(rallyId).get();
@@ -79,7 +79,7 @@ public class RallyService {
         } else {
             foundRally.setRallyName(modifyRally.getRallyName());
             foundRally.setRallyDetail(modifyRally.getRallyDetail());
-            foundRally.setRallyStartLocation(modifyRally.getRallyStartLocation());
+            foundRally.setRallyLocation(modifyRally.getRallyStartLocation());
             foundRally.setRallyEndLocation(modifyRally.getRallyEndLocation());
             foundRally.setRallyType(modifyRally.getRallyType());
             foundRally.setRallyMaximum(modifyRally.getRallyMaximum());
@@ -91,20 +91,21 @@ public class RallyService {
 
     /* 취소상태인 랠리글 삭제 */
     @Transactional
-    public void removeRally(int rallyId) {
+    public void removeRally(long rallyId) {
 
         Rally foundRally = rallyRepository.findById(rallyId).get();
 
         if (!(foundRally.getRallyStatus().equals("취소됨"))) {
             throw new RallyException("취소 상태인 랠리가 아닙니다. 삭제할 수 없습니다.");
         }
+
         rallyRepository.deleteById(rallyId);
     }
 
     /* 본인이 모집한 랠리 찾기 */
-    public List<RallyDTO> findRecruitRallyList(int currentMemberId) {
+    public List<RallyDTO> findRecruitRallyList(long currentMemberId) {
 
-        List<Rally> rallyList = rallyRepository.findAllByRallyMasterId(currentMemberId);
+        List<Rally> rallyList = rallyRepository.findAllByMasterId(currentMemberId);
 
         return rallyList.stream().map(rally -> modelMapper.map(rally, RallyDTO.class)).collect(
             Collectors.toList());

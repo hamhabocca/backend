@@ -5,13 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RallyMateRepository extends JpaRepository<RallyMate, Integer> {
+public interface RallyMateRepository extends JpaRepository<RallyMate, Long> {
 
-    List<RallyMate> findAllByRallyId(int rallyId);
+    List<RallyMate> findAllByRallyId(long rallyId);
 
-    RallyMate findByRallyIdAndMemberId(int rallyId, int memberId);
+    RallyMate findByRallyIdAndMemberId(long rallyId, long memberId);
 
-    List<RallyMate> findAllByMemberId(int currentMemberId);
+    List<RallyMate> findAllByMemberId(long currentMemberId);
 
-    boolean existsByRallyIdAndMemberId(int rallyId, int memberId);
+    boolean existsByRallyIdAndMemberId(long rallyId, long memberId);
 }

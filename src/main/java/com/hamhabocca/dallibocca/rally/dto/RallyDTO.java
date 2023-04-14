@@ -4,8 +4,8 @@ import java.util.Date;
 
 public class RallyDTO {
 
-	private int rallyId;
-	private int rallyMasterId;   //memberId
+	private long rallyId;
+	private long masterId;   //memberId
 	private String rallyStatus;
 	private String rallyName;
 	private java.util.Date rallyWriteDate;
@@ -21,9 +21,12 @@ public class RallyDTO {
 	public RallyDTO() {
 	}
 
-	public RallyDTO(int rallyId, int rallyMasterId, String rallyStatus, String rallyName, Date rallyWriteDate, String rallyType, Date rallyDate, String rallyStartLocation, String rallyEndLocation, int rallyDistance, int rallyMinimum, int rallyMaximum, String rallyDetail) {
+	public RallyDTO(long rallyId, long masterId, String rallyStatus, String rallyName,
+		Date rallyWriteDate, String rallyType, Date rallyDate, String rallyStartLocation,
+		String rallyEndLocation, int rallyDistance, int rallyMinimum, int rallyMaximum,
+		String rallyDetail) {
 		this.rallyId = rallyId;
-		this.rallyMasterId = rallyMasterId;
+		this.masterId = masterId;
 		this.rallyStatus = rallyStatus;
 		this.rallyName = rallyName;
 		this.rallyWriteDate = rallyWriteDate;
@@ -37,20 +40,20 @@ public class RallyDTO {
 		this.rallyDetail = rallyDetail;
 	}
 
-	public int getRallyId() {
+	public long getRallyId() {
 		return rallyId;
 	}
 
-	public void setRallyId(int rallyId) {
+	public void setRallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 
-	public int getRallyMasterId() {
-		return rallyMasterId;
+	public long getMasterId() {
+		return masterId;
 	}
 
-	public void setRallyMasterId(int rallyMasterId) {
-		this.rallyMasterId = rallyMasterId;
+	public void setMasterId(long masterId) {
+		this.masterId = masterId;
 	}
 
 	public String getRallyStatus() {
@@ -144,19 +147,19 @@ public class RallyDTO {
 	@Override
 	public String toString() {
 		return "RallyDTO{" +
-				"rallyId=" + rallyId +
-				", rallyMasterId=" + rallyMasterId +
-				", rallyStatus='" + rallyStatus + '\'' +
-				", rallyName='" + rallyName + '\'' +
-				", rallyWriteDate=" + rallyWriteDate +
-				", rallyType='" + rallyType + '\'' +
-				", rallyDate=" + rallyDate +
-				", rallyStartLocation='" + rallyStartLocation + '\'' +
-				", rallyEndLocation='" + rallyEndLocation + '\'' +
-				", rallyDistance=" + rallyDistance +
-				", rallyMinimum=" + rallyMinimum +
-				", rallyMaximum=" + rallyMaximum +
-				", rallyDetail='" + rallyDetail + '\'' +
-				'}';
+			"rallyId=" + rallyId +
+			", masterId=" + masterId +
+			", rallyStatus='" + rallyStatus + '\'' +
+			", rallyName='" + rallyName + '\'' +
+			", rallyWriteDate=" + rallyWriteDate +
+			", rallyType='" + rallyType + '\'' +
+			", rallyDate=" + rallyDate +
+			", rallyStartLocation='" + rallyStartLocation + '\'' +
+			", rallyEndLocation='" + rallyEndLocation + '\'' +
+			", rallyDistance=" + rallyDistance +
+			", rallyMinimum=" + rallyMinimum +
+			", rallyMaximum=" + rallyMaximum +
+			", rallyDetail='" + rallyDetail + '\'' +
+			'}';
 	}
 }

@@ -25,10 +25,10 @@ public class Rally {
 			strategy = GenerationType.SEQUENCE,
 			generator = "rally_sequence_generator"
 	)
-	private int rallyId;
+	private long rallyId;
 
-	@Column(name = "rally_master_id", nullable = false)
-	private int rallyMasterId;   //memberId
+	@Column(name = "master_id", nullable = false)
+	private long masterId;   //memberId
 
 	@Column(name = "rally_status")
 	@ColumnDefault("'모집중'")
@@ -46,8 +46,8 @@ public class Rally {
 	@Column(name = "rally_date")
 	private java.util.Date rallyDate;
 
-	@Column(name = "rally_start_location")
-	private String rallyStartLocation;
+	@Column(name = "rally_location")
+	private String rallyLocation;
 
 	@Column(name = "rally_end_location")
 	private String rallyEndLocation;
@@ -66,16 +66,18 @@ public class Rally {
 
 	public Rally() {}
 
-	public Rally(int rallyId, int rallyMasterId, String rallyStatus, String rallyName, Date rallyWriteDate, String rallyType, Date rallyDate, String rallyStartLocation, String rallyEndLocation, int rallyDistance, int rallyMinimum, int rallyMaximum, String rallyDetail) {
-
+	public Rally(long rallyId, long masterId, String rallyStatus, String rallyName,
+		Date rallyWriteDate,
+		String rallyType, Date rallyDate, String rallyLocation, String rallyEndLocation,
+		int rallyDistance, int rallyMinimum, int rallyMaximum, String rallyDetail) {
 		this.rallyId = rallyId;
-		this.rallyMasterId = rallyMasterId;
+		this.masterId = masterId;
 		this.rallyStatus = rallyStatus;
 		this.rallyName = rallyName;
 		this.rallyWriteDate = rallyWriteDate;
 		this.rallyType = rallyType;
 		this.rallyDate = rallyDate;
-		this.rallyStartLocation = rallyStartLocation;
+		this.rallyLocation = rallyLocation;
 		this.rallyEndLocation = rallyEndLocation;
 		this.rallyDistance = rallyDistance;
 		this.rallyMinimum = rallyMinimum;
@@ -83,20 +85,20 @@ public class Rally {
 		this.rallyDetail = rallyDetail;
 	}
 
-	public int getRallyId() {
+	public long getRallyId() {
 		return rallyId;
 	}
 
-	public void setRallyId(int rallyId) {
+	public void setRallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 
-	public int getRallyMasterId() {
-		return rallyMasterId;
+	public long getMasterId() {
+		return masterId;
 	}
 
-	public void setRallyMasterId(int rallyMasterId) {
-		this.rallyMasterId = rallyMasterId;
+	public void setMasterId(long masterId) {
+		this.masterId = masterId;
 	}
 
 	public String getRallyStatus() {
@@ -139,12 +141,12 @@ public class Rally {
 		this.rallyDate = rallyDate;
 	}
 
-	public String getRallyStartLocation() {
-		return rallyStartLocation;
+	public String getRallyLocation() {
+		return rallyLocation;
 	}
 
-	public void setRallyStartLocation(String rallyStartLocation) {
-		this.rallyStartLocation = rallyStartLocation;
+	public void setRallyLocation(String rallyLocation) {
+		this.rallyLocation = rallyLocation;
 	}
 
 	public String getRallyEndLocation() {
@@ -190,19 +192,19 @@ public class Rally {
 	@Override
 	public String toString() {
 		return "Rally{" +
-				"rallyId=" + rallyId +
-				", rallyMasterId=" + rallyMasterId +
-				", rallyStatus='" + rallyStatus + '\'' +
-				", rallyName='" + rallyName + '\'' +
-				", rallyWriteDate=" + rallyWriteDate +
-				", rallyType='" + rallyType + '\'' +
-				", rallyDate=" + rallyDate +
-				", rallyStartLocation='" + rallyStartLocation + '\'' +
-				", rallyEndLocation='" + rallyEndLocation + '\'' +
-				", rallyDistance=" + rallyDistance +
-				", rallyMinimum=" + rallyMinimum +
-				", rallyMaximum=" + rallyMaximum +
-				", rallyDetail='" + rallyDetail + '\'' +
-				'}';
+			"rallyId=" + rallyId +
+			", masterId=" + masterId +
+			", rallyStatus='" + rallyStatus + '\'' +
+			", rallyName='" + rallyName + '\'' +
+			", rallyWriteDate=" + rallyWriteDate +
+			", rallyType='" + rallyType + '\'' +
+			", rallyDate=" + rallyDate +
+			", rallyLocation='" + rallyLocation + '\'' +
+			", rallyEndLocation='" + rallyEndLocation + '\'' +
+			", rallyDistance=" + rallyDistance +
+			", rallyMinimum=" + rallyMinimum +
+			", rallyMaximum=" + rallyMaximum +
+			", rallyDetail='" + rallyDetail + '\'' +
+			'}';
 	}
 }

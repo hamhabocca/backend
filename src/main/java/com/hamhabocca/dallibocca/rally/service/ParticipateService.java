@@ -27,7 +27,7 @@ public class ParticipateService {
     }
 
     /* 현재 랠리의 신청 현황 조회 */
-    public List<RallyMateDTO> findRallyMateList(int rallyId) {
+    public List<RallyMateDTO> findRallyMateList(long rallyId) {
 
         List<RallyMate> rallyMates = rallyMateRepository.findAllByRallyId(rallyId);
 
@@ -37,16 +37,17 @@ public class ParticipateService {
     }
 
     /* 현재 랠리 신청 */
-    public void participateByMate(int rallyId, @RequestHeader("memberId") int memberId) {
+    public void participateByMate(long rallyId, @RequestHeader("memberId") long memberId) {
 
+        /* 랠리 신청 중복 체크 */
         boolean checkDuplicate =  rallyMateRepository.existsByRallyIdAndMemberId(rallyId, memberId);
 
         if (checkDuplicate) {
             throw new RallyException("이미 참가 신청한 회원입니다.");
         }
 
+        /* 기본값 설정 뒤 보내기 */
         RallyMateDTO rallyMate = new RallyMateDTO();
-
         rallyMate.setRallyId(rallyId);
         rallyMate.setMemberId(memberId);
         rallyMate.setIsAccepted("N");
@@ -57,7 +58,7 @@ public class ParticipateService {
 
     /* 현재 랠리 신청 취소 */
     @Transactional
-    public void cancelParticipateByMate(int rallyId, int currentMemberId) {
+    public void cancelParticipateByMate(long rallyId, long currentMemberId) {
 
         RallyMate found = rallyMateRepository.findByRallyIdAndMemberId(rallyId, currentMemberId);
 
@@ -66,7 +67,7 @@ public class ParticipateService {
 
     /* 현재 랠리 신청 승인 */
     @Transactional
-    public void allowParticipate(int rallyId, int memberId) {
+    public void allowParticipate(long rallyId, long memberId) {
 
         RallyMate foundRallyMate = rallyMateRepository.findByRallyIdAndMemberId(rallyId, memberId);
 
@@ -74,7 +75,7 @@ public class ParticipateService {
     }
 
     /* 본인이 신청한 랠리 신청 기록 */
-    public List<RallyMateDTO> findParticipateRallyList(int currentMemberId) {
+    public List<RallyMateDTO> findParticipateRallyList(long currentMemberId) {
 
         List<RallyMate> rallyMates = rallyMateRepository.findAllByMemberId(currentMemberId);
 

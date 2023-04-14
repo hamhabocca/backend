@@ -24,14 +24,14 @@ public class RallyMate {
 			strategy = GenerationType.SEQUENCE,
 			generator = "rallymate_sequence_generator"
 	)
-	@Column(name = "rally_mate_id")
-	private int rallyMateId;
+	@Column(name = "id")
+	private long id;
 
 	@Column(name = "rally_id")
-	private int rallyId;
+	private long rallyId;
 
 	@Column(name = "member_id")
-	private int memberId;
+	private long memberId;
 
 	@Column(name = "participation_date", nullable = false)
 	private java.util.Date participationDate;
@@ -42,35 +42,35 @@ public class RallyMate {
 
 	public RallyMate() {}
 
-	public RallyMate(int rallyMateId, int rallyId, int memberId, Date participationDate, String isAccepted) {
-		this.rallyMateId = rallyMateId;
+	public RallyMate(long id, long rallyId, long memberId, Date participationDate, String isAccepted) {
+		this.id = id;
 		this.rallyId = rallyId;
 		this.memberId = memberId;
 		this.participationDate = participationDate;
 		this.isAccepted = isAccepted;
 	}
 
-	public int getRallyMateId() {
-		return rallyMateId;
+	public long getid() {
+		return id;
 	}
 
-	public void setRallyMateId(int rallyMateId) {
-		this.rallyMateId = rallyMateId;
+	public void setid(long id) {
+		this.id = id;
 	}
 
-	public int getRallyId() {
+	public long getRallyId() {
 		return rallyId;
 	}
 
-	public void setRallyId(int rallyId) {
+	public void setRallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 
@@ -93,7 +93,7 @@ public class RallyMate {
 	@Override
 	public String toString() {
 		return "RallyMate{" +
-				"rallyMateId=" + rallyMateId +
+				"id=" + id +
 				", rallyId=" + rallyId +
 				", memberId=" + memberId +
 				", participationDate=" + participationDate +

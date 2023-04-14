@@ -37,7 +37,7 @@ public class ParticipateController {
         @ApiResponse(code = 400, message = "[Bad Request]")
     })
     @GetMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<ResponseMessage> findRallyMateListByRallyId(@PathVariable int rallyId) {
+    public ResponseEntity<ResponseMessage> findRallyMateListByRallyId(@PathVariable long rallyId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -58,8 +58,8 @@ public class ParticipateController {
         @ApiResponse(code = 403, message = "[Forbidden]")
     })
     @PostMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<?> participateRallyByMate(@PathVariable int rallyId,
-        @RequestHeader(value = "memberId") int memberId) {
+    public ResponseEntity<?> participateRallyByMate(@PathVariable long rallyId,
+        @RequestHeader(value = "memberId") long memberId) {
 
         participateService.participateByMate(rallyId, memberId);
 
@@ -74,8 +74,8 @@ public class ParticipateController {
         @ApiResponse(code = 400, message = "[Bad Request]")
     })
     @DeleteMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<?> cancelParticipateRally(@PathVariable int rallyId,
-        @RequestHeader(value = "currentMemberId") int currentMemberId) {
+    public ResponseEntity<?> cancelParticipateRally(@PathVariable long rallyId,
+        @RequestHeader(value = "currentMemberId") long currentMemberId) {
 
         participateService.cancelParticipateByMate(rallyId, currentMemberId);
 
@@ -88,12 +88,12 @@ public class ParticipateController {
         @ApiResponse(code = 400, message = "[Bad Request]")
     })
     @PutMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<?> allowParticipateByMaster(@PathVariable int rallyId, int memberId) {
+    public ResponseEntity<?> allowParticipateByMaster(@PathVariable long rallyId, long mateId) {
 
-        participateService.allowParticipate(rallyId, memberId);
+        participateService.allowParticipate(rallyId, mateId);
 
         return ResponseEntity.created(
-            URI.create("/api/v1/rallies/" + rallyId + "/mate-list/" + memberId)).build();
+            URI.create("/api/v1/rallies/" + rallyId + "/mate-list/" + mateId)).build();
     }
 
 }

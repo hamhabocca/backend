@@ -5,6 +5,7 @@ import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
+import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
 import com.hamhabocca.dallibocca.rally.service.RallyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -91,7 +92,7 @@ public class RallyController {
     @PostMapping("/rallies")
     public ResponseEntity<?> postRally(@RequestBody RallyDTO newRally) {
 
-        int currentId = rallyService.postNewRally(newRally);
+        long currentId = rallyService.postNewRally(newRally);
 
         return ResponseEntity.created(URI.create("/api/v1/rallies/" + currentId)).build();
     }
@@ -122,20 +123,6 @@ public class RallyController {
         rallyService.removeRally(rallyId);
 
         return ResponseEntity.noContent().build();
-    }
-
-    public ResponseEntity<ResponseMessage> findRalliesByFilter() {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-
-//        List<RallySimpleDTO> foundRally = rallyService.findRallyBy(rallyId);
-
-        Map<String, Object> responseMap = new HashMap<>();
-//        responseMap.put("rally", foundRally);
-
-        return ResponseEntity.ok().headers(headers)
-            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
     }
 
 }
