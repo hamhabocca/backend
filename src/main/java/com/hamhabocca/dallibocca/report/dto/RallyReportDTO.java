@@ -1,55 +1,22 @@
-package com.hamhabocca.dallibocca.report.entity;
+package com.hamhabocca.dallibocca.report.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import java.util.Date;
 
-@Entity(name = "RallyReport")
-@Table(name = "rallyReport")
-@SequenceGenerator(
-	name = "report_sequence_generator",
-	sequenceName = "sequence_report_id",
-	initialValue = 1,
-	allocationSize = 50
-)
-public class RallyReport {
+public class RallyReportDTO {
 
-	@Id
-	@GeneratedValue(
-		strategy = GenerationType.SEQUENCE,
-		generator = "report_sequence_generator"
-	)
-	@Column(name = "report_id")
 	private long reportId;
-
-	@Column(name = "report_writer")
 	private String reportWriter;
-
-	@Column(name = "report_target")
 	private String reportTarget;
-
-	@Column(name = "report_reason")
 	private String reportReason;
-
-	@Column(name = "report_reason_detail")
 	private String reportReasonDetail;
-
-	@Column(name = "report_date")
 	private Date reportDate;
-
-	@Column(name = "is_processed")
 	private String isProcessed;
 
-
-	public RallyReport() {
+	public RallyReportDTO() {
 	}
 
-	public RallyReport(long reportId, String reportWriter, String reportTarget, String reportReason,
+	public RallyReportDTO(long reportId, String reportWriter, String reportTarget,
+		String reportReason,
 		String reportReasonDetail, Date reportDate, String isProcessed) {
 		this.reportId = reportId;
 		this.reportWriter = reportWriter;
@@ -118,7 +85,7 @@ public class RallyReport {
 
 	@Override
 	public String toString() {
-		return "RallyReport{" +
+		return "RallyReportDTO{" +
 			"reportId=" + reportId +
 			", reportWriter='" + reportWriter + '\'' +
 			", reportTarget='" + reportTarget + '\'' +
@@ -129,4 +96,3 @@ public class RallyReport {
 			'}';
 	}
 }
-

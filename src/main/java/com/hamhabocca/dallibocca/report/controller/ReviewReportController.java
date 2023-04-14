@@ -1,6 +1,5 @@
 package com.hamhabocca.dallibocca.report.controller;
 
-
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 
 import com.hamhabocca.dallibocca.report.dto.ReviewReportDTO;
@@ -38,10 +37,9 @@ public class ReviewReportController {
         this.reviewReportService = reviewReportService;
     }
 
-
     /*리뷰 신고*/
     @ApiOperation(value = "테스트용 리뷰 신고 추가")
-    @PostMapping(value = "regist")
+    @PostMapping( "/regist")
     @ApiResponses({
         @ApiResponse(code = 201, message = "신고데이터 생성 성공"),
         @ApiResponse(code = 400, message = "잘못된 파라미터")
@@ -52,10 +50,9 @@ public class ReviewReportController {
         reviewReportService.registNewReviewReport(newReviewReport);
 
         return ResponseEntity
-            .created(URI.create("/api/v1/reviewReposts" + newReviewReport.getReportId()))
+            .created(URI.create("/api/v1/regist" + newReviewReport.getReportId()))
             .build();
     }
-
 
     /*리뷰 신고 조회*/
     @ApiOperation(value = "리뷰 신고 전체 조회")
@@ -75,9 +72,7 @@ public class ReviewReportController {
             headers,
             HttpStatus.OK
         );
-
     }
-
 
     /*특정 리뷰 조회*/
     @ApiOperation("리뷰 신고 코드로 특정 리뷰 조회")
@@ -100,7 +95,4 @@ public class ReviewReportController {
             .headers(headers)
             .body(new ResponseMessage(200, "조회성공", responseMap));
     }
-
-
-
 }
