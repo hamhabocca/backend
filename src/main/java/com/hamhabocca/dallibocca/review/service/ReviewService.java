@@ -5,6 +5,8 @@ import com.hamhabocca.dallibocca.review.repository.ReviewRepository;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +34,7 @@ public class ReviewService {
 
 
     /*전체 조회*/
-    public List<ReviewDTO> findAllReview() {
+    public List<ReviewDTO> findAllReview(Pageable pageable) {
         List<Review> reviews = reviewRepository.findAll();
         return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class)).collect(Collectors.toList());
     }
@@ -81,7 +83,5 @@ public class ReviewService {
 
         return reviewDTO;
     }
-
-
 
 }

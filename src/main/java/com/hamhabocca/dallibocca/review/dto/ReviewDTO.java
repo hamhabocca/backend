@@ -59,13 +59,7 @@ public class ReviewDTO {
         this.reviewDetail = reviewDetail;
     }
 
-    public Long getRallyId() {
-        return rallyId;
-    }
 
-    public void setRallyId(Long rallyId) {
-        this.rallyId = rallyId;
-    }
 
     public Date getReviewWriteDate() {
         return reviewWriteDate;

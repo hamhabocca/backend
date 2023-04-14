@@ -2,12 +2,17 @@ package com.hamhabocca.dallibocca.review.controller;
 
 
 import com.hamhabocca.dallibocca.common.ResponseMessage;
+import com.hamhabocca.dallibocca.common.page.Pagination;
+import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import com.hamhabocca.dallibocca.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,14 +51,19 @@ public class ReviewController {
 
     @ApiOperation(value = "모든 회원 목록 조회")
     @GetMapping("/reviews")
-    public ResponseEntity<ResponseMessage> findAllReview() {
+    public ResponseEntity<ResponseMessage> findAllReview(@PageableDefault(size = 15) Pageable pageable) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        List<ReviewDTO> reviews = reviewService.findAllReview();
+
+        //Page<RallySimpleDTO> reviewList = reviewService.findAllReview(pageable);
+       // PagingButtonInfo paging = Pagination.getPagingButtonInfo(reviewList);
+
+
+        List<ReviewDTO> reviews = reviewService.findAllReview(pageable);
         responseMap.put("reviews", reviews);
 
         return new ResponseEntity<>(
@@ -70,7 +80,7 @@ public class ReviewController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<ReviewDTO> reviews = reviewService.findAllReview();
+        List<ReviewDTO> reviews = reviewService.findAllReview(Pageable.unpaged());
 
         ReviewDTO foundReview = reviews.stream().filter(review -> review.getReviewId() == reviewId).collect(Collectors.toList()).get(0);
 
