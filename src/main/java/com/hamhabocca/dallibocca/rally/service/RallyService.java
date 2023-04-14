@@ -2,6 +2,7 @@ package com.hamhabocca.dallibocca.rally.service;
 
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
+import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
 import com.hamhabocca.dallibocca.rally.entity.Rally;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
@@ -111,4 +112,15 @@ public class RallyService {
             Collectors.toList());
     }
 
+    public Page<RallySimpleDTO> findRallyListBySearch(Pageable pageable, SearchFilter searchFilter) {
+
+        //offset, limit, sort 순서
+        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
+            pageable.getPageSize(),
+            Sort.by("rallyId"));
+
+        // 마이바티스 혼용하기
+
+        return null;
+    }
 }

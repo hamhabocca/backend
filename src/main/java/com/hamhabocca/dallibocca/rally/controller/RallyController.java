@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,7 +43,7 @@ public class RallyController {
         @ApiResponse(code = 404, message = "[Not Found]")
     })
     @GetMapping("/rallies")
-    public ResponseEntity<ResponseMessage> findRallyList(@PageableDefault Pageable pageable) {
+    public ResponseEntity<ResponseMessage> findRallyList(@PageableDefault(size = 15) Pageable pageable) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -123,6 +122,29 @@ public class RallyController {
         rallyService.removeRally(rallyId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ApiOperation(value = "조건에 따른 랠리 목록 조회 API")
+    @ApiResponses({
+        @ApiResponse(code = 204, message = "[No Content]"),
+        @ApiResponse(code = 400, message = "[Bad Request]")
+    })
+    @GetMapping("/rallies/search")
+    public ResponseEntity<ResponseMessage> findRalliesByFilter(@PageableDefault(size = 15) Pageable pageable, @RequestBody SearchFilter searchFilter) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        Page<RallySimpleDTO> searchRallies = rallyService.findRallyListBySearch(pageable, searchFilter);
+
+        PagingButtonInfo paging = Pagination.getPagingButtonInfo(searchRallies);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("searchRallies", searchRallies);
+        responseMap.put("paging", paging);
+
+        return ResponseEntity.ok().headers(headers)
+            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
     }
 
 }
