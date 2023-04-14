@@ -12,20 +12,20 @@ import java.util.Date;
 @Entity(name = "RallyReport")
 @Table(name = "rallyReport")
 @SequenceGenerator(
-        name = "report_sequence_generator",
-        sequenceName = "sequence_report_id",
-        initialValue = 1,
-        allocationSize = 50
+	name = "report_sequence_generator",
+	sequenceName = "sequence_report_id",
+	initialValue = 1,
+	allocationSize = 50
 )
 public class RallyReport {
 
 	@Id
 	@GeneratedValue(
-			strategy = GenerationType.SEQUENCE,
-			generator = "report_sequence_generator"
+		strategy = GenerationType.SEQUENCE,
+		generator = "report_sequence_generator"
 	)
 	@Column(name = "report_id")
-	private int reportId;
+	private long reportId;
 
 	@Column(name = "report_writer")
 	private String reportWriter;
@@ -49,7 +49,7 @@ public class RallyReport {
 	public RallyReport() {
 	}
 
-	public RallyReport(int reportId, String reportWriter, String reportTarget, String reportReason,
+	public RallyReport(long reportId, String reportWriter, String reportTarget, String reportReason,
 		String reportReasonDetail, Date reportDate, String isProcessed) {
 		this.reportId = reportId;
 		this.reportWriter = reportWriter;
@@ -60,11 +60,11 @@ public class RallyReport {
 		this.isProcessed = isProcessed;
 	}
 
-	public int getReportId() {
+	public long getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(int reportId) {
+	public void setReportId(long reportId) {
 		this.reportId = reportId;
 	}
 

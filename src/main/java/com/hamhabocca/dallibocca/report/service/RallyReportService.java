@@ -28,7 +28,7 @@ public class RallyReportService {
 	}
 
 	@Transactional
-	public void modifyRallyReport(int reportId, String type) {
+	public void modifyRallyReport(long reportId, String type) {
 
 		RallyReport foundRallyReport = rallyReportRepository.findById(reportId)
 			.get();

@@ -39,7 +39,7 @@ public class RallyReportController {
 		rallyReportService.registNewRallyReport(newRallyReport);
 
 		return ResponseEntity
-			.created(URI.create("/swagger/reports" + newRallyReport.getReportId()))
+			.created(URI.create("/api/v1/reports" + newRallyReport.getReportId()))
 			.build();
 	}
 
@@ -49,12 +49,12 @@ public class RallyReportController {
 		@ApiResponse(code = 401, message = "[Unauthorized]")
 	})
 	@PutMapping("/reports/{reportId}")
-	public ResponseEntity<?> modifyRallyReport(@PathVariable int reportId, String type) {
+	public ResponseEntity<?> modifyRallyReport(@PathVariable long reportId, String type) {
 
 		rallyReportService.modifyRallyReport(reportId, type);
 
 		return ResponseEntity
-			.created(URI.create("/swagger/reports" + reportId))
+			.created(URI.create("/api/v1/reports" + reportId))
 			.build();
 	}
 

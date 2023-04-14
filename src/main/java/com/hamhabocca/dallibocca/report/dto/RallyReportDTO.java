@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class RallyReportDTO {
 
-	private int reportId;
+	private long reportId;
 	private String reportWriter;
 	private String reportTarget;
 	private String reportReason;
@@ -15,8 +15,9 @@ public class RallyReportDTO {
 	public RallyReportDTO() {
 	}
 
-	public RallyReportDTO(int reportId, String reportWriter, String reportTarget,
-		String reportReason, String reportReasonDetail, Date reportDate, String isProcessed) {
+	public RallyReportDTO(long reportId, String reportWriter, String reportTarget,
+		String reportReason,
+		String reportReasonDetail, Date reportDate, String isProcessed) {
 		this.reportId = reportId;
 		this.reportWriter = reportWriter;
 		this.reportTarget = reportTarget;
@@ -26,11 +27,11 @@ public class RallyReportDTO {
 		this.isProcessed = isProcessed;
 	}
 
-	public int getReportId() {
+	public long getReportId() {
 		return reportId;
 	}
 
-	public void setReportId(int reportId) {
+	public void setReportId(long reportId) {
 		this.reportId = reportId;
 	}
 
