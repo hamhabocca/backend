@@ -4,7 +4,7 @@ import java.net.URL;
 
 public class MemberSimpleDTO {
 
-    private int memberId;
+    private long memberId;
 
     private String nickname;
 
@@ -12,22 +12,22 @@ public class MemberSimpleDTO {
 
     public MemberSimpleDTO() {}
 
-    public MemberSimpleDTO(int memberId, String nickname) {
+    public MemberSimpleDTO(long memberId, String nickname) {
         this.memberId = memberId;
         this.nickname = nickname;
     }
 
-    public MemberSimpleDTO(int memberId, String nickname, String linkToMyPage) {
+    public MemberSimpleDTO(long memberId, String nickname, String linkToMyPage) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.linkToMyPage = linkToMyPage;
     }
 
-    public int getMemberId() {
+    public long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(long memberId) {
         this.memberId = memberId;
     }
 

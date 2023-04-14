@@ -10,7 +10,7 @@ import java.sql.Date;
 
 public class MemberDTO {
 
-	private int memberId;
+	private long memberId;
 
 	private String nickname;
 
@@ -18,7 +18,13 @@ public class MemberDTO {
 
 	private String socialLogin;
 
+	private long socialId;
+
 	private String loginToken;
+
+	private String email;
+
+	private String gender;
 
 	private String isDeleted;
 
@@ -36,12 +42,19 @@ public class MemberDTO {
 
 	public MemberDTO() {}
 
-	public MemberDTO(int memberId, String nickname, int reportCount, String socialLogin, String loginToken, String isDeleted, Date signUpDate, Date deletedDate, int level, int mileage, String preferredLocation, String preferredType) {
+	public MemberDTO(long memberId, String nickname, int reportCount, String socialLogin,
+		long socialId,
+		String loginToken, String email, String gender, String isDeleted, Date signUpDate, Date deletedDate,
+		int level,
+		int mileage, String preferredLocation, String preferredType) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.reportCount = reportCount;
 		this.socialLogin = socialLogin;
+		this.socialId = socialId;
 		this.loginToken = loginToken;
+		this.email = email;
+		this.gender = gender;
 		this.isDeleted = isDeleted;
 		this.signUpDate = signUpDate;
 		this.deletedDate = deletedDate;
@@ -51,11 +64,11 @@ public class MemberDTO {
 		this.preferredType = preferredType;
 	}
 
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 
@@ -83,12 +96,28 @@ public class MemberDTO {
 		this.socialLogin = socialLogin;
 	}
 
+	public long getSocialId() {
+		return socialId;
+	}
+
+	public void setSocialId(long socialId) {
+		this.socialId = socialId;
+	}
+
 	public String getLoginToken() {
 		return loginToken;
 	}
 
 	public void setLoginToken(String loginToken) {
 		this.loginToken = loginToken;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getIsDeleted() {
@@ -147,21 +176,32 @@ public class MemberDTO {
 		this.preferredType = preferredType;
 	}
 
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberDTO{" +
-				"memberId=" + memberId +
-				", nickname='" + nickname + '\'' +
-				", reportCount=" + reportCount +
-				", socialLogin='" + socialLogin + '\'' +
-				", loginToken='" + loginToken + '\'' +
-				", isDeleted='" + isDeleted + '\'' +
-				", signUpDate=" + signUpDate +
-				", deletedDate=" + deletedDate +
-				", level=" + level +
-				", mileage=" + mileage +
-				", preferredLocation='" + preferredLocation + '\'' +
-				", preferredType='" + preferredType + '\'' +
-				'}';
+			"memberId=" + memberId +
+			", nickname='" + nickname + '\'' +
+			", reportCount=" + reportCount +
+			", socialLogin='" + socialLogin + '\'' +
+			", socialId=" + socialId +
+			", loginToken='" + loginToken + '\'' +
+			", email='" + email + '\'' +
+			", gender='" + gender + '\'' +
+			", isDeleted='" + isDeleted + '\'' +
+			", signUpDate=" + signUpDate +
+			", deletedDate=" + deletedDate +
+			", level=" + level +
+			", mileage=" + mileage +
+			", preferredLocation='" + preferredLocation + '\'' +
+			", preferredType='" + preferredType + '\'' +
+			'}';
 	}
 }

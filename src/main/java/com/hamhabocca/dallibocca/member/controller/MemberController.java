@@ -37,27 +37,27 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @ApiOperation(value = "테스트용 멤버 추가")
-    @PostMapping("/members/regist-for-test")
-    public ResponseEntity<ResponseMessage> registUserForTesting(@RequestBody SignUpDTO newMemberInfo) {
+    @ApiOperation(value = "최초 소셜 로그인 시 회원 정보 등록")
+    @PostMapping("/members")
+    public ResponseEntity<ResponseMessage> registNewUser(@RequestBody SignUpDTO newMemberInfo) {
 
         MemberDTO newMember = new MemberDTO();
 
         newMember.setNickname(newMemberInfo.getNickname());
         newMember.setSocialLogin(newMemberInfo.getSocialLogin());
-        newMember.setLoginToken(newMemberInfo.getLoginToken());
+        newMember.setSocialId(newMemberInfo.getSocialId());
         newMember.setSignUpDate(newMemberInfo.getSignUpDate());
 
-        memberService.registNewMemberTest(newMember);
+        long newMemberId = memberService.registNewUser(newMember);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/members/regist-for-test/"))
+                .created(URI.create("/api/v1/members/" + newMemberId))
                 .build();
     }
 
     @ApiOperation(value = "멤버 이름, 프사(예정), 마이페이지로 가는 링크만 id로 조회")
     @GetMapping("/members/simple/{memberId}")
-    public ResponseEntity<ResponseMessage> findMemberByIdSimple(@PathVariable int memberId) {
+    public ResponseEntity<ResponseMessage> findMemberByIdSimple(@PathVariable long memberId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -75,7 +75,7 @@ public class MemberController {
 
     @ApiOperation(value = "멤버 id로 조회")
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<ResponseMessage> findMemberById(@PathVariable int memberId) {
+    public ResponseEntity<ResponseMessage> findMemberById(@PathVariable long memberId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -118,9 +118,7 @@ public class MemberController {
             @ApiResponse(code = 400, message = "잘못된 파라미터....")
     })
     @PutMapping("/members/{memberId}")
-    public ResponseEntity<?> modifyMember(@RequestBody MemberDTO modifyInfo, @PathVariable int memberId, String type) {
-
-//        modifyInfo.setIsDeleted("Y");
+    public ResponseEntity<?> modifyMember(@RequestBody MemberDTO modifyInfo, @PathVariable long memberId, String type) {
 
         System.out.println("modifyInfo = " + modifyInfo);
 
@@ -161,4 +159,23 @@ public class MemberController {
                 .headers(headers)
                 .body(new ResponseMessage(200, "중복 검사 결과", responseMap));
     }
+
+    @ApiOperation(value = "멤버 소셜 id로 조회")
+    @GetMapping("/members/{socialLogin}/{socialId}")
+    public ResponseEntity<ResponseMessage> findBySocialId(@PathVariable String socialLogin, @PathVariable long socialId) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        MemberDTO foundMember = memberService.findBySocialId(socialLogin, socialId);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("member", foundMember);
+
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(new ResponseMessage(200, "찾았다~", responseMap));
+    }
+
 }

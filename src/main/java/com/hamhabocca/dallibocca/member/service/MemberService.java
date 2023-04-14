@@ -33,24 +33,25 @@ public class MemberService {
     }
 
     @Transactional
-    public void registNewMemberTest(MemberDTO newMember) {
+    public long registNewUser(MemberDTO newMember) {
 
-        System.out.println("newMember = " + newMember);
+        long lastId = memberRepository.findTopByOrderByMemberIdDesc();
 
+        newMember.setNickname("새로운회원" + (lastId + 1));
         newMember.setLevel(1);
         newMember.setIsDeleted("N");
 
-        memberRepository.save(modelMapper.map(newMember, Member.class));
+        return memberRepository.save(modelMapper.map(newMember, Member.class)).getMemberId();
     }
 
-    public MemberDTO findMemberById(int memberId) {
+    public MemberDTO findMemberById(long memberId) {
 
         Member member = memberRepository.findById(memberId).get();
 
         return modelMapper.map(member, MemberDTO.class);
     }
 
-    public MemberSimpleDTO findMemberByIdSimple(int memberId) {
+    public MemberSimpleDTO findMemberByIdSimple(long memberId) {
 
         MemberSimpleDTO member = memberRepository.findMemberByIdSimple(memberId);
 
@@ -61,18 +62,15 @@ public class MemberService {
 
     public /*List<MemberDTO>*/ Page<MemberDTO> findAllMembers(Pageable pageable) {
 
-//        List<Member> memberList = memberRepository.findAll();
-
         pageable = PageRequest.of(pageable.getPageNumber() <= 0? 0: pageable.getPageNumber() - 1,
                 pageable.getPageSize(),
                 Sort.by("memberId"));
 
-//        return memberList.stream().map(member -> modelMapper.map(member, MemberDTO.class)).collect(Collectors.toList());
         return memberRepository.findAll(pageable).map(member -> modelMapper.map(member, MemberDTO.class));
     }
 
     @Transactional
-    public void modifyMember(MemberDTO modifyInfo, int memberId, String type) {
+    public void modifyMember(MemberDTO modifyInfo, long memberId, String type) {
 
         Member foundMember = memberRepository.findById(memberId).get();
 
@@ -96,7 +94,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember(int memberId) {
+    public void deleteMember(long memberId) {
 
         Member foundMember = memberRepository.findById(memberId).get();
 
@@ -112,5 +110,12 @@ public class MemberService {
         } else {
             return true;
         }
+    }
+
+    public MemberDTO findBySocialId(String socialLogin, long socialId) {
+
+        Member foundMember = memberRepository.findBySocialId(socialLogin, socialId);
+
+        return modelMapper.map(foundMember, MemberDTO.class);
     }
 }

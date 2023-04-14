@@ -9,25 +9,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
-//@SqlResultSetMapping(
-//        name = "SimpleMapping",
-//        entities = {@EntityResult(entityClass = Member.class,
-//        fields = {
-//                @FieldResult(name = "memberId", column = "member_id"),
-//                @FieldResult(name = "nickname", column = "nickname")
-//        })}
-////        ,
-////        columns = {@ColumnResult(name = "member_id"),
-////                @ColumnResult(name = "nickname")}
-//)
-//@NamedNativeQueries(
-//        @NamedNativeQuery(
-//                name = "Member.findMemberByIdSimple",
-//                query = "SELECT A.member_id, A.nickname FROM member A WHERE A.member_id = :memberId",
-//                resultSetMapping = "SimpleMapping"
-//        )
-//)
-
 @Entity(name = "Member")
 @Table(name = "member")
 @SequenceGenerator(
@@ -44,7 +25,7 @@ public class Member {
             generator = "member_sequence_generator"
     )
     @Column(name = "member_id")
-    private int memberId;
+    private long memberId;
 
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
@@ -55,8 +36,17 @@ public class Member {
     @Column(name = "social_login", nullable = false)
     private String socialLogin;
 
+    @Column(name = "social_id", nullable = false)
+    private long socialId;
+
     @Column(name = "login_token", nullable = false)
     private String loginToken;
+
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "gender")
+    private String gender;
 
     @Column(name = "is_deleted", columnDefinition = "varchar (2)", nullable = false)
     private String isDeleted;
@@ -83,12 +73,19 @@ public class Member {
 
     public Member() {}
 
-    public Member(int memberId, String nickname, int reportCount, String socialLogin, String loginToken, String isDeleted, Date signUpDate, Date deletedDate, int level, int mileage, String preferredLocation, String preferredType) {
+    public Member(long memberId, String nickname, int reportCount, String socialLogin,
+        long socialId,
+        String loginToken, String email, String gender, String isDeleted, Date signUpDate, Date deletedDate,
+        int level,
+        int mileage, String preferredLocation, String preferredType) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.reportCount = reportCount;
         this.socialLogin = socialLogin;
+        this.socialId = socialId;
         this.loginToken = loginToken;
+        this.email = email;
+        this.gender = gender;
         this.isDeleted = isDeleted;
         this.signUpDate = signUpDate;
         this.deletedDate = deletedDate;
@@ -98,11 +95,11 @@ public class Member {
         this.preferredType = preferredType;
     }
 
-    public int getMemberId() {
+    public long getMemberId() {
         return memberId;
     }
 
-    public void setMemberId(int memberId) {
+    public void setMemberId(long memberId) {
         this.memberId = memberId;
     }
 
@@ -194,21 +191,49 @@ public class Member {
         this.preferredType = preferredType;
     }
 
+
+    public long getSocialId() {
+        return socialId;
+    }
+
+    public void setSocialId(long socialId) {
+        this.socialId = socialId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
-                "memberId=" + memberId +
-                ", nickname='" + nickname + '\'' +
-                ", reportCount=" + reportCount +
-                ", socialLogin='" + socialLogin + '\'' +
-                ", loginToken='" + loginToken + '\'' +
-                ", isDeleted='" + isDeleted + '\'' +
-                ", signUpDate=" + signUpDate +
-                ", deletedDate=" + deletedDate +
-                ", level=" + level +
-                ", mileage=" + mileage +
-                ", preferredLocation='" + preferredLocation + '\'' +
-                ", preferredType='" + preferredType + '\'' +
-                '}';
+            "memberId=" + memberId +
+            ", nickname='" + nickname + '\'' +
+            ", reportCount=" + reportCount +
+            ", socialLogin='" + socialLogin + '\'' +
+            ", socialId=" + socialId +
+            ", loginToken='" + loginToken + '\'' +
+            ", email='" + email + '\'' +
+            ", gender='" + gender + '\'' +
+            ", isDeleted='" + isDeleted + '\'' +
+            ", signUpDate=" + signUpDate +
+            ", deletedDate=" + deletedDate +
+            ", level=" + level +
+            ", mileage=" + mileage +
+            ", preferredLocation='" + preferredLocation + '\'' +
+            ", preferredType='" + preferredType + '\'' +
+            '}';
     }
 }

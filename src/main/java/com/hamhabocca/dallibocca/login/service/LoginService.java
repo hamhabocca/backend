@@ -2,9 +2,13 @@ package com.hamhabocca.dallibocca.login.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hamhabocca.dallibocca.jwt.TokenProvider;
+import com.hamhabocca.dallibocca.login.dto.AccessTokenDTO;
 import com.hamhabocca.dallibocca.login.dto.KakaoProfileDTO;
 import com.hamhabocca.dallibocca.login.dto.OauthTokenDTO;
 import com.hamhabocca.dallibocca.login.repository.LoginRepository;
+import com.hamhabocca.dallibocca.member.dto.MemberDTO;
+import com.hamhabocca.dallibocca.member.service.MemberService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -21,12 +25,17 @@ public class LoginService {
 
     private final LoginRepository loginRepository;
     private final ModelMapper modelMapper;
+	private final MemberService memberService;
+	private final TokenProvider tokenProvider;
 
     @Autowired
-    public LoginService(LoginRepository loginRepository, ModelMapper modelMapper) {
+    public LoginService(LoginRepository loginRepository, ModelMapper modelMapper,
+		MemberService memberService, TokenProvider tokenProvider) {
         this.loginRepository = loginRepository;
         this.modelMapper = modelMapper;
-    }
+		this.memberService = memberService;
+		this.tokenProvider = tokenProvider;
+	}
 
 	public OauthTokenDTO getAccessToken(String code) {
 
@@ -64,10 +73,9 @@ public class LoginService {
         }
 
         return oauthToken;
-//		return null;
 	}
 
-	public KakaoProfileDTO findProfile(String accessToken) {
+	public KakaoProfileDTO findKakaoProfile(String accessToken) {
 
 		RestTemplate rt = new RestTemplate();
 
@@ -99,4 +107,33 @@ public class LoginService {
 
 		return kakaoProfileDTO;
 	}
+
+	public AccessTokenDTO getJwtToken(String accessToken) {
+
+		KakaoProfileDTO kakaoProfileDTO = findKakaoProfile(accessToken);
+
+		MemberDTO foundmember = new MemberDTO();
+
+		/* 해당 유저의 가입 이력이 없을 경우 */
+		if(memberService.findBySocialId("KAKAO", kakaoProfileDTO.getId()) == null) {
+
+			MemberDTO newMember = new MemberDTO();
+
+			newMember.setSocialLogin("KAKAO");
+			newMember.setSocialId(kakaoProfileDTO.getId());
+			newMember.setEmail(kakaoProfileDTO.getKakao_account().getEmail());
+
+			if(kakaoProfileDTO.getKakao_account().getGender() != null) {
+				newMember.setGender(kakaoProfileDTO.getKakao_account().getGender());
+			}
+
+			memberService.registNewUser(newMember);
+		}
+
+		/* 소셜 아이디로 멤버가 있는지 조회해 가져옴 */
+		foundmember = memberService.findBySocialId("KAKAO", kakaoProfileDTO.getId());
+
+		return tokenProvider.generateMemberTokenDTO(foundmember);
+	}
+
 }

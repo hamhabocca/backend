@@ -8,16 +8,16 @@ public class SignUpDTO {
 
     private String socialLogin;
 
-    private String loginToken;
+    private long socialId;
 
     private java.sql.Date signUpDate;
 
     public SignUpDTO() {};
 
-    public SignUpDTO(String nickname, String socialLogin, String loginToken, Date signUpDate) {
+    public SignUpDTO(String nickname, String socialLogin, long socialId, Date signUpDate) {
         this.nickname = nickname;
         this.socialLogin = socialLogin;
-        this.loginToken = loginToken;
+        this.socialId = socialId;
         this.signUpDate = signUpDate;
     }
 
@@ -37,12 +37,12 @@ public class SignUpDTO {
         this.socialLogin = socialLogin;
     }
 
-    public String getLoginToken() {
-        return loginToken;
+    public long getSocialId() {
+        return socialId;
     }
 
-    public void setLoginToken(String loginToken) {
-        this.loginToken = loginToken;
+    public void setSocialId(long socialId) {
+        this.socialId = socialId;
     }
 
     public Date getSignUpDate() {
@@ -56,10 +56,10 @@ public class SignUpDTO {
     @Override
     public String toString() {
         return "SignUpDTO{" +
-                "nickname='" + nickname + '\'' +
-                ", socialLogin='" + socialLogin + '\'' +
-                ", loginToken='" + loginToken + '\'' +
-                ", signUpDate=" + signUpDate +
-                '}';
+            "nickname='" + nickname + '\'' +
+            ", socialLogin='" + socialLogin + '\'' +
+            ", socialId=" + socialId +
+            ", signUpDate=" + signUpDate +
+            '}';
     }
 }
