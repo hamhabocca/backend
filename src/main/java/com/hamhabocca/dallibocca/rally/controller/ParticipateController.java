@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Api(tags = "랠리 참가용 컨트롤러")
+@Api(tags = "Rally Participate API")
 @RestController
 @RequestMapping("/api/v1")
 public class ParticipateController {

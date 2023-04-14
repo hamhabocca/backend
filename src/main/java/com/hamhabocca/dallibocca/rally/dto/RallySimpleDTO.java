@@ -8,17 +8,17 @@ public class RallySimpleDTO {
 	private String rallyStatus;
 	private String rallyName;
 	private java.util.Date rallyDate;
-	private String rallyStartLocation;
+	private String rallyLocation;
 	private java.util.Date rallyWriteDate;
 
 	public RallySimpleDTO() {}
 
-	public RallySimpleDTO(long rallyId, String rallyStatus, String rallyName, Date rallyDate, String rallyStartLocation, Date rallyWriteDate) {
+	public RallySimpleDTO(long rallyId, String rallyStatus, String rallyName, Date rallyDate, String rallyLocation, Date rallyWriteDate) {
 		this.rallyId = rallyId;
 		this.rallyStatus = rallyStatus;
 		this.rallyName = rallyName;
 		this.rallyDate = rallyDate;
-		this.rallyStartLocation = rallyStartLocation;
+		this.rallyLocation = rallyLocation;
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
@@ -53,12 +53,12 @@ public class RallySimpleDTO {
 		this.rallyDate = rallyDate;
 	}
 
-	public String getrallyStartLocation() {
-		return rallyStartLocation;
+	public String getrallyLocation() {
+		return rallyLocation;
 	}
 
-	public void setrallyStartLocation(String rallyStartLocation) {
-		this.rallyStartLocation = rallyStartLocation;
+	public void setrallyLocation(String rallyLocation) {
+		this.rallyLocation = rallyLocation;
 	}
 
 	public Date getRallyWriteDate() {
@@ -76,7 +76,7 @@ public class RallySimpleDTO {
 				", rallyStatus='" + rallyStatus + '\'' +
 				", rallyName='" + rallyName + '\'' +
 				", rallyDate=" + rallyDate +
-				", rallyStartLocation='" + rallyStartLocation + '\'' +
+				", rallyLocation='" + rallyLocation + '\'' +
 				", rallyWriteDate=" + rallyWriteDate;
 	}
 }

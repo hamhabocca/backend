@@ -7,6 +7,7 @@ import com.hamhabocca.dallibocca.rally.entity.Rally;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -36,7 +37,7 @@ public class RallyService {
         //offset, limit, sort 순서
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
             pageable.getPageSize(),
-            Sort.by("rallyId"));
+            Sort.by("rallyId").descending());
 
         return rallyRepository.findSimpleRallyList(pageable);
     }
@@ -51,10 +52,12 @@ public class RallyService {
 
     /* 랠리글 추가 */
     @Transactional
-    public long postNewRally(RallyDTO newRally) {
+    public long postNewRally(RallyDTO newRally, long memberId) {
 
         /* 기본값 설정 */
         newRally.setRallyStatus("모집중");
+        newRally.setMasterId(memberId);
+        newRally.setRallyWriteDate(new Date());
 
         if (newRally.getRallyMinimum() == 0) {
             newRally.setRallyMinimum(2);
@@ -74,13 +77,17 @@ public class RallyService {
         /* 변경할 기존 랠리 가져오기 */
         Rally foundRally = rallyRepository.findById(rallyId).get();
 
-        /* (글조회에서) 랠리상태만 변경 혹은 (글수정화면에서) 랠리 정보 변경 */
-        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus()))) {
+
+        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus())) && modifyRally.getRallyStatus() != null) {
+
+            /* 수정할 랠리의 상태가 널이 아니면서 기존 랠리와 다르면...상태만 수정  */
             foundRally.setRallyStatus(modifyRally.getRallyStatus());
         } else {
+
+            /* 그 외는 랠리의 정보 변경 */
             foundRally.setRallyName(modifyRally.getRallyName());
             foundRally.setRallyDetail(modifyRally.getRallyDetail());
-            foundRally.setRallyLocation(modifyRally.getRallyStartLocation());
+            foundRally.setRallyLocation(modifyRally.getRallyLocation());
             foundRally.setRallyEndLocation(modifyRally.getRallyEndLocation());
             foundRally.setRallyType(modifyRally.getRallyType());
             foundRally.setRallyMaximum(modifyRally.getRallyMaximum());
@@ -88,6 +95,7 @@ public class RallyService {
             foundRally.setRallyDistance(modifyRally.getRallyDistance());
             foundRally.setRallyDate(modifyRally.getRallyDate());
         }
+
     }
 
     /* 취소상태인 랠리글 삭제 */
@@ -112,7 +120,8 @@ public class RallyService {
             Collectors.toList());
     }
 
-    public Page<RallySimpleDTO> findRallyListBySearch(Pageable pageable, SearchFilter searchFilter) {
+    public Page<RallySimpleDTO> findRallyListBySearch(Pageable pageable,
+        SearchFilter searchFilter) {
 
         //offset, limit, sort 순서
         pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,

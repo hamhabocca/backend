@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 
-@Api(tags = "랠리 게시글 컨트롤러")
+@Api(tags = "Rally API")
 @RestController
 @RequestMapping("/api/v1")
 public class RallyController {
@@ -89,9 +89,9 @@ public class RallyController {
         @ApiResponse(code = 403, message = "[Forbidden]")
     })
     @PostMapping("/rallies")
-    public ResponseEntity<?> postRally(@RequestBody RallyDTO newRally) {
+    public ResponseEntity<?> postRally(@RequestBody RallyDTO newRally, @RequestHeader(value = "memberId") long memberId) {
 
-        long currentId = rallyService.postNewRally(newRally);
+        long currentId = rallyService.postNewRally(newRally, memberId);
 
         return ResponseEntity.created(URI.create("/api/v1/rallies/" + currentId)).build();
     }
