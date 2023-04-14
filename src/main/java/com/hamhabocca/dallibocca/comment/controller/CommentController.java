@@ -70,7 +70,7 @@ public class CommentController {
 		commentService.registNewComment(newComment);
 
 		return ResponseEntity
-			.created(URI.create("/swagger/comments" + newComment.getMemberId()))
+			.created(URI.create("/api/v1/comments" + newComment.getMemberId()))
 			.build();
 
 	}

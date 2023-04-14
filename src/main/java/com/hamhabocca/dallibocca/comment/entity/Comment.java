@@ -12,20 +12,20 @@ import javax.persistence.Table;
 @Entity(name = "Comment")
 @Table(name = "comment")
 @SequenceGenerator(
-        name = "member_sequence_generator",
-        sequenceName = "sequence_member_id",
-        initialValue = 1,
-        allocationSize = 50
+	name = "member_sequence_generator",
+	sequenceName = "sequence_member_id",
+	initialValue = 1,
+	allocationSize = 50
 )
 public class Comment {
 
 	@Id
 	@Column(name = "member_id")
 	@GeneratedValue(
-			strategy = GenerationType.SEQUENCE,
-			generator = "member_sequence_generator"
+		strategy = GenerationType.SEQUENCE,
+		generator = "member_sequence_generator"
 	)
-	private int memberId;
+	private long memberId;
 
 	@Column(name = "nickname")
 	private String nickname;
@@ -39,18 +39,18 @@ public class Comment {
 	public Comment() {
 	}
 
-	public Comment(int memberId, String nickname, String comment, Date commentWriteDate) {
+	public Comment(long memberId, String nickname, String comment, Date commentWriteDate) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.comment = comment;
 		this.commentWriteDate = commentWriteDate;
 	}
 
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 

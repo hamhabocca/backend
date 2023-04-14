@@ -23,7 +23,7 @@ public class CommentService {
 	}
 
 	public List<CommenetDTO> findAllComment() {
-		List<Comment> comments = commentRepository.findAllComment();
+		List<Comment> comments = commentRepository.findAll();
 		return comments.stream().map(comment -> modelMapper.map(comment, CommenetDTO.class))
 			.collect(
 				Collectors.toList());

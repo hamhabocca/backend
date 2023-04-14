@@ -5,7 +5,7 @@ import javax.persistence.Column;
 
 public class CommenetDTO {
 
-	private int memberId;
+	private long memberId;
 	private String nickname;
 	private String comment;
 	private java.util.Date commentWriteDate;
@@ -13,18 +13,18 @@ public class CommenetDTO {
 	public CommenetDTO() {
 	}
 
-	public CommenetDTO(int memberId, String nickname, String comment, Date commentWriteDate) {
+	public CommenetDTO(long memberId, String nickname, String comment, Date commentWriteDate) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.comment = comment;
 		this.commentWriteDate = commentWriteDate;
 	}
 
-	public int getMemberId() {
+	public long getMemberId() {
 		return memberId;
 	}
 
-	public void setMemberId(int memberId) {
+	public void setMemberId(long memberId) {
 		this.memberId = memberId;
 	}
 
