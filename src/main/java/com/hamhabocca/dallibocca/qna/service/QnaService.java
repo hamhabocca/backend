@@ -1,15 +1,10 @@
 package com.hamhabocca.dallibocca.qna.service;
 
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
-import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 import com.hamhabocca.dallibocca.qna.entity.Qna;
 import com.hamhabocca.dallibocca.qna.repository.QnaRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,13 +24,10 @@ public class QnaService {
 		this.modelMapper = new ModelMapper();
 	}
 
-	public Page<QnaSimpleDTO> findQnaList(Pageable pageable) {
-
-		pageable = PageRequest.of(pageable.getPageNumber() <= 0? 0: pageable.getPageNumber() - 1,
-			pageable.getPageSize(),
-			Sort.by("qnaId"));
-
-		return qnaRepository.findSimpleQnaList(pageable);
+	public List<QnaDTO> findAllQna() {
+		List<Qna> qnas = qnaRepository.findAll();
+		return qnas.stream().map(qna -> modelMapper.map(qna, QnaDTO.class))
+			.collect(Collectors.toList());
 	}
 
 	public QnaDTO findQnaById(long qnaId) {

@@ -1,19 +1,13 @@
 package com.hamhabocca.dallibocca.qna.controller;
 
 import com.hamhabocca.dallibocca.common.ResponseMessage;
-import com.hamhabocca.dallibocca.common.page.Pagination;
-import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
-import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 import com.hamhabocca.dallibocca.qna.service.QnaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,18 +39,15 @@ public class QnaController {
 		@ApiResponse(code = 400, message = "[Bad Reuest]")
 	})
 	@GetMapping("/qnas")
-	public ResponseEntity<ResponseMessage> findQnaList(@PageableDefault Pageable pageable) {
+	public ResponseEntity<ResponseMessage> findAllUQnas() {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-		Page<QnaSimpleDTO> qnaList = qnaService.findQnaList(pageable);
-
-		PagingButtonInfo paging = Pagination.getPagingButtonInfo(qnaList);
-
 		Map<String, Object> responseMap = new HashMap<>();
-		responseMap.put("QnaList", qnaList) ;
-		responseMap.put("paging", paging);
+
+		List<QnaDTO> qnas = qnaService.findAllQna();
+		responseMap.put("qnas", qnas);
 
 		return new ResponseEntity<>(
 			new ResponseMessage(200, "조회성공", responseMap),
