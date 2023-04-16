@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -178,4 +179,14 @@ public class MemberController {
             .body(new ResponseMessage(200, "찾았다~", responseMap));
     }
 
+    @ApiOperation(value = "인증된 멤버 정보 조회")
+    @GetMapping("/members/auth")
+    public ResponseEntity<?> getCurrentMember(HttpServletRequest request) {
+
+        System.out.println(request);
+
+        MemberDTO currentMember = memberService.getAuthedMember(request);
+
+        return ResponseEntity.ok().body(currentMember);
+    }
 }

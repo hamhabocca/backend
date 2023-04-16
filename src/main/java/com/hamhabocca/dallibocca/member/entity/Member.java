@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.UniqueElements;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity(name = "Member")
 @Table(name = "member")
@@ -52,10 +53,10 @@ public class Member {
     private String isDeleted;
 
     @Column(name = "sign_up_date", nullable = false)
-    private java.sql.Date signUpDate;
+    private LocalDateTime signUpDate;
 
     @Column(name = "deleted_date")
-    private java.sql.Date deletedDate;
+    private LocalDateTime deletedDate;
 
     @Column(name = "level", nullable = false)
     private int level;
@@ -75,7 +76,7 @@ public class Member {
 
     public Member(long memberId, String nickname, int reportCount, String socialLogin,
         long socialId,
-        String loginToken, String email, String gender, String isDeleted, Date signUpDate, Date deletedDate,
+        String loginToken, String email, String gender, String isDeleted, LocalDateTime signUpDate, LocalDateTime deletedDate,
         int level,
         int mileage, String preferredLocation, String preferredType) {
         this.memberId = memberId;
@@ -143,19 +144,19 @@ public class Member {
         this.isDeleted = isDeleted;
     }
 
-    public Date getSignUpDate() {
+    public LocalDateTime getSignUpDate() {
         return signUpDate;
     }
 
-    public void setSignUpDate(Date signUpDate) {
+    public void setSignUpDate(LocalDateTime signUpDate) {
         this.signUpDate = signUpDate;
     }
 
-    public Date getDeletedDate() {
+    public LocalDateTime getDeletedDate() {
         return deletedDate;
     }
 
-    public void setDeletedDate(Date deletedDate) {
+    public void setDeletedDate(LocalDateTime deletedDate) {
         this.deletedDate = deletedDate;
     }
 

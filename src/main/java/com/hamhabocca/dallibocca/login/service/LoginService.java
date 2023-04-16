@@ -20,6 +20,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Service
 public class LoginService {
 
@@ -30,7 +34,7 @@ public class LoginService {
 
     @Autowired
     public LoginService(LoginRepository loginRepository, ModelMapper modelMapper,
-		MemberService memberService, TokenProvider tokenProvider) {
+						MemberService memberService, TokenProvider tokenProvider) {
         this.loginRepository = loginRepository;
         this.modelMapper = modelMapper;
 		this.memberService = memberService;
@@ -46,9 +50,14 @@ public class LoginService {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", System.getenv("KakaoRestAPIKey"));
+//		params.add("client_id", System.getenv("KakaoRestAPIKey"));
+		params.add("client_id", "b6ed15cc6705233690f08417571cc3c0");
 		params.add("redirect_uri", "http://localhost:3000/oauth");
 		params.add("code", code);
+
+//		params.forEach((key, value) -> {
+//			System.out.println(key + " : " + value);
+//		});
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
             new HttpEntity<>(params, headers);
@@ -84,13 +93,13 @@ public class LoginService {
 		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
 		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest =
-			new HttpEntity<>(headers);
+				new HttpEntity<>(headers);
 
 		ResponseEntity<String> kakaoProfileResponse = rt.exchange(
-			"https://kapi.kakao.com/v2/user/me",
-			HttpMethod.POST,
-			kakaoProfileRequest,
-			String.class
+				"https://kapi.kakao.com/v2/user/me",
+				HttpMethod.POST,
+				kakaoProfileRequest,
+				String.class
 		);
 
 		System.out.println(kakaoProfileResponse.getBody());
@@ -100,7 +109,7 @@ public class LoginService {
 
 		try {
 			kakaoProfileDTO = objectMapper.readValue(kakaoProfileResponse.getBody(),
-				KakaoProfileDTO.class);
+					KakaoProfileDTO.class);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -122,6 +131,8 @@ public class LoginService {
 			newMember.setSocialLogin("KAKAO");
 			newMember.setSocialId(kakaoProfileDTO.getId());
 			newMember.setEmail(kakaoProfileDTO.getKakao_account().getEmail());
+			newMember.setLoginToken(accessToken);
+			newMember.setSignUpDate(LocalDateTime.now());
 
 			if(kakaoProfileDTO.getKakao_account().getGender() != null) {
 				newMember.setGender(kakaoProfileDTO.getKakao_account().getGender());

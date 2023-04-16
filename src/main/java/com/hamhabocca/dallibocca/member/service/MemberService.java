@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.servlet.http.HttpServletRequest;
+import java.net.http.HttpRequest;
 import java.util.List;
 
 @Service
@@ -35,7 +37,12 @@ public class MemberService {
     @Transactional
     public long registNewUser(MemberDTO newMember) {
 
-        long lastId = memberRepository.findTopByOrderByMemberIdDesc();
+        long lastId = 0;
+
+        if(memberRepository.findTopByOrderByMemberIdDesc() != null) {
+            lastId = (long) memberRepository.findTopByOrderByMemberIdDesc();
+        }
+
 
         newMember.setNickname("새로운회원" + (lastId + 1));
         newMember.setLevel(1);
@@ -116,6 +123,19 @@ public class MemberService {
 
         Member foundMember = memberRepository.findBySocialId(socialLogin, socialId);
 
-        return modelMapper.map(foundMember, MemberDTO.class);
+        if(foundMember == null) {
+            return null;
+        } else {
+            return modelMapper.map(foundMember, MemberDTO.class);
+        }
+    }
+
+    public MemberDTO getAuthedMember(HttpServletRequest request) {
+
+        Long memberId = (Long) request.getAttribute("memberId");
+
+        MemberDTO authedMember = modelMapper.map(memberRepository.findById(memberId), MemberDTO.class);
+
+        return authedMember;
     }
 }

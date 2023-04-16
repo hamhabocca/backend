@@ -1,6 +1,7 @@
 package com.hamhabocca.dallibocca.member.dto;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class SignUpDTO {
 
@@ -10,11 +11,11 @@ public class SignUpDTO {
 
     private long socialId;
 
-    private java.sql.Date signUpDate;
+    private LocalDateTime signUpDate;
 
     public SignUpDTO() {};
 
-    public SignUpDTO(String nickname, String socialLogin, long socialId, Date signUpDate) {
+    public SignUpDTO(String nickname, String socialLogin, long socialId, LocalDateTime signUpDate) {
         this.nickname = nickname;
         this.socialLogin = socialLogin;
         this.socialId = socialId;
@@ -45,11 +46,11 @@ public class SignUpDTO {
         this.socialId = socialId;
     }
 
-    public Date getSignUpDate() {
+    public LocalDateTime getSignUpDate() {
         return signUpDate;
     }
 
-    public void setSignUpDate(Date signUpDate) {
+    public void setSignUpDate(LocalDateTime signUpDate) {
         this.signUpDate = signUpDate;
     }
 

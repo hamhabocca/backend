@@ -1,18 +1,26 @@
 package com.hamhabocca.dallibocca.jwt;
 
+import com.hamhabocca.dallibocca.exception.TokenException;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import com.hamhabocca.dallibocca.login.dto.AccessTokenDTO;
@@ -25,9 +33,12 @@ public class TokenProvider {
 	private static final String BEARER_TYPE = "bearer";
 	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
 
+	private final UserDetailsService userDetailsService;
+
 	private final Key key;
 
-	public TokenProvider(@Value("${jwt.secret}") String secretKey) {
+	public TokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
 		byte[] keyBytes = Decoders.BASE64URL.decode(secretKey);
 		this.key = Keys.hmacShaKeyFor(keyBytes);
 	}
@@ -36,24 +47,21 @@ public class TokenProvider {
 		log.info("[TokenProvider] generateTokenDto Start ===================================");
 
 		Claims claims = Jwts
-			.claims()
-			.setSubject(String.valueOf(foundmember.getMemberId()));
-
-//		claims.put(AUTHORITIES_KEY, roles);
-
+				.claims()
+				.setSubject(String.valueOf(foundmember.getMemberId()));
+				// 여기에 아마 refresh token 추가?
 		long now = (new Date()).getTime();
 
 		// Access Token 생성
 		Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
 		String jwtToken = Jwts.builder()
-			.setClaims(claims)
-			//.claim(AUTHORITIES_KEY, roles)
-			.setExpiration(accessTokenExpiresIn)
-			.signWith(key, SignatureAlgorithm.HS512)
-			.compact();
+				.setClaims(claims)
+				.setExpiration(accessTokenExpiresIn)
+				.signWith(key, SignatureAlgorithm.HS512)
+				.compact();
 
 		return new AccessTokenDTO(BEARER_TYPE, foundmember.getMemberId(), jwtToken,
-			accessTokenExpiresIn.getTime());
+				accessTokenExpiresIn.getTime());
 	}
 
 	public Authentication getAuthentication(String accessToken) {
@@ -61,8 +69,53 @@ public class TokenProvider {
 		/* 토큰 복호화 */
 		Claims claims = parseClaims(accessToken);
 
-		return null;
+		if(claims.get(AUTHORITIES_KEY) == null) {
+			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
+		}
+
+		/* 클레임에서 권한 정보 가져오기 */
+		Collection<? extends GrantedAuthority> authorities =
+				Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+						.map(SimpleGrantedAuthority::new)
+						.collect(Collectors.toList());
+		log.info("[TokenProvider] authorities : {}", authorities);
+		// UserDetails 객체를 만들어서 Authentication 리턴
+		UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(accessToken));
+
+		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+//		return null;
 	}
+
+	private String getUserId(String accessToken) {
+		return Jwts
+				.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(accessToken)
+				.getBody()
+				.getSubject();
+	}
+
+	public boolean validateToken(String token) {
+		try {
+			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+			return true;
+		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+			log.info("[TokenProvider] Malformed JWT Sign");
+			throw new TokenException("잘못된 JWT 서명입니다.");
+		} catch (ExpiredJwtException e) {
+			log.info("[TokenProvider] Expired JWT Token");
+			throw new TokenException("만료된 JWT 토큰입니다.");
+		} catch (UnsupportedJwtException e) {
+			log.info("[TokenProvider] Unsupported JWT token");
+			throw new TokenException("지원되지 않는 JWT 토큰입니다.");
+		} catch (IllegalArgumentException e) {
+			log.info("[TokenProvider] JWT Token Illegal");
+			throw new TokenException("JWT 토큰이 잘못되었습니다.");
+		}
+
+	}
+
 
 	private Claims parseClaims(String accessToken) {
 		try {

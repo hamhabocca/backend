@@ -21,5 +21,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    @Query(value = "SELECT SCHEMA.sequence_member_id.nextval FROM DUAL", nativeQuery = true)
 //    long findCurrId();
 
-    long findTopByOrderByMemberIdDesc();
+    Object findTopByOrderByMemberIdDesc();
 }

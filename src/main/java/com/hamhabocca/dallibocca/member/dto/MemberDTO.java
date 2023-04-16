@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 public class MemberDTO {
 
@@ -28,9 +29,9 @@ public class MemberDTO {
 
 	private String isDeleted;
 
-	private java.sql.Date signUpDate;
+	private LocalDateTime signUpDate;
 
-	private java.sql.Date deletedDate;
+	private LocalDateTime deletedDate;
 
 	private int level;
 
@@ -44,7 +45,7 @@ public class MemberDTO {
 
 	public MemberDTO(long memberId, String nickname, int reportCount, String socialLogin,
 		long socialId,
-		String loginToken, String email, String gender, String isDeleted, Date signUpDate, Date deletedDate,
+		String loginToken, String email, String gender, String isDeleted, LocalDateTime signUpDate, LocalDateTime deletedDate,
 		int level,
 		int mileage, String preferredLocation, String preferredType) {
 		this.memberId = memberId;
@@ -128,19 +129,19 @@ public class MemberDTO {
 		this.isDeleted = isDeleted;
 	}
 
-	public Date getSignUpDate() {
+	public LocalDateTime getSignUpDate() {
 		return signUpDate;
 	}
 
-	public void setSignUpDate(Date signUpDate) {
+	public void setSignUpDate(LocalDateTime signUpDate) {
 		this.signUpDate = signUpDate;
 	}
 
-	public Date getDeletedDate() {
+	public LocalDateTime getDeletedDate() {
 		return deletedDate;
 	}
 
-	public void setDeletedDate(Date deletedDate) {
+	public void setDeletedDate(LocalDateTime deletedDate) {
 		this.deletedDate = deletedDate;
 	}
 
