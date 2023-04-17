@@ -21,7 +21,13 @@ public class MemberDTO {
 
 	private long socialId;
 
-	private String loginToken;
+	private String accessToken;
+
+	private long accessTokenExpireDate;
+
+	private String refreshToken;
+
+	private long refreshTokenExpireDate;
 
 	private String email;
 
@@ -45,15 +51,19 @@ public class MemberDTO {
 
 	public MemberDTO(long memberId, String nickname, int reportCount, String socialLogin,
 		long socialId,
-		String loginToken, String email, String gender, String isDeleted, LocalDateTime signUpDate, LocalDateTime deletedDate,
-		int level,
-		int mileage, String preferredLocation, String preferredType) {
+		String accessToken, long accessTokenExpireDate, String refreshToken,
+		long refreshTokenExpireDate, String email, String gender, String isDeleted,
+		LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
+		String preferredLocation, String preferredType) {
 		this.memberId = memberId;
 		this.nickname = nickname;
 		this.reportCount = reportCount;
 		this.socialLogin = socialLogin;
 		this.socialId = socialId;
-		this.loginToken = loginToken;
+		this.accessToken = accessToken;
+		this.accessTokenExpireDate = accessTokenExpireDate;
+		this.refreshToken = refreshToken;
+		this.refreshTokenExpireDate = refreshTokenExpireDate;
 		this.email = email;
 		this.gender = gender;
 		this.isDeleted = isDeleted;
@@ -103,14 +113,6 @@ public class MemberDTO {
 
 	public void setSocialId(long socialId) {
 		this.socialId = socialId;
-	}
-
-	public String getLoginToken() {
-		return loginToken;
-	}
-
-	public void setLoginToken(String loginToken) {
-		this.loginToken = loginToken;
 	}
 
 	public String getEmail() {
@@ -185,6 +187,38 @@ public class MemberDTO {
 		this.gender = gender;
 	}
 
+	public String getAccessToken() {
+		return accessToken;
+	}
+
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
+
+	public long getAccessTokenExpireDate() {
+		return accessTokenExpireDate;
+	}
+
+	public void setAccessTokenExpireDate(long accessTokenExpireDate) {
+		this.accessTokenExpireDate = accessTokenExpireDate;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public long getRefreshTokenExpireDate() {
+		return refreshTokenExpireDate;
+	}
+
+	public void setRefreshTokenExpireDate(long refreshTokenExpireDate) {
+		this.refreshTokenExpireDate = refreshTokenExpireDate;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberDTO{" +
@@ -193,7 +227,10 @@ public class MemberDTO {
 			", reportCount=" + reportCount +
 			", socialLogin='" + socialLogin + '\'' +
 			", socialId=" + socialId +
-			", loginToken='" + loginToken + '\'' +
+			", accessToken='" + accessToken + '\'' +
+			", accessTokenExpireDate=" + accessTokenExpireDate +
+			", refreshToken='" + refreshToken + '\'' +
+			", refreshTokenExpireDate=" + refreshTokenExpireDate +
 			", email='" + email + '\'' +
 			", gender='" + gender + '\'' +
 			", isDeleted='" + isDeleted + '\'' +

@@ -29,9 +29,9 @@ import com.hamhabocca.dallibocca.login.dto.AccessTokenDTO;
 public class TokenProvider {
 
 	private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
-	private static final String AUTHORITIES_KEY = "auth";
+	private static final String AUTHORITIES_KEY = "Auth";
 	private static final String BEARER_TYPE = "bearer";
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;	// 30분
 
 	private final UserDetailsService userDetailsService;
 
@@ -69,16 +69,14 @@ public class TokenProvider {
 		/* 토큰 복호화 */
 		Claims claims = parseClaims(accessToken);
 
-		if(claims.get(AUTHORITIES_KEY) == null) {
-			throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-		}
+		System.out.println("claims = " + claims);
 
 		/* 클레임에서 권한 정보 가져오기 */
-		Collection<? extends GrantedAuthority> authorities =
-				Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-						.map(SimpleGrantedAuthority::new)
-						.collect(Collectors.toList());
-		log.info("[TokenProvider] authorities : {}", authorities);
+//		Collection<? extends GrantedAuthority> authorities =
+//				Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
+//						.map(SimpleGrantedAuthority::new)
+//						.collect(Collectors.toList());
+//		log.info("[TokenProvider] authorities : {}", authorities);
 		// UserDetails 객체를 만들어서 Authentication 리턴
 		UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(accessToken));
 
@@ -96,7 +94,7 @@ public class TokenProvider {
 				.getSubject();
 	}
 
-	public boolean validateToken(String token) {
+	public boolean validateToken(String token) throws ExpiredJwtException {
 		try {
 			Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
 			return true;
@@ -113,7 +111,6 @@ public class TokenProvider {
 			log.info("[TokenProvider] JWT Token Illegal");
 			throw new TokenException("JWT 토큰이 잘못되었습니다.");
 		}
-
 	}
 
 

@@ -21,5 +21,4 @@ public class BeanConfiguration {
 		return new InMemoryUserDetailsManager();
 	}
 
-
 }

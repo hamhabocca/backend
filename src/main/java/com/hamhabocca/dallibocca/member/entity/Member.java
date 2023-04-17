@@ -40,8 +40,17 @@ public class Member {
     @Column(name = "social_id", nullable = false)
     private long socialId;
 
-    @Column(name = "login_token", nullable = false)
-    private String loginToken;
+    @Column(name = "access_token", nullable = false)
+    private String accessToken;
+
+    @Column(name = "access_token_expire_date", nullable = false)
+    private long accessTokenExpireDate;
+
+    @Column(name = "refresh_token", nullable = false)
+    private String refreshToken;
+
+    @Column(name = "refresh_token_expire_date", nullable = false)
+    private long refreshTokenExpireDate;
 
     @Column(name = "email", nullable = false)
     private String email;
@@ -76,15 +85,19 @@ public class Member {
 
     public Member(long memberId, String nickname, int reportCount, String socialLogin,
         long socialId,
-        String loginToken, String email, String gender, String isDeleted, LocalDateTime signUpDate, LocalDateTime deletedDate,
-        int level,
-        int mileage, String preferredLocation, String preferredType) {
+        String accessToken, long accessTokenExpireDate, String refreshToken,
+        long refreshTokenExpireDate, String email, String gender, String isDeleted,
+        LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
+        String preferredLocation, String preferredType) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.reportCount = reportCount;
         this.socialLogin = socialLogin;
         this.socialId = socialId;
-        this.loginToken = loginToken;
+        this.accessToken = accessToken;
+        this.accessTokenExpireDate = accessTokenExpireDate;
+        this.refreshToken = refreshToken;
+        this.refreshTokenExpireDate = refreshTokenExpireDate;
         this.email = email;
         this.gender = gender;
         this.isDeleted = isDeleted;
@@ -126,14 +139,6 @@ public class Member {
 
     public void setSocialLogin(String socialLogin) {
         this.socialLogin = socialLogin;
-    }
-
-    public String getLoginToken() {
-        return loginToken;
-    }
-
-    public void setLoginToken(String loginToken) {
-        this.loginToken = loginToken;
     }
 
     public String getIsDeleted() {
@@ -217,6 +222,38 @@ public class Member {
         this.gender = gender;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
+    public long getAccessTokenExpireDate() {
+        return accessTokenExpireDate;
+    }
+
+    public void setAccessTokenExpireDate(long accessTokenExpireDate) {
+        this.accessTokenExpireDate = accessTokenExpireDate;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public long getRefreshTokenExpireDate() {
+        return refreshTokenExpireDate;
+    }
+
+    public void setRefreshTokenExpireDate(long refreshTokenExpireDate) {
+        this.refreshTokenExpireDate = refreshTokenExpireDate;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -225,7 +262,10 @@ public class Member {
             ", reportCount=" + reportCount +
             ", socialLogin='" + socialLogin + '\'' +
             ", socialId=" + socialId +
-            ", loginToken='" + loginToken + '\'' +
+            ", accessToken='" + accessToken + '\'' +
+            ", accessTokenExpireDate=" + accessTokenExpireDate +
+            ", refreshToken='" + refreshToken + '\'' +
+            ", refreshTokenExpireDate=" + refreshTokenExpireDate +
             ", email='" + email + '\'' +
             ", gender='" + gender + '\'' +
             ", isDeleted='" + isDeleted + '\'' +

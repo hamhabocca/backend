@@ -1,5 +1,7 @@
 package com.hamhabocca.dallibocca.jwt;
 
+import com.hamhabocca.dallibocca.login.service.LoginService;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
@@ -44,6 +46,9 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 									FilterChain filterChain) throws ServletException, IOException {
+
+		System.out.println("혹시호출되니?????????????????????????");
+
 		try {
 			/* 1. Request Header 토큰 꺼내기 */
 			String jwtHeader = resolveToken(request);
@@ -52,8 +57,8 @@ public class JwtFilter extends OncePerRequestFilter {
 			// 2. validateToken 으로 토큰 유효성 검사
 			// 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
 			if (StringUtils.hasText(jwtHeader) && tokenProvider.validateToken(jwtHeader)) {
-				Authentication authentication = tokenProvider.getAuthentication(jwtHeader);
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+//				Authentication authentication = tokenProvider.getAuthentication(jwtHeader);
+//				SecurityContextHolder.getContext().setAuthentication(authentication);
 			}
 			filterChain.doFilter(request, response);
 		} catch (RuntimeException e) {
@@ -66,8 +71,7 @@ public class JwtFilter extends OncePerRequestFilter {
 			response.setStatus(HttpStatus.UNAUTHORIZED.value());
 			response.getWriter().write(convertObjectToJson(errorResponse));
 		}
-
-}
+	}
 
 	public String convertObjectToJson(Object object) throws JsonProcessingException {
 		if (object == null) {
@@ -85,8 +89,6 @@ public class JwtFilter extends OncePerRequestFilter {
 		String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 		Map<String, String> tokenToMap = objectMapper.readValue(bearerToken, Map.class);
 
-		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaa" + tokenToMap.get("accessToken"));
-
 		if(StringUtils.hasText(tokenToMap.get("accessToken")) && (tokenToMap.get("grantType").equals(BEARER_PREFIX))) {
 			System.out.println("yes");
 			return tokenToMap.get("accessToken");
@@ -94,5 +96,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
 		return null;
 //		return bearerToken;
+	}
+
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		String path = request.getRequestURI();
+		if("/api/v1/login/kakaocode".equals(path)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
