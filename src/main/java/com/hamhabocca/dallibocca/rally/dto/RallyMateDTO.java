@@ -1,18 +1,16 @@
 package com.hamhabocca.dallibocca.rally.dto;
 
-import java.util.Date;
-
 public class RallyMateDTO {
 
 	private long id;
 	private long rallyId;
 	private long memberId;
-	private java.util.Date participationDate;
+	private String participationDate;
 	private String isAccepted;
 
 	public RallyMateDTO() {}
 
-	public RallyMateDTO(long id, long rallyId, long memberId, Date participationDate,
+	public RallyMateDTO(long id, long rallyId, long memberId, String participationDate,
 		String isAccepted) {
 		this.id = id;
 		this.rallyId = rallyId;
@@ -45,11 +43,11 @@ public class RallyMateDTO {
 		this.memberId = memberId;
 	}
 
-	public Date getParticipationDate() {
+	public String getParticipationDate() {
 		return participationDate;
 	}
 
-	public void setParticipationDate(Date participationDate) {
+	public void setParticipationDate(String participationDate) {
 		this.participationDate = participationDate;
 	}
 

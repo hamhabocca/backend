@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @DynamicInsert
 @DynamicUpdate
@@ -38,13 +37,13 @@ public class Rally {
 	private String rallyName;
 
 	@Column(name = "rally_write_date")
-	private java.util.Date rallyWriteDate;
+	private String rallyWriteDate;
 
 	@Column(name = "rally_type", nullable = false)
 	private String rallyType;
 
 	@Column(name = "rally_date")
-	private java.util.Date rallyDate;
+	private String rallyDate;
 
 	@Column(name = "rally_location")
 	private String rallyLocation;
@@ -67,8 +66,8 @@ public class Rally {
 	public Rally() {}
 
 	public Rally(long rallyId, long masterId, String rallyStatus, String rallyName,
-		Date rallyWriteDate,
-		String rallyType, Date rallyDate, String rallyLocation, String rallyEndLocation,
+		String rallyWriteDate,
+		String rallyType, String rallyDate, String rallyLocation, String rallyEndLocation,
 		int rallyDistance, int rallyMinimum, int rallyMaximum, String rallyDetail) {
 		this.rallyId = rallyId;
 		this.masterId = masterId;
@@ -117,11 +116,11 @@ public class Rally {
 		this.rallyName = rallyName;
 	}
 
-	public Date getRallyWriteDate() {
+	public String getRallyWriteDate() {
 		return rallyWriteDate;
 	}
 
-	public void setRallyWriteDate(Date rallyWriteDate) {
+	public void setRallyWriteDate(String rallyWriteDate) {
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
@@ -133,11 +132,11 @@ public class Rally {
 		this.rallyType = rallyType;
 	}
 
-	public Date getRallyDate() {
+	public String getRallyDate() {
 		return rallyDate;
 	}
 
-	public void setRallyDate(Date rallyDate) {
+	public void setRallyDate(String rallyDate) {
 		this.rallyDate = rallyDate;
 	}
 

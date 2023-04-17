@@ -1,16 +1,14 @@
 package com.hamhabocca.dallibocca.rally.dto;
 
-import java.util.Date;
-
 public class RallyDTO {
 
 	private long rallyId;
 	private long masterId;   //memberId
 	private String rallyStatus;
 	private String rallyName;
-	private java.util.Date rallyWriteDate;
+	private String rallyWriteDate;
 	private String rallyType;
-	private java.util.Date rallyDate;
+	private String rallyDate;
 	private String rallyLocation;
 	private String rallyEndLocation;
 	private int rallyDistance;
@@ -22,7 +20,8 @@ public class RallyDTO {
 	}
 
 	public RallyDTO(long rallyId, long masterId, String rallyStatus, String rallyName,
-		Date rallyWriteDate, String rallyType, Date rallyDate, String rallyLocation,
+		String rallyWriteDate, String rallyType, String rallyDate,
+		String rallyLocation,
 		String rallyEndLocation, int rallyDistance, int rallyMinimum, int rallyMaximum,
 		String rallyDetail) {
 		this.rallyId = rallyId;
@@ -72,11 +71,11 @@ public class RallyDTO {
 		this.rallyName = rallyName;
 	}
 
-	public Date getRallyWriteDate() {
+	public String getRallyWriteDate() {
 		return rallyWriteDate;
 	}
 
-	public void setRallyWriteDate(Date rallyWriteDate) {
+	public void setRallyWriteDate(String rallyWriteDate) {
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
@@ -88,11 +87,11 @@ public class RallyDTO {
 		this.rallyType = rallyType;
 	}
 
-	public Date getRallyDate() {
+	public String getRallyDate() {
 		return rallyDate;
 	}
 
-	public void setRallyDate(Date rallyDate) {
+	public void setRallyDate(String rallyDate) {
 		this.rallyDate = rallyDate;
 	}
 

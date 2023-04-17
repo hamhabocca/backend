@@ -5,7 +5,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @DynamicInsert
 @DynamicUpdate
@@ -34,7 +33,7 @@ public class RallyMate {
 	private long memberId;
 
 	@Column(name = "participation_date", nullable = false)
-	private java.util.Date participationDate;
+	private String participationDate;
 
 	@Column(name = "is_accepted", length = 2)
 	@ColumnDefault("'N'")
@@ -42,7 +41,7 @@ public class RallyMate {
 
 	public RallyMate() {}
 
-	public RallyMate(long id, long rallyId, long memberId, Date participationDate, String isAccepted) {
+	public RallyMate(long id, long rallyId, long memberId, String participationDate, String isAccepted) {
 		this.id = id;
 		this.rallyId = rallyId;
 		this.memberId = memberId;
@@ -50,11 +49,11 @@ public class RallyMate {
 		this.isAccepted = isAccepted;
 	}
 
-	public long getid() {
+	public long getId() {
 		return id;
 	}
 
-	public void setid(long id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -74,11 +73,11 @@ public class RallyMate {
 		this.memberId = memberId;
 	}
 
-	public Date getParticipationDate() {
+	public String getParticipationDate() {
 		return participationDate;
 	}
 
-	public void setParticipationDate(Date participationDate) {
+	public void setParticipationDate(String participationDate) {
 		this.participationDate = participationDate;
 	}
 

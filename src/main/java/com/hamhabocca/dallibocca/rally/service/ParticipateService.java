@@ -4,13 +4,13 @@ import com.hamhabocca.dallibocca.rally.dto.RallyMateDTO;
 import com.hamhabocca.dallibocca.rally.entity.RallyMate;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import com.hamhabocca.dallibocca.rally.repository.RallyMateRepository;
+import java.time.LocalDateTime;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +51,7 @@ public class ParticipateService {
         rallyMate.setRallyId(rallyId);
         rallyMate.setMemberId(memberId);
         rallyMate.setIsAccepted("N");
-        rallyMate.setParticipationDate(new Date());
+        rallyMate.setParticipationDate(LocalDateTime.now() + "");
 
         rallyMateRepository.save(modelMapper.map(rallyMate, RallyMate.class));
     }

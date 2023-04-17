@@ -1,32 +1,33 @@
 package com.hamhabocca.dallibocca.rally.dto;
 
-import java.util.Date;
-
 public class RallySimpleDTO {
 
 	private long rallyId;
 	private String rallyStatus;
+	private String rallyType;
 	private String rallyName;
-	private java.util.Date rallyDate;
+	private String rallyDate;
 	private String rallyLocation;
-	private java.util.Date rallyWriteDate;
+	private String rallyWriteDate;
 
 	public RallySimpleDTO() {}
 
-	public RallySimpleDTO(long rallyId, String rallyStatus, String rallyName, Date rallyDate, String rallyLocation, Date rallyWriteDate) {
+	public RallySimpleDTO(long rallyId, String rallyStatus, String rallyType, String rallyName,
+		String rallyDate, String rallyLocation, String rallyWriteDate) {
 		this.rallyId = rallyId;
 		this.rallyStatus = rallyStatus;
+		this.rallyType = rallyType;
 		this.rallyName = rallyName;
 		this.rallyDate = rallyDate;
 		this.rallyLocation = rallyLocation;
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
-	public long getrallyId() {
+	public long getRallyId() {
 		return rallyId;
 	}
 
-	public void setrallyId(long rallyId) {
+	public void setRallyId(long rallyId) {
 		this.rallyId = rallyId;
 	}
 
@@ -37,6 +38,15 @@ public class RallySimpleDTO {
 	public void setRallyStatus(String rallyStatus) {
 		this.rallyStatus = rallyStatus;
 	}
+
+	public String getRallyType() {
+		return rallyType;
+	}
+
+	public void setRallyType(String rallyType) {
+		this.rallyType = rallyType;
+	}
+
 	public String getRallyName() {
 		return rallyName;
 	}
@@ -45,38 +55,40 @@ public class RallySimpleDTO {
 		this.rallyName = rallyName;
 	}
 
-	public Date getRallyDate() {
+	public String getRallyDate() {
 		return rallyDate;
 	}
 
-	public void setRallyDate(Date rallyDate) {
+	public void setRallyDate(String rallyDate) {
 		this.rallyDate = rallyDate;
 	}
 
-	public String getrallyLocation() {
+	public String getRallyLocation() {
 		return rallyLocation;
 	}
 
-	public void setrallyLocation(String rallyLocation) {
+	public void setRallyLocation(String rallyLocation) {
 		this.rallyLocation = rallyLocation;
 	}
 
-	public Date getRallyWriteDate() {
+	public String getRallyWriteDate() {
 		return rallyWriteDate;
 	}
 
-	public void setRallyWriteDate(Date rallyWriteDate) {
+	public void setRallyWriteDate(String rallyWriteDate) {
 		this.rallyWriteDate = rallyWriteDate;
 	}
 
 	@Override
 	public String toString() {
 		return "RallySimpleDTO{" +
-				"rallyId=" + rallyId +
-				", rallyStatus='" + rallyStatus + '\'' +
-				", rallyName='" + rallyName + '\'' +
-				", rallyDate=" + rallyDate +
-				", rallyLocation='" + rallyLocation + '\'' +
-				", rallyWriteDate=" + rallyWriteDate;
+			"rallyId=" + rallyId +
+			", rallyStatus='" + rallyStatus + '\'' +
+			", rallyType='" + rallyType + '\'' +
+			", rallyName='" + rallyName + '\'' +
+			", rallyDate=" + rallyDate +
+			", rallyLocation='" + rallyLocation + '\'' +
+			", rallyWriteDate=" + rallyWriteDate +
+			'}';
 	}
 }

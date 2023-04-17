@@ -5,9 +5,10 @@ import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
 import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
 import com.hamhabocca.dallibocca.rally.entity.Rally;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
+import com.hamhabocca.dallibocca.rally.repository.RallyMapper;
 import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -23,11 +24,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class RallyService {
 
     private final RallyRepository rallyRepository;
+    private final RallyMapper rallyMapper;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public RallyService(RallyRepository rallyRepository, ModelMapper modelMapper) {
+    public RallyService(RallyRepository rallyRepository, RallyMapper rallyMapper,
+        ModelMapper modelMapper) {
         this.rallyRepository = rallyRepository;
+        this.rallyMapper = rallyMapper;
         this.modelMapper = modelMapper;
     }
 
@@ -57,7 +61,7 @@ public class RallyService {
         /* 기본값 설정 */
         newRally.setRallyStatus("모집중");
         newRally.setMasterId(memberId);
-        newRally.setRallyWriteDate(new Date());
+        newRally.setRallyWriteDate(LocalDateTime.now()+"");
 
         if (newRally.getRallyMinimum() == 0) {
             newRally.setRallyMinimum(2);
@@ -77,8 +81,8 @@ public class RallyService {
         /* 변경할 기존 랠리 가져오기 */
         Rally foundRally = rallyRepository.findById(rallyId).get();
 
-
-        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus())) && modifyRally.getRallyStatus() != null) {
+        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus()))
+            && modifyRally.getRallyStatus() != null) {
 
             /* 수정할 랠리의 상태가 널이 아니면서 기존 랠리와 다르면...상태만 수정  */
             foundRally.setRallyStatus(modifyRally.getRallyStatus());
@@ -120,16 +124,15 @@ public class RallyService {
             Collectors.toList());
     }
 
-    public Page<RallySimpleDTO> findRallyListBySearch(Pageable pageable,
-        SearchFilter searchFilter) {
+    public List<RallyDTO> findRallyListBySearch(SearchFilter searchQuery) {
 
-        //offset, limit, sort 순서
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
-            pageable.getPageSize(),
-            Sort.by("rallyId"));
+        System.out.println("서비스에서의..." + searchQuery);
 
         // 마이바티스 혼용하기
+        List<Rally> rallyList = rallyMapper.findRallyListBySearch(searchQuery);
 
-        return null;
+        return rallyList.stream().map(rally -> modelMapper.map(rally, RallyDTO.class))
+            .collect(
+                Collectors.toList());
     }
 }

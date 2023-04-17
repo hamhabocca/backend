@@ -75,9 +75,9 @@ public class ParticipateController {
     })
     @DeleteMapping("/rallies/{rallyId}/mate-list")
     public ResponseEntity<?> cancelParticipateRally(@PathVariable long rallyId,
-        @RequestHeader(value = "currentMemberId") long currentMemberId) {
+        @RequestHeader(value = "memberId") long memberId) {
 
-        participateService.cancelParticipateByMate(rallyId, currentMemberId);
+        participateService.cancelParticipateByMate(rallyId, memberId);
 
         return ResponseEntity.noContent().build();
     }
@@ -88,7 +88,7 @@ public class ParticipateController {
         @ApiResponse(code = 400, message = "[Bad Request]")
     })
     @PutMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<?> allowParticipateByMaster(@PathVariable long rallyId, long mateId) {
+    public ResponseEntity<?> allowParticipateByMaster(@PathVariable long rallyId,@RequestParam long mateId) {
 
         participateService.allowParticipate(rallyId, mateId);
 

@@ -1,23 +1,21 @@
 package com.hamhabocca.dallibocca.rally.dto;
 
-import java.util.Date;
-
 public class SearchFilter {
 
     private String type;
     private String location;
-    private Date date;
+    private String date;
     private int distance;
-    private int people;
+    private int maximum;
 
     public SearchFilter() {}
 
-    public SearchFilter(String type, String location, Date date, int distance, int people) {
+    public SearchFilter(String type, String location, String date, int distance, int maximum) {
         this.type = type;
         this.location = location;
         this.date = date;
         this.distance = distance;
-        this.people = people;
+        this.maximum = maximum;
     }
 
     public String getType() {
@@ -36,11 +34,11 @@ public class SearchFilter {
         this.location = location;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -52,12 +50,12 @@ public class SearchFilter {
         this.distance = distance;
     }
 
-    public int getPeople() {
-        return people;
+    public int getmaximum() {
+        return maximum;
     }
 
-    public void setPeople(int people) {
-        this.people = people;
+    public void setmaximum(int maximum) {
+        this.maximum = maximum;
     }
 
     @Override
@@ -67,7 +65,7 @@ public class SearchFilter {
             ", location='" + location + '\'' +
             ", date=" + date +
             ", distance=" + distance +
-            ", people=" + people +
+            ", maximum=" + maximum +
             '}';
     }
 }

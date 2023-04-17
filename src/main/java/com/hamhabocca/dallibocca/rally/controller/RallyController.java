@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.net.URI;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 @Api(tags = "Rally API")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping(value = "/api/v1")
 public class RallyController {
 
     private final RallyService rallyService;
@@ -39,8 +40,8 @@ public class RallyController {
 
     @ApiOperation(value = "모든 랠리 목록 조회 API")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "[Ok]"),
-        @ApiResponse(code = 404, message = "[Not Found]")
+        @ApiResponse(code = 200, message = "전체 조회 성공"),
+        @ApiResponse(code = 404, message = "찾을 수 없는 목록")
     })
     @GetMapping("/rallies")
     public ResponseEntity<ResponseMessage> findRallyList(@PageableDefault(size = 15) Pageable pageable) {
@@ -62,10 +63,10 @@ public class RallyController {
 
     @ApiOperation(value = "랠리글 상세 조회 API")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "[Ok]"),
-        @ApiResponse(code = 400, message = "[Bad Request]"),
-        @ApiResponse(code = 403, message = "[Forbidden]"),
-        @ApiResponse(code = 404, message = "[Not Found]")
+        @ApiResponse(code = 200, message = "상세 조회 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청"),
+        @ApiResponse(code = 401, message = "접근 권한 없음"),
+        @ApiResponse(code = 404, message = "찾을 수 없는 정보")
     })
     @GetMapping("/rallies/{rallyId}")
     public ResponseEntity<ResponseMessage> findRallyById(@PathVariable int rallyId) {
@@ -79,17 +80,17 @@ public class RallyController {
         responseMap.put("rally", foundRally);
 
         return ResponseEntity.ok().headers(headers)
-            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
+            .body(new ResponseMessage(200, "상세 조회 성공", responseMap));
     }
 
     @ApiOperation(value = "랠리글 추가 API")
     @ApiResponses({
-        @ApiResponse(code = 201, message = "[Created]"),
-        @ApiResponse(code = 400, message = "[Bad Request]"),
-        @ApiResponse(code = 403, message = "[Forbidden]")
+        @ApiResponse(code = 201, message = "리소스 생성 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청"),
+        @ApiResponse(code = 403, message = "비회원의 접근")
     })
     @PostMapping("/rallies")
-    public ResponseEntity<?> postRally(@RequestBody RallyDTO newRally, @RequestHeader(value = "memberId") long memberId) {
+    public ResponseEntity<?> postRally(RallyDTO newRally, @RequestHeader(value = "memberId") long memberId) {
 
         long currentId = rallyService.postNewRally(newRally, memberId);
 
@@ -98,13 +99,15 @@ public class RallyController {
 
     @ApiOperation(value = "랠리글 수정 API")
     @ApiResponses({
-        @ApiResponse(code = 201, message = "[Created]"),
-        @ApiResponse(code = 400, message = "[Bad Request]"),
-        @ApiResponse(code = 403, message = "[Forbidden]")
+        @ApiResponse(code = 201, message = "리소스 수정 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청"),
+        @ApiResponse(code = 403, message = "접근 권한 없음")
     })
     @PutMapping("/rallies/{rallyId}")
-    public ResponseEntity<?> modifyRally(@RequestBody RallyDTO modifyRally,
+    public ResponseEntity<?> modifyRally(RallyDTO modifyRally,
         @PathVariable int rallyId) {
+
+        System.out.println("폼들어왓나" + modifyRally);
 
         rallyService.modifyRally(modifyRally, rallyId);
 
@@ -113,8 +116,8 @@ public class RallyController {
 
     @ApiOperation(value = "취소된 랠리글 삭제 API")
     @ApiResponses({
-        @ApiResponse(code = 204, message = "[No Content]"),
-        @ApiResponse(code = 400, message = "[Bad Request]")
+        @ApiResponse(code = 204, message = "리소스 삭제 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @DeleteMapping("/rallies/{rallyId}")
     public ResponseEntity<?> removeRally(@PathVariable int rallyId) {
@@ -126,25 +129,20 @@ public class RallyController {
 
     @ApiOperation(value = "조건에 따른 랠리 목록 조회 API")
     @ApiResponses({
-        @ApiResponse(code = 204, message = "[No Content]"),
-        @ApiResponse(code = 400, message = "[Bad Request]")
+        @ApiResponse(code = 200, message = "검색 조회 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @GetMapping("/rallies/search")
-    public ResponseEntity<ResponseMessage> findRalliesByFilter(@PageableDefault(size = 15) Pageable pageable, @RequestBody SearchFilter searchFilter) {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-
-        Page<RallySimpleDTO> searchRallies = rallyService.findRallyListBySearch(pageable, searchFilter);
-
-        PagingButtonInfo paging = Pagination.getPagingButtonInfo(searchRallies);
+    public ResponseEntity<ResponseMessage> findRalliesByFilter(SearchFilter searchFilter) {
 
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("searchRallies", searchRallies);
-        responseMap.put("paging", paging);
 
-        return ResponseEntity.ok().headers(headers)
-            .body(new ResponseMessage(200, "개별 조회 성공", responseMap));
+        System.out.println("컨트롤러에서의..." + searchFilter);
+
+        List<RallyDTO> rallyList = rallyService.findRallyListBySearch(searchFilter);
+        responseMap.put("rallyList", rallyList);
+
+        return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
     }
 
 }
