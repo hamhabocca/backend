@@ -34,7 +34,7 @@ public class LoginService {
 
 	@Autowired
 	public LoginService(LoginRepository loginRepository, ModelMapper modelMapper,
-		MemberService memberService, TokenProvider tokenProvider) {
+						MemberService memberService, TokenProvider tokenProvider) {
 		this.loginRepository = loginRepository;
 		this.modelMapper = modelMapper;
 		this.memberService = memberService;
@@ -60,13 +60,13 @@ public class LoginService {
 //		});
 
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-			new HttpEntity<>(params, headers);
+				new HttpEntity<>(params, headers);
 
 		ResponseEntity<String> accessTokenResponse = rt.exchange(
-			"https://kauth.kakao.com/oauth/token",
-			HttpMethod.POST,
-			kakaoTokenRequest,
-			String.class
+				"https://kauth.kakao.com/oauth/token",
+				HttpMethod.POST,
+				kakaoTokenRequest,
+				String.class
 		);
 
 		System.out.println(accessTokenResponse);
@@ -93,13 +93,13 @@ public class LoginService {
 		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
 		HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest =
-			new HttpEntity<>(headers);
+				new HttpEntity<>(headers);
 
 		ResponseEntity<String> kakaoProfileResponse = rt.exchange(
-			"https://kapi.kakao.com/v2/user/me",
-			HttpMethod.POST,
-			kakaoProfileRequest,
-			String.class
+				"https://kapi.kakao.com/v2/user/me",
+				HttpMethod.POST,
+				kakaoProfileRequest,
+				String.class
 		);
 
 		System.out.println(kakaoProfileResponse.getBody());
@@ -109,7 +109,7 @@ public class LoginService {
 
 		try {
 			kakaoProfileDTO = objectMapper.readValue(kakaoProfileResponse.getBody(),
-				KakaoProfileDTO.class);
+					KakaoProfileDTO.class);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
@@ -150,7 +150,17 @@ public class LoginService {
 		Date accessExpireDate = new Date(foundmember.getAccessTokenExpireDate());
 
 		if(accessExpireDate.before(new Date())) {
-			renewKakaoToken(foundmember);
+
+			RenewTokenDTO renewedToken = renewKakaoToken(foundmember);
+
+			if(renewedToken.getRefresh_token() != null) {
+
+				foundmember.setRefreshToken(renewedToken.getRefresh_token());
+				foundmember.setRefreshTokenExpireDate(renewedToken.getRefresh_token_expires_in() + System.currentTimeMillis());
+			}
+
+			foundmember.setAccessToken(renewedToken.getAccess_token());
+			foundmember.setAccessTokenExpireDate(renewedToken.getExpires_in() + System.currentTimeMillis());
 		}
 
 		return tokenProvider.generateMemberTokenDTO(foundmember);
@@ -172,13 +182,13 @@ public class LoginService {
 		System.out.println("refreshhhhhhhhhh" + foundMember.getRefreshToken());
 
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
-			new HttpEntity<>(params, headers);
+				new HttpEntity<>(params, headers);
 
 		ResponseEntity<String> renewTokenResponse = rt.exchange(
-			"https://kauth.kakao.com/oauth/token",
-			HttpMethod.POST,
-			kakaoTokenRequest,
-			String.class
+				"https://kauth.kakao.com/oauth/token",
+				HttpMethod.POST,
+				kakaoTokenRequest,
+				String.class
 		);
 
 		ObjectMapper objectMapper = new ObjectMapper();

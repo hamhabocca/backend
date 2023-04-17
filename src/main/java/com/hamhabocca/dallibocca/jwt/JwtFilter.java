@@ -103,6 +103,12 @@ public class JwtFilter extends OncePerRequestFilter {
 		String path = request.getRequestURI();
 		if("/api/v1/login/kakaocode".equals(path)) {
 			return true;
+		} else if("/api/v1/login/renew".equals(path)) {
+			return true;
+		} else if("/swagger-ui/index.html".equals(path)) {
+			return true;
+		} else if("/swagger-ui.html".equals(path)){
+			return true;
 		} else {
 			return false;
 		}

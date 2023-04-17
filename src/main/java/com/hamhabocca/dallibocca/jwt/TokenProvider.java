@@ -31,7 +31,7 @@ public class TokenProvider {
 	private static final Logger log = LoggerFactory.getLogger(TokenProvider.class);
 	private static final String AUTHORITIES_KEY = "Auth";
 	private static final String BEARER_TYPE = "bearer";
-	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;	// 30분
+	private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 21599;	// 30분 정도가 이상적이나 Redis 사용 이전까지는 카카오 액세스 토큰과 시간을 같게 함
 
 	private final UserDetailsService userDetailsService;
 
@@ -49,7 +49,6 @@ public class TokenProvider {
 		Claims claims = Jwts
 				.claims()
 				.setSubject(String.valueOf(foundmember.getMemberId()));
-				// 여기에 아마 refresh token 추가?
 		long now = (new Date()).getTime();
 
 		// Access Token 생성

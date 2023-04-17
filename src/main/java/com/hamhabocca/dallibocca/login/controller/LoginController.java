@@ -61,6 +61,7 @@ public class LoginController {
 	@PostMapping("/renew")
 	public ResponseEntity<?> renewAccessToken(@RequestHeader(value = "Auth") String auth) {
 
+		System.out.println("auth = " + auth);
 		return null;
 	}
 }
