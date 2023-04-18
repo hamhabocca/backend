@@ -29,6 +29,7 @@ public class QnaService {
 		this.modelMapper = new ModelMapper();
 	}
 
+
 	public Page<QnaSimpleDTO> findQnaList(Pageable pageable) {
 
 		pageable = PageRequest.of(pageable.getPageNumber() <= 0? 0: pageable.getPageNumber() - 1,
