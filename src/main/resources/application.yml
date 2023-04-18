@@ -1,20 +1,16 @@
 server:
   port: 3307
-#  port: 3000
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://@mysql.team-greedy.com:3306/dallibocca?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
-#    url: jdbc:mysql://@localhost:3306/test?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
     username: hamhabocca
     password: hamhabocca
-#    username: TEST
-#    password: TEST
     hikari:
       auto-commit: false
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     show-sql: true
     database: mysql
     properties:
@@ -22,10 +18,6 @@ spring:
         '[format_sql]': true
         hbm2ddl:
           auto: update
-
-# 스웨거 비번 끄기 위해 잠시 사용
-#  autoconfigure:
-#    exclude[0]: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 # HS512 알고리즘을 사용할 것이기 때문에 512bit, 즉 64byte 이상의 secret key를 사용해야 한다.
 # Secret 값은 특정 문자열을 Base64 로 인코딩한 값 사용

@@ -1,9 +1,9 @@
 package com.hamhabocca.dallibocca.member.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
-import com.hamhabocca.dallibocca.member.dto.SignUpDTO;
 import com.hamhabocca.dallibocca.member.service.MemberService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -19,10 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Api(tags = "멤버 관련 기능 API")
@@ -36,24 +34,6 @@ public class MemberController {
     public MemberController(MemberService memberService) {
 
         this.memberService = memberService;
-    }
-
-    @ApiOperation(value = "최초 소셜 로그인 시 회원 정보 등록")
-    @PostMapping("/members")
-    public ResponseEntity<ResponseMessage> registNewUser(@RequestBody SignUpDTO newMemberInfo) {
-
-        MemberDTO newMember = new MemberDTO();
-
-        newMember.setNickname(newMemberInfo.getNickname());
-        newMember.setSocialLogin(newMemberInfo.getSocialLogin());
-        newMember.setSocialId(newMemberInfo.getSocialId());
-        newMember.setSignUpDate(newMemberInfo.getSignUpDate());
-
-        long newMemberId = memberService.registNewUser(newMember);
-
-        return ResponseEntity
-                .created(URI.create("/api/v1/members/" + newMemberId))
-                .build();
     }
 
     @ApiOperation(value = "멤버 이름, 프사(예정), 마이페이지로 가는 링크만 id로 조회")
@@ -181,12 +161,22 @@ public class MemberController {
 
     @ApiOperation(value = "인증된 멤버 정보 조회")
     @GetMapping("/members/auth")
-    public ResponseEntity<?> getCurrentMember(HttpServletRequest request) {
+    public ResponseEntity<?> getCurrentMember(HttpServletRequest request)
+        throws JsonProcessingException {
 
-        System.out.println(request);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        MemberDTO currentMember = memberService.getAuthedMember(request);
+        System.out.println(request.getHeader("Auth"));
 
-        return ResponseEntity.ok().body(currentMember);
+        MemberDTO currentMember = memberService.getAuthedMember(request.getHeader("Auth"));
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("member", currentMember);
+
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(new ResponseMessage(200, "찾았다~", responseMap));
     }
 }

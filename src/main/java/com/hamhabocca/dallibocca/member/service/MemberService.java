@@ -1,9 +1,12 @@
 package com.hamhabocca.dallibocca.member.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.entity.Member;
 import com.hamhabocca.dallibocca.member.repository.MemberRepository;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,127 +18,130 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
-import java.net.http.HttpRequest;
 import java.util.List;
 
 @Service
 public class MemberService {
 
-    private final MemberRepository memberRepository;
-    private final ModelMapper modelMapper;
+	private final MemberRepository memberRepository;
+	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
-    @PersistenceContext
-    private EntityManager em;
+	@Autowired
+	public MemberService(MemberRepository memberRepository, ModelMapper modelMapper,
+		ObjectMapper objectMapper) {
+		this.memberRepository = memberRepository;
+		this.modelMapper = modelMapper;
+		this.objectMapper = objectMapper;
+	}
 
-    @Autowired
-    public MemberService(MemberRepository memberRepository, ModelMapper modelMapper) {
-        this.memberRepository = memberRepository;
-        this.modelMapper = modelMapper;
-    }
+	@Transactional
+	public long registNewUser(MemberDTO newMember) {
 
-    @Transactional
-    public long registNewUser(MemberDTO newMember) {
+		long lastId = 0;
 
-        long lastId = 0;
+		if (memberRepository.findTopByOrderByMemberIdDesc() != null) {
+			lastId = (long) memberRepository.findTopByOrderByMemberIdDesc();
+		}
 
-        if(memberRepository.findTopByOrderByMemberIdDesc() != null) {
-            lastId = (long) memberRepository.findTopByOrderByMemberIdDesc();
-        }
+		newMember.setNickname("새로운회원" + (lastId + 1));
+		newMember.setLevel(1);
+		newMember.setIsDeleted("N");
 
+		return memberRepository.save(modelMapper.map(newMember, Member.class)).getMemberId();
+	}
 
-        newMember.setNickname("새로운회원" + (lastId + 1));
-        newMember.setLevel(1);
-        newMember.setIsDeleted("N");
+	public MemberDTO findMemberById(long memberId) {
 
-        return memberRepository.save(modelMapper.map(newMember, Member.class)).getMemberId();
-    }
+		Member member = memberRepository.findById(memberId).get();
 
-    public MemberDTO findMemberById(long memberId) {
+		return modelMapper.map(member, MemberDTO.class);
+	}
 
-        Member member = memberRepository.findById(memberId).get();
+	public MemberSimpleDTO findMemberByIdSimple(long memberId) {
 
-        return modelMapper.map(member, MemberDTO.class);
-    }
+		MemberSimpleDTO member = memberRepository.findMemberByIdSimple(memberId);
 
-    public MemberSimpleDTO findMemberByIdSimple(long memberId) {
+		member.setLinkToMyPage("/mypage/" + member.getMemberId());  //마이페이지 링크 기억안나서 아직 예시
 
-        MemberSimpleDTO member = memberRepository.findMemberByIdSimple(memberId);
+		return member;
+	}
 
-        member.setLinkToMyPage("/mypage/" + member.getMemberId());  //마이페이지 링크 기억안나서 아직 예시
+	public /*List<MemberDTO>*/ Page<MemberDTO> findAllMembers(Pageable pageable) {
 
-        return member;
-    }
+		pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
+			pageable.getPageSize(),
+			Sort.by("memberId"));
 
-    public /*List<MemberDTO>*/ Page<MemberDTO> findAllMembers(Pageable pageable) {
+		return memberRepository.findAll(pageable)
+			.map(member -> modelMapper.map(member, MemberDTO.class));
+	}
 
-        pageable = PageRequest.of(pageable.getPageNumber() <= 0? 0: pageable.getPageNumber() - 1,
-                pageable.getPageSize(),
-                Sort.by("memberId"));
+	@Transactional
+	public void modifyMember(MemberDTO modifyInfo, long memberId, String type) {
 
-        return memberRepository.findAll(pageable).map(member -> modelMapper.map(member, MemberDTO.class));
-    }
+		Member foundMember = memberRepository.findById(memberId).get();
 
-    @Transactional
-    public void modifyMember(MemberDTO modifyInfo, long memberId, String type) {
+		switch (type) {
+			case "edit":
+				if (modifyInfo.getNickname() != null) {
+					foundMember.setNickname(modifyInfo.getNickname());
+				}
+				if (modifyInfo.getPreferredLocation() != null) {
+					foundMember.setPreferredLocation(modifyInfo.getPreferredLocation());
+				}
+				if (modifyInfo.getPreferredType() != null) {
+					foundMember.setPreferredType(modifyInfo.getPreferredType());
+				}
+				break;
 
-        Member foundMember = memberRepository.findById(memberId).get();
+			case "deactivate":
+				foundMember.setIsDeleted("Y");
+				break;
+		}
+	}
 
-        switch (type) {
-            case "edit":
-                if (modifyInfo.getNickname() != null) {
-                    foundMember.setNickname(modifyInfo.getNickname());
-                }
-                if (modifyInfo.getPreferredLocation() != null) {
-                    foundMember.setPreferredLocation(modifyInfo.getPreferredLocation());
-                }
-                if (modifyInfo.getPreferredType() != null) {
-                    foundMember.setPreferredType(modifyInfo.getPreferredType());
-                }
-                break;
+	@Transactional
+	public void deleteMember(long memberId) {
 
-            case "deactivate":
-                foundMember.setIsDeleted("Y");
-                break;
-        }
-    }
+		Member foundMember = memberRepository.findById(memberId).get();
 
-    @Transactional
-    public void deleteMember(long memberId) {
+		memberRepository.delete(foundMember);
+	}
 
-        Member foundMember = memberRepository.findById(memberId).get();
+	public boolean checkIfRepeated(String nickname) {
 
-        memberRepository.delete(foundMember);
-    }
+		List<Member> foundMember = memberRepository.findByNickname(nickname);
 
-    public boolean checkIfRepeated(String nickname) {
+		if (foundMember.size() < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
-        List<Member> foundMember = memberRepository.findByNickname(nickname);
+	public MemberDTO findBySocialId(String socialLogin, long socialId) {
 
-        if(foundMember.size() < 1) {
-            return false;
-        } else {
-            return true;
-        }
-    }
+		Member foundMember = memberRepository.findBySocialId(socialLogin, socialId);
 
-    public MemberDTO findBySocialId(String socialLogin, long socialId) {
+		if (foundMember == null) {
+			return null;
+		} else {
+			return modelMapper.map(foundMember, MemberDTO.class);
+		}
+	}
 
-        Member foundMember = memberRepository.findBySocialId(socialLogin, socialId);
+	public MemberDTO getAuthedMember(String header) throws JsonProcessingException {
 
-        if(foundMember == null) {
-            return null;
-        } else {
-            return modelMapper.map(foundMember, MemberDTO.class);
-        }
-    }
+		Map<String, String> headerMap = objectMapper.readValue(header, Map.class);
 
-    public MemberDTO getAuthedMember(HttpServletRequest request) {
+		String id = String.valueOf(headerMap.get("memberId"));
 
-        Long memberId = (Long) request.getAttribute("memberId");
+		Long memberId = Long.parseLong(id);
 
-        MemberDTO authedMember = modelMapper.map(memberRepository.findById(memberId), MemberDTO.class);
+		MemberDTO authedMember = modelMapper.map(memberRepository.findById(memberId),
+			MemberDTO.class);
 
-        return authedMember;
-    }
+		return authedMember;
+	}
 }
