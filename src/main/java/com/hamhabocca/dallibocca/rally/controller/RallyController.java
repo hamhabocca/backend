@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.rally.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
@@ -44,7 +45,8 @@ public class RallyController {
         @ApiResponse(code = 404, message = "찾을 수 없는 목록")
     })
     @GetMapping("/rallies")
-    public ResponseEntity<ResponseMessage> findRallyList(@PageableDefault(size = 15) Pageable pageable) {
+    public ResponseEntity<ResponseMessage> findRallyList(
+        @PageableDefault(size = 15) Pageable pageable) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -87,14 +89,15 @@ public class RallyController {
     @ApiResponses({
         @ApiResponse(code = 201, message = "리소스 생성 성공"),
         @ApiResponse(code = 400, message = "잘못된 요청"),
-        @ApiResponse(code = 403, message = "비회원의 접근")
+        @ApiResponse(code = 403, message = "접근 권한 없음")
     })
     @PostMapping("/rallies")
-    public ResponseEntity<?> postRally(RallyDTO newRally, @RequestHeader(value = "memberId") long memberId) {
+    public ResponseEntity<?> postRally(RallyDTO newRally,
+        @RequestHeader(value = "Auth") String auth) throws JsonProcessingException {
 
-        long currentId = rallyService.postNewRally(newRally, memberId);
+        long rallyId = rallyService.postNewRally(newRally, auth);
 
-        return ResponseEntity.created(URI.create("/api/v1/rallies/" + currentId)).build();
+        return ResponseEntity.created(URI.create("/api/v1/rallies/" + rallyId)).build();
     }
 
     @ApiOperation(value = "랠리글 수정 API")
@@ -105,11 +108,10 @@ public class RallyController {
     })
     @PutMapping("/rallies/{rallyId}")
     public ResponseEntity<?> modifyRally(RallyDTO modifyRally,
-        @PathVariable int rallyId) {
+        @PathVariable int rallyId, @RequestHeader(value = "Auth") String auth)
+        throws JsonProcessingException {
 
-        System.out.println("폼들어왓나" + modifyRally);
-
-        rallyService.modifyRally(modifyRally, rallyId);
+        rallyService.modifyRally(modifyRally, rallyId, auth);
 
         return ResponseEntity.created(URI.create("/api/v1/rallies/" + rallyId)).build();
     }
@@ -120,7 +122,7 @@ public class RallyController {
         @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @DeleteMapping("/rallies/{rallyId}")
-    public ResponseEntity<?> removeRally(@PathVariable int rallyId) {
+    public ResponseEntity<?> removeRallyForAdmin(@PathVariable int rallyId) {
 
         rallyService.removeRally(rallyId);
 

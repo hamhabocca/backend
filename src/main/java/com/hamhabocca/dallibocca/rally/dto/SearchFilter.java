@@ -8,7 +8,8 @@ public class SearchFilter {
     private int distance;
     private int maximum;
 
-    public SearchFilter() {}
+    public SearchFilter() {
+    }
 
     public SearchFilter(String type, String location, String date, int distance, int maximum) {
         this.type = type;

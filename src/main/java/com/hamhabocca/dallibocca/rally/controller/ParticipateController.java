@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.rally.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.rally.dto.RallyMateDTO;
 import com.hamhabocca.dallibocca.rally.service.ParticipateService;
@@ -33,8 +34,8 @@ public class ParticipateController {
 
     @ApiOperation(value = "랠리 신청 현황 API")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "[OK]"),
-        @ApiResponse(code = 400, message = "[Bad Request]")
+        @ApiResponse(code = 200, message = "신청현황 조회 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @GetMapping("/rallies/{rallyId}/mate-list")
     public ResponseEntity<ResponseMessage> findRallyMateListByRallyId(@PathVariable long rallyId) {
@@ -53,15 +54,14 @@ public class ParticipateController {
 
     @ApiOperation(value = "랠리 참가 신청 API")
     @ApiResponses({
-        @ApiResponse(code = 201, message = "[Created]"),
-        @ApiResponse(code = 400, message = "[Bad Request]"),
-        @ApiResponse(code = 403, message = "[Forbidden]")
+        @ApiResponse(code = 201, message = "참가 신청 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청")
     })
     @PostMapping("/rallies/{rallyId}/mate-list")
     public ResponseEntity<?> participateRallyByMate(@PathVariable long rallyId,
-        @RequestHeader(value = "memberId") long memberId) {
+        @RequestHeader(value = "Auth") String auth) throws JsonProcessingException {
 
-        participateService.participateByMate(rallyId, memberId);
+        long memberId = participateService.participateByMate(rallyId, auth);
 
         return ResponseEntity.created(
                 URI.create("/api/v1/rallies/" + rallyId + "/mate-list/" + memberId))
@@ -75,9 +75,9 @@ public class ParticipateController {
     })
     @DeleteMapping("/rallies/{rallyId}/mate-list")
     public ResponseEntity<?> cancelParticipateRally(@PathVariable long rallyId,
-        @RequestHeader(value = "memberId") long memberId) {
+        @RequestHeader(value = "Auth") String auth) throws JsonProcessingException {
 
-        participateService.cancelParticipateByMate(rallyId, memberId);
+        participateService.cancelParticipateByMate(rallyId, auth);
 
         return ResponseEntity.noContent().build();
     }
@@ -88,9 +88,11 @@ public class ParticipateController {
         @ApiResponse(code = 400, message = "[Bad Request]")
     })
     @PutMapping("/rallies/{rallyId}/mate-list")
-    public ResponseEntity<?> allowParticipateByMaster(@PathVariable long rallyId,@RequestParam long mateId) {
+    public ResponseEntity<?> allowParticipateByMaster(@PathVariable long rallyId,
+        @RequestParam long mateId, @RequestHeader(value = "Auth") String auth)
+        throws JsonProcessingException {
 
-        participateService.allowParticipate(rallyId, mateId);
+        participateService.allowParticipate(rallyId, mateId, auth);
 
         return ResponseEntity.created(
             URI.create("/api/v1/rallies/" + rallyId + "/mate-list/" + mateId)).build();

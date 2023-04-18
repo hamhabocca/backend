@@ -1,5 +1,7 @@
 package com.hamhabocca.dallibocca.rally.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallySimpleDTO;
 import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
@@ -10,6 +12,7 @@ import com.hamhabocca.dallibocca.rally.repository.RallyRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +29,15 @@ public class RallyService {
     private final RallyRepository rallyRepository;
     private final RallyMapper rallyMapper;
     private final ModelMapper modelMapper;
+    private final ObjectMapper objectMapper;
 
     @Autowired
     public RallyService(RallyRepository rallyRepository, RallyMapper rallyMapper,
-        ModelMapper modelMapper) {
+        ModelMapper modelMapper, ObjectMapper objectMapper) {
         this.rallyRepository = rallyRepository;
         this.rallyMapper = rallyMapper;
         this.modelMapper = modelMapper;
+        this.objectMapper = objectMapper;
     }
 
     /* 모든 랠리 목록 조회 */
@@ -56,12 +61,20 @@ public class RallyService {
 
     /* 랠리글 추가 */
     @Transactional
-    public long postNewRally(RallyDTO newRally, long memberId) {
+    public long postNewRally(RallyDTO newRally, String auth) throws JsonProcessingException {
+
+        // 신청 회원 확인
+        Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+        long memberId = Long.parseLong(authMap.get("memberId"));
+
+        if (auth == "") {
+            throw new RallyException("비회원 접근");
+        }
 
         /* 기본값 설정 */
         newRally.setRallyStatus("모집중");
         newRally.setMasterId(memberId);
-        newRally.setRallyWriteDate(LocalDateTime.now()+"");
+        newRally.setRallyWriteDate(LocalDateTime.now() + "");
 
         if (newRally.getRallyMinimum() == 0) {
             newRally.setRallyMinimum(2);
@@ -76,10 +89,19 @@ public class RallyService {
 
     /* 랠리글 수정 */
     @Transactional
-    public void modifyRally(RallyDTO modifyRally, long rallyId) {
+    public void modifyRally(RallyDTO modifyRally, long rallyId, String auth)
+        throws JsonProcessingException {
+
+        // 신청 회원 확인
+        Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+        long memberId = Long.parseLong(authMap.get("memberId"));
 
         /* 변경할 기존 랠리 가져오기 */
         Rally foundRally = rallyRepository.findById(rallyId).get();
+
+        if (memberId != foundRally.getMasterId()) {
+            throw new RallyException("해당 랠리의 작성자가 아닙니다.");
+        }
 
         if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus()))
             && modifyRally.getRallyStatus() != null) {
@@ -115,7 +137,7 @@ public class RallyService {
         rallyRepository.deleteById(rallyId);
     }
 
-    /* 본인이 모집한 랠리 찾기 */
+    /* 본인이 모집한 랠리 찾기 - 마이페이지 */
     public List<RallyDTO> findRecruitRallyList(long currentMemberId) {
 
         List<Rally> rallyList = rallyRepository.findAllByMasterId(currentMemberId);
@@ -124,6 +146,7 @@ public class RallyService {
             Collectors.toList());
     }
 
+    /* 검색필터를 통한 랠리 목록 조회 */
     public List<RallyDTO> findRallyListBySearch(SearchFilter searchQuery) {
 
         System.out.println("서비스에서의..." + searchQuery);
