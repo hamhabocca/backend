@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface QnaRepository extends JpaRepository<Qna, Integer> {
+public interface QnaRepository extends JpaRepository<Qna, Long> {
     List<Qna> findAllQna();
     List<Qna> findByQnaTitleContaining(String qnaTitle);
 
