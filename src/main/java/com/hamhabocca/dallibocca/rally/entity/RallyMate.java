@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity(name = "RallyMate")
 @Table(name = "rally_mate")
 @SequenceGenerator(
-    name = "rallymate_sequence_generator",
+    name="rallymate_sequence_generator",
     sequenceName = "sequence_rally_mate_id",
     initialValue = 1,
     allocationSize = 50
@@ -101,4 +101,5 @@ public class RallyMate {
             ", isAccepted='" + isAccepted + '\'' +
             '}';
     }
+
 }

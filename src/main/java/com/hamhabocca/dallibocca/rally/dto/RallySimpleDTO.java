@@ -92,4 +92,5 @@ public class RallySimpleDTO {
             ", rallyWriteDate=" + rallyWriteDate +
             '}';
     }
+
 }

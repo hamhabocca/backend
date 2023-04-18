@@ -161,4 +161,5 @@ public class RallyDTO {
             ", rallyDetail='" + rallyDetail + '\'' +
             '}';
     }
+
 }
