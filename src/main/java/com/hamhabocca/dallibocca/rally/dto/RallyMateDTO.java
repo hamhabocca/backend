@@ -1,73 +1,74 @@
 package com.hamhabocca.dallibocca.rally.dto;
 
-import java.util.Date;
-
 public class RallyMateDTO {
 
-	private int rallyMateId;
-	private int rallyId;
-	private int memberId;
-	private java.util.Date participationDate;
-	private String isAccepted;
+    private long id;
+    private long rallyId;
+    private long memberId;
+    private String participationDate;
+    private String isAccepted;
 
-	public RallyMateDTO() {}
+    public RallyMateDTO() {
+    }
 
-	public RallyMateDTO(int rallyMateId, int rallyId, int memberId, Date participationDate, String isAccepted) {
-		this.rallyMateId = rallyMateId;
-		this.rallyId = rallyId;
-		this.memberId = memberId;
-		this.participationDate = participationDate;
-		this.isAccepted = isAccepted;
-	}
+    public RallyMateDTO(long id, long rallyId, long memberId, String participationDate,
+        String isAccepted) {
+        this.id = id;
+        this.rallyId = rallyId;
+        this.memberId = memberId;
+        this.participationDate = participationDate;
+        this.isAccepted = isAccepted;
+    }
 
-	public int getRallyMateId() {
-		return rallyMateId;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public void setRallyMateId(int rallyMateId) {
-		this.rallyMateId = rallyMateId;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public int getRallyId() {
-		return rallyId;
-	}
+    public long getRallyId() {
+        return rallyId;
+    }
 
-	public void setRallyId(int rallyId) {
-		this.rallyId = rallyId;
-	}
+    public void setRallyId(long rallyId) {
+        this.rallyId = rallyId;
+    }
 
-	public int getMemberId() {
-		return memberId;
-	}
+    public long getMemberId() {
+        return memberId;
+    }
 
-	public void setMemberId(int memberId) {
-		this.memberId = memberId;
-	}
+    public void setMemberId(long memberId) {
+        this.memberId = memberId;
+    }
 
-	public Date getParticipationDate() {
-		return participationDate;
-	}
+    public String getParticipationDate() {
+        return participationDate;
+    }
 
-	public void setParticipationDate(Date participationDate) {
-		this.participationDate = participationDate;
-	}
+    public void setParticipationDate(String participationDate) {
+        this.participationDate = participationDate;
+    }
 
-	public String getIsAccepted() {
-		return isAccepted;
-	}
+    public String getIsAccepted() {
+        return isAccepted;
+    }
 
-	public void setIsAccepted(String isAccepted) {
-		this.isAccepted = isAccepted;
-	}
+    public void setIsAccepted(String isAccepted) {
+        this.isAccepted = isAccepted;
+    }
 
-	@Override
-	public String toString() {
-		return "RallyMateDTO{" +
-				"rallyMateId=" + rallyMateId +
-				", rallyId=" + rallyId +
-				", memberId=" + memberId +
-				", participationDate=" + participationDate +
-				", isAccepted='" + isAccepted + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "RallyMateDTO{" +
+            "id=" + id +
+            ", rallyId=" + rallyId +
+            ", memberId=" + memberId +
+            ", participationDate=" + participationDate +
+            ", isAccepted='" + isAccepted + '\'' +
+            '}';
+    }
+
 }

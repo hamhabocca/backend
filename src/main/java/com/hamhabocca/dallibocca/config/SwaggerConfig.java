@@ -20,30 +20,30 @@ public class SwaggerConfig {
     private ApiInfo swaggerInfo() {
 
         return new ApiInfoBuilder()
-                .title("Dallibocca API")
-                .description("spring boot swagger")
-                .build();
+            .title("Dallibocca API")
+            .description("spring boot swagger")
+            .build();
     }
 
     @Bean
     public Docket swaggerApi() {
 
         return new Docket(DocumentationType.SWAGGER_2)
-                .consumes(getConsumeContentTypes())
-                .produces(getProduceContentTypes())
-                .apiInfo(swaggerInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.hamhabocca.dallibocca"))
-                .paths(PathSelectors.any())
-                .build()
-                .useDefaultResponseMessages(false);
+            .consumes(getConsumeContentTypes())
+            .produces(getProduceContentTypes())
+            .apiInfo(swaggerInfo())
+            .select()
+            .apis(RequestHandlerSelectors.basePackage("com.hamhabocca.dallibocca"))
+            .paths(PathSelectors.any())
+            .build()
+            .useDefaultResponseMessages(false);
     }
 
     private Set<String> getConsumeContentTypes() {
 
         Set<String> consumes = new HashSet<>();
         consumes.add("application/json;charset=UTF-8");
-//        consumes.add("application/x-www-form-urlencoded");
+        consumes.add("application/x-www-form-urlencoded");
 
         return consumes;
     }
