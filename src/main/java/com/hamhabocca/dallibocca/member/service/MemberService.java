@@ -38,13 +38,7 @@ public class MemberService {
 	@Transactional
 	public long registNewUser(MemberDTO newMember) {
 
-		long lastId = 0;
-
-		if (memberRepository.findTopByOrderByMemberIdDesc() != null) {
-			lastId = (long) memberRepository.findTopByOrderByMemberIdDesc();
-		}
-
-		newMember.setNickname("새로운회원" + (lastId + 1));
+		newMember.setNickname("새로운회원" + (Math.random() * 100 + 1));
 		newMember.setLevel(1);
 		newMember.setIsDeleted("N");
 
