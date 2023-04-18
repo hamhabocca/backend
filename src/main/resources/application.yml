@@ -1,5 +1,5 @@
 server:
-  port: 3307
+  port: 8000
 
 spring:
   datasource:
@@ -29,3 +29,6 @@ logging:
     org:
       springframework:
         security: DEBUG
+
+mybatis:
+  mapper-locations: mybatis/**/*.xml

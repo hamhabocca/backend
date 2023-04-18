@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DalliboccaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DalliboccaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DalliboccaApplication.class, args);
+    }
 
 }
