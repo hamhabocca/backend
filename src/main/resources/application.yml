@@ -1,5 +1,5 @@
 server:
-  port: 8000
+  port: 3306
 
 spring:
   datasource:
@@ -16,8 +16,3 @@ spring:
     properties:
       hibernate:
         '[format_sql]': true
-        hbm2ddl:
-          auto: update
-
-mybatis:
-  mapper-locations: mybatis/**/*.xml

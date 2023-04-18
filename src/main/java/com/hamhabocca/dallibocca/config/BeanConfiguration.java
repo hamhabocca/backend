@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.hamhabocca.dallibocca")
 public class BeanConfiguration {
 
-    @Bean
-    public ModelMapper modelMapper() {
+	@Bean
+	public ModelMapper modelMapper() {
 
-        return new ModelMapper();
-    }
+		return new ModelMapper();
+	}
 
 }
