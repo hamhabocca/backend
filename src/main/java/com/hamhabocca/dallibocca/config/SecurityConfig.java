@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -99,9 +97,9 @@ public class SecurityConfig {
 		CorsConfiguration configuration = new CorsConfiguration();
 		// 로컬 React에서 오는 요청은 CORS 허용해준다.
 		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-		configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE"));
+		configuration.setAllowedMethods(Arrays.asList("GET", "PUT", "POST", "DELETE", "OPTIONS"));
 		configuration.setAllowedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Content-Type",
-			"Access-Control-Allow-Headers", "Authorization", "X-Requested-With"));
+			"Access-Control-Allow-Headers", "Authorization", "X-Requested-With", "Auth"));
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
