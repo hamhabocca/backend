@@ -1,6 +1,5 @@
 package com.hamhabocca.dallibocca.report.controller;
 
-
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.report.dto.RallyReportDTO;
@@ -66,7 +65,6 @@ public class RallyReportController {
 			.build();
 	}
 
-
 	@ApiOperation(value = "랠리 신고 전체 조회")
 	@GetMapping("/reportrallys")
 	public ResponseEntity<ResponseMessage> findAllRallyReport() {
@@ -85,7 +83,6 @@ public class RallyReportController {
 			HttpStatus.OK
 		);
 	}
-
 }
 
 
