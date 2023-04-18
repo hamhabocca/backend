@@ -133,9 +133,13 @@ public class MemberService {
 
 		Long memberId = Long.parseLong(id);
 
-		MemberDTO authedMember = modelMapper.map(memberRepository.findById(memberId),
-			MemberDTO.class);
+		System.out.println("memberId = " + memberId);
+		System.out.println(memberId.getClass().getName());
 
-		return authedMember;
+		Member authedMember = memberRepository.findById(memberId).get();
+
+		System.out.println("authedMember = " + authedMember);
+
+		return modelMapper.map(authedMember, MemberDTO.class);
 	}
 }
