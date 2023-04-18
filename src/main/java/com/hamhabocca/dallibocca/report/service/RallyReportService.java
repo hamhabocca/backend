@@ -3,6 +3,8 @@ package com.hamhabocca.dallibocca.report.service;
 import com.hamhabocca.dallibocca.report.dto.RallyReportDTO;
 import com.hamhabocca.dallibocca.report.entity.RallyReport;
 import com.hamhabocca.dallibocca.report.repository.RallyReportRepository;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +44,13 @@ public class RallyReportService {
 				break;
 		}
 
+	}
+
+	/*랠리 신고 전체 조회*/
+	public List<RallyReportDTO> findAllRallyReports() {
+		List<RallyReport> rallyReports = rallyReportRepository.findAll();
+		return rallyReports.stream()
+			.map(rallyReport -> modelMapper.map(rallyReport, RallyReportDTO.class))
+			.collect(Collectors.toList());
 	}
 }

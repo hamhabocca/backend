@@ -2,26 +2,23 @@ package com.hamhabocca.dallibocca.qna.dto;
 
 import java.util.Date;
 
-public class QnaDTO {
+public class QnaSimpleDTO {
 
 	private long qnaId;
 	private String qnaTitle;
 	private String qnaCategory;
 	private String qnaWriter;
-	private String qnaDetail;
 	private java.util.Date qnaWriteDate;
 
-	public QnaDTO() {
+	public QnaSimpleDTO() {
 	}
 
-	public QnaDTO(long qnaId, String qnaTitle, String qnaCategory, String qnaWriter,
-		String qnaDetail,
+	public QnaSimpleDTO(long qnaId, String qnaTitle, String qnaCategory, String qnaWriter,
 		Date qnaWriteDate) {
 		this.qnaId = qnaId;
 		this.qnaTitle = qnaTitle;
 		this.qnaCategory = qnaCategory;
 		this.qnaWriter = qnaWriter;
-		this.qnaDetail = qnaDetail;
 		this.qnaWriteDate = qnaWriteDate;
 	}
 
@@ -57,14 +54,6 @@ public class QnaDTO {
 		this.qnaWriter = qnaWriter;
 	}
 
-	public String getQnaDetail() {
-		return qnaDetail;
-	}
-
-	public void setQnaDetail(String qnaDetail) {
-		this.qnaDetail = qnaDetail;
-	}
-
 	public Date getQnaWriteDate() {
 		return qnaWriteDate;
 	}
@@ -75,12 +64,11 @@ public class QnaDTO {
 
 	@Override
 	public String toString() {
-		return "QnaDTO{" +
+		return "QnaSimpleDTO{" +
 			"qnaId=" + qnaId +
 			", qnaTitle='" + qnaTitle + '\'' +
 			", qnaCategory='" + qnaCategory + '\'' +
 			", qnaWriter='" + qnaWriter + '\'' +
-			", qnaDetail='" + qnaDetail + '\'' +
 			", qnaWriteDate=" + qnaWriteDate +
 			'}';
 	}
