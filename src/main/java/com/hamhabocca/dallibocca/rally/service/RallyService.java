@@ -65,16 +65,18 @@ public class RallyService {
 
         // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-        long memberId = Long.parseLong(authMap.get("memberId"));
 
-        if (auth == "") {
+        String id = String.valueOf(authMap.get("memberId"));
+        long memberId = Long.parseLong(id);
+
+        if (auth.equals("")) {
             throw new RallyException("비회원 접근");
         }
 
         /* 기본값 설정 */
         newRally.setRallyStatus("모집중");
         newRally.setMasterId(memberId);
-        newRally.setRallyWriteDate(LocalDateTime.now() + "");
+        newRally.setRallyWriteDate(String.valueOf(LocalDateTime.now()));
 
         if (newRally.getRallyMinimum() == 0) {
             newRally.setRallyMinimum(2);
@@ -94,7 +96,8 @@ public class RallyService {
 
         // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-        long memberId = Long.parseLong(authMap.get("memberId"));
+        String id = String.valueOf(authMap.get("memberId"));
+        long memberId = Long.parseLong(id);
 
         /* 변경할 기존 랠리 가져오기 */
         Rally foundRally = rallyRepository.findById(rallyId).get();
