@@ -65,8 +65,8 @@ public class LoginController {
 		return null;
 	}
 
-	@ApiOperation(value = "카카오 인가 코드 받아와서 액세스 토큰 발급")
-	@PostMapping("/kakaocode")
+	@ApiOperation(value = "네이버 인가 코드 받아와서 액세스 토큰 발급")
+	@PostMapping("/navercode")
 	public ResponseEntity<?> getNaverCode(@RequestBody Map<String, String> codeAndState) {
 
 		System.out.println("코드 받아서 백엔드 시작됨");
