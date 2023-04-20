@@ -21,7 +21,7 @@ public class Review {
         generator = "review_sequence_generator"
     )
     @Column(name = "REVIEW_ID")
-    private Long reviewId;
+    private long reviewId;
 
     @Column(name = "REVIEW_TITLE")
     private String reviewTitle;
@@ -36,13 +36,13 @@ public class Review {
     private Date reviewWriteDate;
 
     @Column(name = "RALLY_ID")
-    private String rallyId;
+    private long rallyId;
 
     public Review() {}
 
 
-    public Review(Long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
-        Date reviewWriteDate, String rallyId) {
+    public Review(long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
+        Date reviewWriteDate, long rallyId) {
         this.reviewId = reviewId;
         this.reviewTitle = reviewTitle;
         this.reviewWriter = reviewWriter;
@@ -51,11 +51,11 @@ public class Review {
         this.rallyId = rallyId;
     }
 
-    public Long getReviewId() {
+    public long getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(Long reviewId) {
+    public void setReviewId(long reviewId) {
         this.reviewId = reviewId;
     }
 
@@ -91,11 +91,11 @@ public class Review {
         this.reviewWriteDate = reviewWriteDate;
     }
 
-    public String getRallyId() {
+    public long getRallyId() {
         return rallyId;
     }
 
-    public void setRallyId(String rallyId) {
+    public void setRallyId(long rallyId) {
         this.rallyId = rallyId;
     }
 

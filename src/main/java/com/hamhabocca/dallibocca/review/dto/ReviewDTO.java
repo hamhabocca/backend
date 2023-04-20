@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReviewDTO {
 
-    private Long reviewId;
+    private long reviewId;
 
     private String reviewTitle;
 
@@ -12,13 +12,13 @@ public class ReviewDTO {
 
     private String reviewDetail;
 
-    private Long rallyId;
+    private long rallyId;
 
-    private Date reviewWriteDate;
+    private java.util.Date reviewWriteDate;
     public ReviewDTO() {}
 
-    public ReviewDTO(Long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
-        Long rallyId, Date reviewWriteDate) {
+    public ReviewDTO(long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
+        long rallyId, Date reviewWriteDate) {
         this.reviewId = reviewId;
         this.reviewTitle = reviewTitle;
         this.reviewWriter = reviewWriter;
@@ -27,11 +27,11 @@ public class ReviewDTO {
         this.reviewWriteDate = reviewWriteDate;
     }
 
-    public Long getReviewId() {
+    public long getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(Long reviewId) {
+    public void setReviewId(long reviewId) {
         this.reviewId = reviewId;
     }
 
@@ -59,7 +59,13 @@ public class ReviewDTO {
         this.reviewDetail = reviewDetail;
     }
 
+    public long getRallyId() {
+        return rallyId;
+    }
 
+    public void setRallyId(long rallyId) {
+        this.rallyId = rallyId;
+    }
 
     public Date getReviewWriteDate() {
         return reviewWriteDate;
