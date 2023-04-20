@@ -1,9 +1,13 @@
 package com.hamhabocca.dallibocca.qna.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 import com.hamhabocca.dallibocca.qna.entity.Qna;
 import com.hamhabocca.dallibocca.qna.repository.QnaRepository;
+import java.util.Date;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,19 +17,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 @Service
 public class QnaService {
 
 	private final QnaRepository qnaRepository;
 	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Autowired
-	public QnaService(QnaRepository qnaRepository, ModelMapper modelMapper) {
+	public QnaService(QnaRepository qnaRepository, ModelMapper modelMapper,
+		ObjectMapper objectMapper) {
 		this.qnaRepository = qnaRepository;
+		this.objectMapper = objectMapper;
 		this.modelMapper = new ModelMapper();
 	}
 
@@ -47,9 +51,17 @@ public class QnaService {
 	}
 
 	@Transactional
-	public void registNewQna(QnaDTO newQna) {
+	public long registNewQna(QnaDTO newQna, String auth) throws JsonProcessingException {
 
-		qnaRepository.save(modelMapper.map(newQna, Qna.class));
+		// 신청 회원 확인
+		Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+		String id = String.valueOf(authMap.get("memberId"));
+		long memberId = Long.parseLong(id);
+
+		newQna.setQnaWriter(memberId + "");
+		newQna.setQnaWriteDate(new Date());
+
+		return qnaRepository.save(modelMapper.map(newQna, Qna.class)).getQnaId();
 	}
 
 	@Transactional

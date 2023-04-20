@@ -10,7 +10,7 @@ spring:
     hikari:
       auto-commit: false
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     show-sql: true
     database: mysql
     properties:

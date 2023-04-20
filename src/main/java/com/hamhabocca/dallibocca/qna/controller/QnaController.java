@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.qna.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
@@ -95,12 +96,13 @@ public class QnaController {
 		@ApiResponse(code = 403, message = "[Forbidden]")
 	})
 	@PostMapping("/qnas")
-	public ResponseEntity<?> registNewQna(@RequestBody QnaDTO newQna) {
+	public ResponseEntity<?> registNewQna(QnaDTO newQna, @RequestHeader(value = "Auth") String auth)
+		throws JsonProcessingException {
 
-		qnaService.registNewQna(newQna);
+		long qndId = qnaService.registNewQna(newQna, auth);
 
 		return ResponseEntity
-			.created(URI.create("/api/v1/qnas" + newQna.getQnaId()))
+			.created(URI.create("/api/v1/qnas" + qndId))
 			.build();
 	}
 
