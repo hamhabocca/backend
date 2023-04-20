@@ -52,7 +52,9 @@ public class ParticipateService {
 
         // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-        long memberId = Long.parseLong(authMap.get("memberId"));
+
+        String id = String.valueOf(authMap.get("memberId"));
+        long memberId = Long.parseLong(id);
 
         // 랠리 신청 중복 체크
         boolean checkDuplicate = rallyMateRepository.existsByRallyIdAndMemberId(rallyId, memberId);
@@ -66,7 +68,7 @@ public class ParticipateService {
         rallyMate.setRallyId(rallyId);
         rallyMate.setMemberId(memberId);
         rallyMate.setIsAccepted("N");
-        rallyMate.setParticipationDate(LocalDateTime.now() + "");
+        rallyMate.setParticipationDate(String.valueOf(LocalDateTime.now()));
 
         rallyMateRepository.save(modelMapper.map(rallyMate, RallyMate.class));
 
@@ -79,7 +81,9 @@ public class ParticipateService {
 
         // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-        long memberId = Long.parseLong(authMap.get("memberId"));
+
+        String id = String.valueOf(authMap.get("memberId"));
+        long memberId = Long.parseLong(id);
 
         // 삭제할 랠리 신청 찾기
         RallyMate found = rallyMateRepository.findByRallyIdAndMemberId(rallyId, memberId);
@@ -92,8 +96,11 @@ public class ParticipateService {
     public void allowParticipate(long rallyId, long memberId, String auth)
         throws JsonProcessingException {
 
+        // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-        long currentMemberId = Long.parseLong(authMap.get("memberId"));
+
+        String id = String.valueOf(authMap.get("memberId"));
+        long currentMemberId = Long.parseLong(id);
 
         Rally currentRally = rallyRepository.findById(rallyId).get();
 

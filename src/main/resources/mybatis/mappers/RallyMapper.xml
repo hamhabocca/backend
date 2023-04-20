@@ -30,7 +30,7 @@
       AND rally_location like CONCAT('%', #{location}, '%')
     </if>
     <if test="date != null and date != ''">
-      AND rally_date = #{ date }
+      AND rally_date like CONCAT(#{date}, '%')
     </if>
     <if test="distance != null and distance != 0">
       AND rally_distance = #{ distance }
