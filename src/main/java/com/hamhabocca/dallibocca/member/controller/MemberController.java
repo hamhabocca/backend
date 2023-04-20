@@ -5,6 +5,9 @@ import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.service.MemberService;
+import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
+import com.hamhabocca.dallibocca.rally.service.ParticipateService;
+import com.hamhabocca.dallibocca.rally.service.RallyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Api(tags = "멤버 관련 기능 API")
@@ -29,11 +33,15 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RallyService rallyService;
+    private final ParticipateService participateService;
 
     @Autowired
-    public MemberController(MemberService memberService) {
+    public MemberController(MemberService memberService, RallyService rallyService, ParticipateService participateService) {
 
         this.memberService = memberService;
+        this.rallyService = rallyService;
+        this.participateService = participateService;
     }
 
     @ApiOperation(value = "멤버 이름, 프사(예정), 마이페이지로 가는 링크만 id로 조회")
@@ -99,9 +107,11 @@ public class MemberController {
             @ApiResponse(code = 400, message = "잘못된 파라미터....")
     })
     @PutMapping("/members/{memberId}")
-    public ResponseEntity<?> modifyMember(@RequestBody MemberDTO modifyInfo, @PathVariable long memberId, String type) {
+    public ResponseEntity<?> modifyMember(MemberDTO modifyInfo, @PathVariable long memberId, @RequestParam String type) {
 
         System.out.println("modifyInfo = " + modifyInfo);
+
+        System.out.println("type = " + type);
 
         memberService.modifyMember(modifyInfo, memberId, type);
 
@@ -178,5 +188,25 @@ public class MemberController {
             .ok()
             .headers(headers)
             .body(new ResponseMessage(200, "찾았다~", responseMap));
+    }
+
+    @ApiOperation(value = "멤버가 모집한 랠리 조회")
+    @GetMapping("/members/recruit")
+    public ResponseEntity<?> getRalliesRecruitedByMember(HttpServletRequest request) throws JsonProcessingException {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        String header = request.getHeader("Auth");
+
+        List<RallyDTO> recruitedRallyList = rallyService.findRecruitRallyList(header);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("recruitedRallyList", recruitedRallyList);
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .body(new ResponseMessage(200, "찾았다!", responseMap));
     }
 }

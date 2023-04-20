@@ -202,4 +202,6 @@ public class LoginService {
 		return renewToken;
 	}
 
+    public void getNaverAccessToken(String code, String state) {
+    }
 }

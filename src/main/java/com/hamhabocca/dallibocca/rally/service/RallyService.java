@@ -141,9 +141,15 @@ public class RallyService {
     }
 
     /* 본인이 모집한 랠리 찾기 - 마이페이지 */
-    public List<RallyDTO> findRecruitRallyList(long currentMemberId) {
+    public List<RallyDTO> findRecruitRallyList(String header) throws JsonProcessingException {
 
-        List<Rally> rallyList = rallyRepository.findAllByMasterId(currentMemberId);
+        Map<String, String> headerMap = objectMapper.readValue(header, Map.class);
+
+        String id = String.valueOf(headerMap.get("memberId"));
+
+        Long memberId = Long.parseLong(id);
+
+        List<Rally> rallyList = rallyRepository.findAllByMasterId(memberId);
 
         return rallyList.stream().map(rally -> modelMapper.map(rally, RallyDTO.class)).collect(
             Collectors.toList());

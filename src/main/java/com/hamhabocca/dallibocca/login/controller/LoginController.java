@@ -64,4 +64,32 @@ public class LoginController {
 		System.out.println("auth = " + auth);
 		return null;
 	}
+
+	@ApiOperation(value = "네이버 인가 코드 받아와서 액세스 토큰 발급")
+	@PostMapping("/navercode")
+	public ResponseEntity<?> getNaverCode(@RequestBody Map<String, String> codeAndState) {
+
+		System.out.println("코드 받아서 백엔드 시작됨");
+		System.out.println("code = " + codeAndState.get("code"));
+		System.out.println("state = " + codeAndState.get("state"));
+
+		System.out.println("Testttttttttttttttttttttttttttttttttttttttt");
+
+		/* 인가 코드로 액세스 토큰 발급 */
+//		OauthTokenDTO oauthToken = loginService.getAccessToken(code.get("code"));
+		loginService.getNaverAccessToken(codeAndState.get("code"), codeAndState.get("state"));
+
+		/* 액세스 토큰으로 DB 저장or 확인 후 JWT 생성 */
+//		AccessTokenDTO jwtToken = loginService.getJwtToken(oauthToken);
+
+		Map<String, Object> responseMap = new HashMap<>();
+//		responseMap.put("token", jwtToken);
+
+		/* JWT와 응답 결과를 프론트에 전달*/
+		return ResponseEntity
+				.ok()
+//			.headers(headers)
+				.body(new ResponseMessage(200, "로그인 성공", responseMap));
+	}
+
 }
