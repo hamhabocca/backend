@@ -6,12 +6,14 @@ import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.service.MemberService;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
+import com.hamhabocca.dallibocca.rally.dto.RallyMateDTO;
 import com.hamhabocca.dallibocca.rally.service.ParticipateService;
 import com.hamhabocca.dallibocca.rally.service.RallyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -208,5 +210,35 @@ public class MemberController {
                 .ok()
                 .headers(headers)
                 .body(new ResponseMessage(200, "찾았다!", responseMap));
+    }
+
+    @ApiOperation(value = "멤버가 참여한 랠리 조회")
+    @GetMapping("/members/participate")
+    public ResponseEntity<?> getRalliesParticipatedfromMember(HttpServletRequest request)
+        throws JsonProcessingException {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        String header = request.getHeader("Auth");
+
+        /* 참여 리스트 */
+        List<RallyMateDTO> participatedRallyList = participateService.findParticipateRallyList(header);
+
+        List<RallyDTO> finalRallyList = new ArrayList<>();
+
+        participatedRallyList.forEach(rally -> {
+            finalRallyList.add(rallyService.findRallyById(rally.getRallyId()));
+        });
+
+        System.out.println("finalRallyList = " + finalRallyList);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("finalRallyList", finalRallyList);
+
+        return ResponseEntity
+            .ok()
+            .headers(headers)
+            .body(new ResponseMessage(200, "찾음...", responseMap));
     }
 }
