@@ -115,9 +115,18 @@ public class ParticipateService {
     }
 
     /* 본인이 신청한 랠리 신청 기록 - 마이페이지 사용 */
-    public List<RallyMateDTO> findParticipateRallyList(long currentMemberId) {
+    public List<RallyMateDTO> findParticipateRallyList(String header)
+        throws JsonProcessingException {
 
-        List<RallyMate> rallyMates = rallyMateRepository.findAllByMemberId(currentMemberId);
+        Map<String, String> headerMap = objectMapper.readValue(header, Map.class);
+
+        String id = String.valueOf(headerMap.get("memberId"));
+
+        Long memberId = Long.parseLong(id);
+
+        List<RallyMate> rallyMates = rallyMateRepository.findAllByMemberId(memberId);
+
+        System.out.println("rallyMates = " + rallyMates);
 
         return rallyMates.stream()
             .map(rallyMate -> modelMapper.map(rallyMate, RallyMateDTO.class)).collect(

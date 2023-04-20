@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-	@Query("SELECT new com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO(m.memberId, m.nickname) FROM Member m WHERE m.memberId = :memberId")
+	@Query("SELECT new com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO(m.memberId, m.nickname, m.imageSource) FROM Member m WHERE m.memberId = :memberId")
 	MemberSimpleDTO findMemberByIdSimple(long memberId);
 
 	List<Member> findByNickname(String nickname);

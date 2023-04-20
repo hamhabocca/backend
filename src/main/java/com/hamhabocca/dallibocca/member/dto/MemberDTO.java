@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.member.dto;
 
+import java.net.URL;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Column;
@@ -14,6 +15,8 @@ public class MemberDTO {
 	private long memberId;
 
 	private String nickname;
+
+	private String imageSource;
 
 	private int reportCount;
 
@@ -49,14 +52,15 @@ public class MemberDTO {
 
 	public MemberDTO() {}
 
-	public MemberDTO(long memberId, String nickname, int reportCount, String socialLogin,
-		long socialId,
-		String accessToken, long accessTokenExpireDate, String refreshToken,
-		long refreshTokenExpireDate, String email, String gender, String isDeleted,
+	public MemberDTO(long memberId, String nickname, String imageSource, int reportCount,
+		String socialLogin, long socialId, String accessToken, long accessTokenExpireDate,
+		String refreshToken, long refreshTokenExpireDate, String email, String gender,
+		String isDeleted,
 		LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
 		String preferredLocation, String preferredType) {
 		this.memberId = memberId;
 		this.nickname = nickname;
+		this.imageSource = imageSource;
 		this.reportCount = reportCount;
 		this.socialLogin = socialLogin;
 		this.socialId = socialId;
@@ -219,11 +223,20 @@ public class MemberDTO {
 		this.refreshTokenExpireDate = refreshTokenExpireDate;
 	}
 
+	public String getImageSource() {
+		return imageSource;
+	}
+
+	public void setImageSource(String imageSource) {
+		this.imageSource = imageSource;
+	}
+
 	@Override
 	public String toString() {
 		return "MemberDTO{" +
 			"memberId=" + memberId +
 			", nickname='" + nickname + '\'' +
+			", imageSource=" + imageSource +
 			", reportCount=" + reportCount +
 			", socialLogin='" + socialLogin + '\'' +
 			", socialId=" + socialId +
