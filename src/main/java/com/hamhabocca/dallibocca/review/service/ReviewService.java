@@ -23,7 +23,7 @@ public class ReviewService {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private Long reviewId;
+    private long reviewId;
 
 
     @Autowired
@@ -36,28 +36,28 @@ public class ReviewService {
     /*전체 조회*/
     public List<ReviewDTO> findAllReview(Pageable pageable) {
         List<Review> reviews = reviewRepository.findAll();
-        return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class)).collect(Collectors.toList());
+        return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
+            .collect(Collectors.toList());
     }
 
     /*일부 조회*/
-    @Transactional
-    public ReviewDTO findReviewByCode(Long reviewId) {
-        Review review = reviewRepository.findById(this.reviewId).get();
-        return modelMapper.map(review, ReviewDTO.class);
+//    @Transactional
+    public ReviewDTO findReviewById(long reviewId) {
+        Review foundReview = reviewRepository.findById(reviewId).get();
+        return modelMapper.map(foundReview, ReviewDTO.class);
 
     }
 
     /*등록*/
     @Transactional
-    public void registNewReviewTest(ReviewDTO newReview){
+    public void registNewReviewTest(ReviewDTO newReview) {
         reviewRepository.save(modelMapper.map(newReview, Review.class));
     }
 
 
-
     /*삭제*/
     @Transactional
-    public ReviewDTO removeReview(ReviewDTO deleteInfo, Long reviewId) {
+    public ReviewDTO removeReview(ReviewDTO deleteInfo, long reviewId) {
 
         Review foundReview = reviewRepository.findById(reviewId).get();
         reviewRepository.delete(foundReview);
@@ -69,19 +69,14 @@ public class ReviewService {
 
     /*수정*/
     @Transactional
-    public ReviewDTO modifyReview(ReviewDTO modifyInfo){
+    public void modifyReview(ReviewDTO modifyInfo, long reviewId) {
 
-        Review foundReview = reviewRepository.findById(modifyInfo.getReviewId()).get();
+        Review foundReview = reviewRepository.findById(reviewId).get();
 
         foundReview.setReviewTitle(modifyInfo.getReviewTitle());
-        foundReview.setReviewWriter(modifyInfo.getReviewWriter());
-        foundReview.setReviewWriteDate(modifyInfo.getReviewWriteDate());
         foundReview.setReviewDetail(modifyInfo.getReviewDetail());
-        foundReview.setReviewId(modifyInfo.getReviewId());
 
-        ReviewDTO reviewDTO = new ReviewDTO();
-
-        return reviewDTO;
     }
-
 }
+
+

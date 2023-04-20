@@ -1,6 +1,7 @@
 package com.hamhabocca.dallibocca.review.controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
@@ -75,17 +76,17 @@ public class ReviewController {
 
     @ApiOperation("리뷰코드로 리뷰 조회")
     @GetMapping("/reviews/{reviewId}")
-    public ResponseEntity<ResponseMessage> findMenuByCode(@PathVariable Long reviewId) {
+    public ResponseEntity<ResponseMessage> findReviewById(@PathVariable long reviewId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-        List<ReviewDTO> reviews = reviewService.findAllReview(Pageable.unpaged());
+        ReviewDTO foundReview = reviewService.findReviewById(reviewId);
 
-        ReviewDTO foundReview = reviews.stream().filter(review -> review.getReviewId() == reviewId).collect(Collectors.toList()).get(0);
+        System.out.println(foundReview);
 
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("review", foundReview);
+        responseMap.put("reviews", foundReview);
 
         return ResponseEntity
                 .ok()
@@ -101,7 +102,7 @@ public class ReviewController {
             @ApiResponse(code = 400, message = "잘못된 파라미터")
     })
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<?> removeReview(@RequestBody ReviewDTO deleteInfo, @PathVariable Long reviewId){
+    public ResponseEntity<?> removeReview(@RequestBody ReviewDTO deleteInfo, @PathVariable long reviewId){
 
 
         ReviewDTO foundReview = reviewService.removeReview(deleteInfo, reviewId);
@@ -112,13 +113,20 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "리뷰 수정")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "리뷰 수정 성공"),
+        @ApiResponse(code = 400, message = "잘못된 파라미터")
+    })
     @PutMapping("/reviews/{reviewId}")
-    public ResponseEntity<?> modifyReview(@RequestBody ReviewDTO modifyInfo, @PathVariable Long reviewId){
+    public ResponseEntity<?> modifyReview(ReviewDTO modifyInfo,
+        @PathVariable long reviewId) {
 
-        ReviewDTO foundReview = reviewService.modifyReview(modifyInfo);
+        System.out.println("modifyInfo = " + modifyInfo);
+
+        reviewService.modifyReview(modifyInfo, reviewId);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/reviews" + reviewId))
+                .created(URI.create("/api/v1/reviews/" + reviewId))
                 .build();
     }
 }
