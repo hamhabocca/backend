@@ -28,7 +28,7 @@ public class Qna {
 	private String qnaCategory;
 
 	@Column(name = "qna_writer")
-	private String qnaWriter;
+	private long qnaWriter;
 
 	@Column(name = "qna_detail")
 	private String qnaDetail;
@@ -38,8 +38,7 @@ public class Qna {
 
 	public Qna() {
 	}
-
-	public Qna(long qnaId, String qnaTitle, String qnaCategory, String qnaWriter, String qnaDetail,
+	public Qna(long qnaId, String qnaTitle, String qnaCategory, long qnaWriter, String qnaDetail,
 		Date qnaWriteDate) {
 		this.qnaId = qnaId;
 		this.qnaTitle = qnaTitle;
@@ -73,11 +72,11 @@ public class Qna {
 		this.qnaCategory = qnaCategory;
 	}
 
-	public String getQnaWriter() {
+	public long getQnaWriter() {
 		return qnaWriter;
 	}
 
-	public void setQnaWriter(String qnaWriter) {
+	public void setQnaWriter(long qnaWriter) {
 		this.qnaWriter = qnaWriter;
 	}
 
@@ -103,7 +102,7 @@ public class Qna {
 			"qnaId=" + qnaId +
 			", qnaTitle='" + qnaTitle + '\'' +
 			", qnaCategory='" + qnaCategory + '\'' +
-			", qnaWriter='" + qnaWriter + '\'' +
+			", qnaWriter=" + qnaWriter +
 			", qnaDetail='" + qnaDetail + '\'' +
 			", qnaWriteDate=" + qnaWriteDate +
 			'}';

@@ -5,9 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 import com.hamhabocca.dallibocca.qna.entity.Qna;
+import com.hamhabocca.dallibocca.qna.exception.QnaException;
 import com.hamhabocca.dallibocca.qna.repository.QnaRepository;
+import com.hamhabocca.dallibocca.rally.exception.RallyException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,19 +34,21 @@ public class QnaService {
 		ObjectMapper objectMapper) {
 		this.qnaRepository = qnaRepository;
 		this.objectMapper = objectMapper;
-		this.modelMapper = new ModelMapper();
+		this.modelMapper = modelMapper;
 	}
 
-
+	/* 전체조회 */
 	public Page<QnaSimpleDTO> findQnaList(Pageable pageable) {
 
-		pageable = PageRequest.of(pageable.getPageNumber() <= 0? 0: pageable.getPageNumber() - 1,
+		pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
 			pageable.getPageSize(),
-			Sort.by("qnaId"));
+			Sort.by("qnaId").descending());
 
 		return qnaRepository.findSimpleQnaList(pageable);
 	}
 
+	/* 일부조회 */
+	@Transactional
 	public QnaDTO findQnaById(long qnaId) {
 
 		Qna foundQna = qnaRepository.findById(qnaId).get();
@@ -50,40 +56,53 @@ public class QnaService {
 		return modelMapper.map(foundQna, QnaDTO.class);
 	}
 
+	/* 등록 */
 	@Transactional
 	public long registNewQna(QnaDTO newQna, String auth) throws JsonProcessingException {
+
+		// 신청 회원 확인
+		Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+
+		String id = String.valueOf(authMap.get("memberId"));
+		long memberId = Long.parseLong(id);
+
+		if (auth.equals("")) {
+			throw new QnaException("비회원 접근");
+		}
+
+		newQna.setQnaWriter(memberId);
+		newQna.setQnaWriteDate(new Date());
+
+		return qnaRepository.save(modelMapper.map(newQna, Qna.class)).getQnaId();
+	}
+
+	/* 수정 */
+	@Transactional
+	public void modifyQna(QnaDTO modifyInfo, long qnaId, String auth) throws JsonProcessingException {
 
 		// 신청 회원 확인
 		Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
 		String id = String.valueOf(authMap.get("memberId"));
 		long memberId = Long.parseLong(id);
 
-		newQna.setQnaWriter(memberId + "");
-		newQna.setQnaWriteDate(new Date());
-
-		return qnaRepository.save(modelMapper.map(newQna, Qna.class)).getQnaId();
-	}
-
-	@Transactional
-	public QnaDTO modifyQna(QnaDTO modifyInfo) {
-
 		// 영속화 함
-		Qna foundQna = qnaRepository.findById(modifyInfo.getQnaId()).get();
+		Qna foundQna = qnaRepository.findById(qnaId).get();
+
+//		if (memberId != foundQna.getQnaWriter()) {
+//			throw new RuntimeException();
+//		}
 
 		// 세터로 값 수정
 		foundQna.setQnaTitle(modifyInfo.getQnaTitle());
-		foundQna.setQnaId(modifyInfo.getQnaId());
+//		foundQna.setQnaId(modifyInfo.getQnaId());
 		foundQna.setQnaDetail(modifyInfo.getQnaDetail());
-		foundQna.setQnaWriter(modifyInfo.getQnaWriter());
-		foundQna.setQnaWriteDate(modifyInfo.getQnaWriteDate());
+//		foundQna.setQnaWriter(modifyInfo.getQnaWriter());
+//		foundQna.setQnaWriteDate(modifyInfo.getQnaWriteDate());
 		foundQna.setQnaCategory(modifyInfo.getQnaCategory());
 
-		//엔티티를 dto로 변환
-		QnaDTO qnaDTO = new QnaDTO();
-
-		return qnaDTO;
 	}
 
+	/* 삭제 */
 	@Transactional
 	public QnaDTO removeQna(QnaDTO modifyInfo, long qnaId) {
 
@@ -95,4 +114,12 @@ public class QnaService {
 		return qnaDTO;
 	}
 
+	/* 검색 */
+	public List<QnaDTO> findQnaListBySearch(String qnaTitle) {
+
+		List<Qna> qnaList = qnaRepository.findByQnaTitleLike(qnaTitle);
+
+		return qnaList.stream().map(qna -> modelMapper.map(qna, QnaDTO.class)).collect(Collectors.toList());
+
+	}
 }

@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface QnaRepository extends JpaRepository<Qna, Long> {
 
-	@Query("SELECT new com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO(q.qnaId,q.qnaTitle,q.qnaCategory,q.qnaWriter,q.qnaWriteDate) FROM Qna q")
+	@Query("SELECT new com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO(q.qnaId,q.qnaTitle,q.qnaCategory,q.qnaWriter,q.qnaWriteDate) FROM Qna q ORDER BY q.qnaId DESC")
 	Page<QnaSimpleDTO> findSimpleQnaList(Pageable pageable);
+
+	List<Qna> findByQnaTitleLike(String qnaTitle);
 }
