@@ -106,19 +106,21 @@ public class RallyService {
             throw new RallyException("해당 랠리의 작성자가 아닙니다.");
         }
 
-        if (!(foundRally.getRallyStatus().equals(modifyRally.getRallyStatus()))
-            && modifyRally.getRallyStatus() != null) {
-
             /* 수정할 랠리의 상태가 널이 아니면서 기존 랠리와 다르면...상태만 수정  */
+        if (modifyRally.getRallyStatus() != null && !foundRally.getRallyStatus().equals(modifyRally.getRallyStatus())) {
+
             foundRally.setRallyStatus(modifyRally.getRallyStatus());
         } else {
+
+            if (modifyRally.getRallyType() != null && !modifyRally.getRallyType().equals("")) {
+                foundRally.setRallyType(modifyRally.getRallyType());
+            }
 
             /* 그 외는 랠리의 정보 변경 */
             foundRally.setRallyName(modifyRally.getRallyName());
             foundRally.setRallyDetail(modifyRally.getRallyDetail());
             foundRally.setRallyLocation(modifyRally.getRallyLocation());
             foundRally.setRallyEndLocation(modifyRally.getRallyEndLocation());
-            foundRally.setRallyType(modifyRally.getRallyType());
             foundRally.setRallyMaximum(modifyRally.getRallyMaximum());
             foundRally.setRallyMinimum(modifyRally.getRallyMinimum());
             foundRally.setRallyDistance(modifyRally.getRallyDistance());
@@ -157,8 +159,6 @@ public class RallyService {
 
     /* 검색필터를 통한 랠리 목록 조회 */
     public List<RallyDTO> findRallyListBySearch(SearchFilter searchQuery) {
-
-        System.out.println("서비스에서의..." + searchQuery);
 
         // 마이바티스 혼용하기
         List<Rally> rallyList = rallyMapper.findRallyListBySearch(searchQuery);
