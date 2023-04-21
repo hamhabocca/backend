@@ -2,6 +2,7 @@ package com.hamhabocca.dallibocca.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hamhabocca.dallibocca.login.dto.KakaoProfileDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.entity.Member;
@@ -13,12 +14,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class MemberService {
@@ -78,18 +85,46 @@ public class MemberService {
 
 		switch (type) {
 			case "edit":
-				if (modifyInfo.getNickname() != null) {
+				if (modifyInfo.getNickname().length() > 0) {
 					foundMember.setNickname(modifyInfo.getNickname());
 				}
-				if (modifyInfo.getPreferredLocation() != null) {
+				if (modifyInfo.getPreferredLocation().length() > 0) {
 					foundMember.setPreferredLocation(modifyInfo.getPreferredLocation());
 				}
-				if (modifyInfo.getPreferredType() != null) {
+				if (modifyInfo.getPreferredType().length() > 0) {
 					foundMember.setPreferredType(modifyInfo.getPreferredType());
 				}
 				break;
 
 			case "deactivate":
+
+				RestTemplate rt = new RestTemplate();
+
+				HttpHeaders headers = new HttpHeaders();
+				headers.add("Authorization", "Bearer " + foundMember.getAccessToken());
+
+				HttpEntity<MultiValueMap<String, String>> kakaoDeactivateRequest =
+					new HttpEntity<>(headers);
+
+				ResponseEntity<String> kakaoDeactivateResponse = rt.exchange(
+					"https://kapi.kakao.com/v1/user/unlink",
+					HttpMethod.POST,
+					kakaoDeactivateRequest,
+					String.class
+				);
+
+				System.out.println(kakaoDeactivateResponse.getBody());
+
+				String kakaoDeactivateResult = "";
+
+				try {
+					kakaoDeactivateResult = objectMapper.readValue(
+						kakaoDeactivateResponse.getBody(),
+						String.class);
+				} catch (JsonProcessingException e) {
+					throw new RuntimeException(e);
+				}
+
 				foundMember.setIsDeleted("Y");
 				break;
 		}

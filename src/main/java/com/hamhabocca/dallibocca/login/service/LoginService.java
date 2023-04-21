@@ -87,6 +87,9 @@ public class LoginService {
 	public KakaoProfileDTO findKakaoProfile(String accessToken) {
 
 		RestTemplate rt = new RestTemplate();
+//		rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+		System.out.println("testtttttttttttttttttttttttttttttttttttttttttttt");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + accessToken);
