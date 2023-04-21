@@ -8,6 +8,7 @@ import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 
 import com.hamhabocca.dallibocca.qna.service.QnaService;
+import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -27,7 +28,6 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Api(tags = "Qna API")
 @RestController
@@ -43,11 +43,11 @@ public class QnaController {
 
 	@ApiOperation(value = "모든 건의 목록 조회")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "[Ok]"),
-		@ApiResponse(code = 400, message = "[Bad Reuest]")
+		@ApiResponse(code = 200, message = "전체 조회 성공"),
+		@ApiResponse(code = 404, message = "찾을 수 없는 목록")
 	})
 	@GetMapping("/qnas")
-	public ResponseEntity<ResponseMessage> findQnaList(@PageableDefault Pageable pageable) {
+	public ResponseEntity<ResponseMessage> findQnaList(@PageableDefault(size = 10) Pageable pageable) {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -57,20 +57,19 @@ public class QnaController {
 		PagingButtonInfo paging = Pagination.getPagingButtonInfo(qnaList);
 
 		Map<String, Object> responseMap = new HashMap<>();
-		responseMap.put("QnaList", qnaList) ;
+		responseMap.put("qnaList", qnaList) ;
 		responseMap.put("paging", paging);
 
-		return new ResponseEntity<>(
-			new ResponseMessage(200, "조회성공", responseMap),
-			headers,
-			HttpStatus.OK
-		);
+		return ResponseEntity.ok().headers(headers)
+			.body(new ResponseMessage(200, "전체 조회 성공", responseMap));
 	}
 
 	@ApiOperation(value = "건의 번호로 건의 조회")
 	@ApiResponses({
-		@ApiResponse(code = 200, message = "[Ok]"),
-		@ApiResponse(code = 400, message = "[Bad Reuest]")
+		@ApiResponse(code = 200, message = "상세 조회 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청"),
+		@ApiResponse(code = 401, message = "접근 권한 없음"),
+		@ApiResponse(code = 404, message = "찾을 수 없는 정보")
 	})
 	@GetMapping("/qnas/{qnaId}")
 	public ResponseEntity<ResponseMessage> findQnaById(@PathVariable long qnaId) {
@@ -91,31 +90,32 @@ public class QnaController {
 
 	@ApiOperation(value = "신규 건의 추가")
 	@ApiResponses({
-		@ApiResponse(code = 201, message = "[Created]"),
-		@ApiResponse(code = 400, message = "[Bad Request]"),
-		@ApiResponse(code = 403, message = "[Forbidden]")
+		@ApiResponse(code = 201, message = "리소스 생성 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청"),
+		@ApiResponse(code = 403, message = "접근 권한 없음")
 	})
 	@PostMapping("/qnas")
 	public ResponseEntity<?> registNewQna(QnaDTO newQna, @RequestHeader(value = "Auth") String auth)
 		throws JsonProcessingException {
 
-		long qndId = qnaService.registNewQna(newQna, auth);
+		long qnaId = qnaService.registNewQna(newQna, auth);
 
 		return ResponseEntity
-			.created(URI.create("/api/v1/qnas" + qndId))
+			.created(URI.create("/api/v1/qnas" + qnaId))
 			.build();
 	}
 
 	@ApiOperation(value = "건의 수정")
 	@ApiResponses({
-		@ApiResponse(code = 201, message = "[Created]"),
-		@ApiResponse(code = 400, message = "[Bad Request]"),
-		@ApiResponse(code = 403, message = "[Forbidden]")
+		@ApiResponse(code = 201, message = "리소스 수정 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청"),
+		@ApiResponse(code = 403, message = "접근 권한 없음")
 	})
 	@PutMapping("/qnas/{qnaId}")
-	public ResponseEntity<?> modifyQna(@RequestBody QnaDTO modifyInfo, @PathVariable long qnaId) {
+	public ResponseEntity<?> modifyQna(QnaDTO modifyInfo, @PathVariable long qnaId, @RequestHeader(value = "Auth") String auth)
+		throws JsonProcessingException {
 
-		qnaService.modifyQna(modifyInfo);
+		qnaService.modifyQna(modifyInfo, qnaId, auth);
 
 		return ResponseEntity
 			.created(URI.create("/api/v1/qnas" + qnaId))
@@ -124,9 +124,8 @@ public class QnaController {
 
 	@ApiOperation(value = "건의 삭제")
 	@ApiResponses({
-		@ApiResponse(code = 204, message = "[No Content]"),
-		@ApiResponse(code = 400, message = "[Bad Request]"),
-		@ApiResponse(code = 404, message = "[Not Found]")
+		@ApiResponse(code = 204, message = "리소스 삭제 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청")
 	})
 	@DeleteMapping("/qnas/{qnaId}")
 	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable long qnaId) {
@@ -137,4 +136,21 @@ public class QnaController {
 			.noContent()
 			.build();
 	}
+
+	@ApiOperation(value = "건의 검색")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "검색 조회 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청")
+	})
+	@GetMapping("/qnas/search")
+	public ResponseEntity<ResponseMessage> findQnasBySearch(String qnaTitle) {
+
+		Map<String, Object> responseMap = new HashMap<>();
+
+		List<QnaDTO> qnaList = qnaService.findQnaListBySearch(qnaTitle);
+		responseMap.put("qnaList", qnaList);
+
+		return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
+	}
+
 }

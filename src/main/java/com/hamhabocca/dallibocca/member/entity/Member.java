@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.member.entity;
 
+import java.net.URL;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -30,6 +31,9 @@ public class Member {
 
     @Column(name = "nickname", unique = true, nullable = false)
     private String nickname;
+
+    @Column(name = "image_source")
+    private String imageSource;
 
     @Column(name = "report_count", nullable = false)
     private int reportCount;
@@ -83,14 +87,15 @@ public class Member {
 
     public Member() {}
 
-    public Member(long memberId, String nickname, int reportCount, String socialLogin,
-        long socialId,
-        String accessToken, long accessTokenExpireDate, String refreshToken,
+    public Member(long memberId, String nickname, String imageSource, int reportCount,
+        String socialLogin,
+        long socialId, String accessToken, long accessTokenExpireDate, String refreshToken,
         long refreshTokenExpireDate, String email, String gender, String isDeleted,
         LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
         String preferredLocation, String preferredType) {
         this.memberId = memberId;
         this.nickname = nickname;
+        this.imageSource = imageSource;
         this.reportCount = reportCount;
         this.socialLogin = socialLogin;
         this.socialId = socialId;
@@ -254,11 +259,20 @@ public class Member {
         this.refreshTokenExpireDate = refreshTokenExpireDate;
     }
 
+    public String getImageSource() {
+        return imageSource;
+    }
+
+    public void setImageSource(String imageSource) {
+        this.imageSource = imageSource;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
             "memberId=" + memberId +
             ", nickname='" + nickname + '\'' +
+            ", imageSource=" + imageSource +
             ", reportCount=" + reportCount +
             ", socialLogin='" + socialLogin + '\'' +
             ", socialId=" + socialId +
