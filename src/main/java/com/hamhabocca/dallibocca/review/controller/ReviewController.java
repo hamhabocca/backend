@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
+import com.hamhabocca.dallibocca.rally.service.RallyService;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import com.hamhabocca.dallibocca.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
@@ -40,17 +41,17 @@ public class ReviewController {
     }
 
     @ApiOperation(value = "테스트용 리뷰 추가하기")
-    @PostMapping("/regists")
-    public ResponseEntity<ResponseMessage> registReviewForTesting(@RequestBody ReviewDTO newReview){
+    @PostMapping("/reviews")
+    public ResponseEntity<?> registReviewForTesting(ReviewDTO newReview){
 
-        reviewService.registNewReviewTest(newReview);
+        reviewService.registNewReview(newReview);
 
         return ResponseEntity
-                .created(URI.create("/api/v1/reviews" + newReview.getReviewId()))
+                .created(URI.create("/api/v1/reviews/regist/" + newReview.getReviewId()))
                 .build();
     }
 
-    @ApiOperation(value = "모든 회원 목록 조회")
+    @ApiOperation(value = "모든 리뷰 목록 조회")
     @GetMapping("/reviews")
     public ResponseEntity<ResponseMessage> findAllReview(@PageableDefault(size = 15) Pageable pageable) {
 
@@ -58,11 +59,6 @@ public class ReviewController {
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
         Map<String, Object> responseMap = new HashMap<>();
-
-
-        //Page<RallySimpleDTO> reviewList = reviewService.findAllReview(pageable);
-       // PagingButtonInfo paging = Pagination.getPagingButtonInfo(reviewList);
-
 
         List<ReviewDTO> reviews = reviewService.findAllReview(pageable);
         responseMap.put("reviews", reviews);
@@ -93,8 +89,6 @@ public class ReviewController {
                 .headers(headers)
                 .body(new ResponseMessage(200, "조회성공", responseMap));
     }
-
-
 
     @ApiOperation(value = "리뷰 삭제")
     @ApiResponses({
@@ -129,5 +123,15 @@ public class ReviewController {
                 .created(URI.create("/api/v1/reviews/" + reviewId))
                 .build();
     }
+
+
+    //--------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
 }
 

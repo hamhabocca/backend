@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
-
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
 
@@ -50,7 +49,7 @@ public class ReviewService {
 
     /*등록*/
     @Transactional
-    public void registNewReviewTest(ReviewDTO newReview) {
+    public void registNewReview(ReviewDTO newReview) {
         reviewRepository.save(modelMapper.map(newReview, Review.class));
     }
 
