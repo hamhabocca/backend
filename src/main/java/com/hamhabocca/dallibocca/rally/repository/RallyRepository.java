@@ -16,4 +16,5 @@ public interface RallyRepository extends JpaRepository<Rally, Long> {
 
     List<Rally> findAllByMasterId(long currentMemberId);
 
+    int countByMasterIdAndRallyStatusNot(long memberId, String s);
 }
