@@ -330,5 +330,36 @@ public class LoginService {
 		return naverProfileDTO;
 	}
 
+	public RenewTokenDTO renewNaverToken(MemberDTO foundMember) {
 
+		RestTemplate rt = new RestTemplate();
+
+		HttpHeaders headers = new HttpHeaders();
+
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("client_id", foundMember.getSocialId());
+		params.add("client_secret", "0kcy7pLweV");
+		params.add("refresh_token", foundMember.getRefreshToken());
+		params.add("grant_type", "refresh_token");
+
+		HttpEntity<MultiValueMap<String, String>> naverRenewRequest =
+				new HttpEntity<>(params, headers);
+
+		ResponseEntity<String> naverRenewResponses = rt.exchange(
+				"https://nid.naver.com/oauth2.0/token",
+				HttpMethod.GET,
+				naverRenewRequest,
+				String.class
+		);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		RenewTokenDTO renewToken = null;
+		try {
+			renewToken = objectMapper.readValue(naverRenewResponses.getBody(), RenewTokenDTO.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return renewToken;
+	}
 }

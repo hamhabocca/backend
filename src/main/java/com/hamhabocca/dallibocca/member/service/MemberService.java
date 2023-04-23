@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -96,37 +98,44 @@ public class MemberService {
 				}
 				break;
 
-			case "deactivate":
+			case "kakaodeactivate":
 
 				RestTemplate rt = new RestTemplate();
 
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("Authorization", "Bearer " + foundMember.getAccessToken());
+				if(foundMember.getSocialLogin().equals("KAKAO")) {
 
-				HttpEntity<MultiValueMap<String, String>> kakaoDeactivateRequest =
-					new HttpEntity<>(headers);
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + foundMember.getAccessToken());
 
-				ResponseEntity<String> kakaoDeactivateResponse = rt.exchange(
-					"https://kapi.kakao.com/v1/user/unlink",
-					HttpMethod.POST,
-					kakaoDeactivateRequest,
-					String.class
-				);
+					HttpEntity<MultiValueMap<String, String>> kakaoDeactivateRequest =
+						new HttpEntity<>(headers);
 
-				System.out.println(kakaoDeactivateResponse.getBody());
+					ResponseEntity<String> kakaoDeactivateResponse = rt.exchange(
+						"https://kapi.kakao.com/v1/user/unlink",
+						HttpMethod.POST,
+						kakaoDeactivateRequest,
+						String.class
+					);
 
-				String kakaoDeactivateResult = "";
+					System.out.println(kakaoDeactivateResponse.getBody());
 
-				try {
-					kakaoDeactivateResult = objectMapper.readValue(
-						kakaoDeactivateResponse.getBody(),
-						String.class);
-				} catch (JsonProcessingException e) {
-					throw new RuntimeException(e);
+					String kakaoDeactivateResult = "";
+
+					try {
+						kakaoDeactivateResult = objectMapper.readValue(
+							kakaoDeactivateResponse.getBody(),
+							String.class);
+					} catch (JsonProcessingException e) {
+						throw new RuntimeException(e);
+					}
+
+					foundMember.setIsDeleted("Y");
+					break;
+				} else if(foundMember.getSocialLogin().equals("NAVER")) {
+
+
 				}
 
-				foundMember.setIsDeleted("Y");
-				break;
 		}
 	}
 
