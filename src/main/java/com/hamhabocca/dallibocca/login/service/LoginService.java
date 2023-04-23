@@ -3,10 +3,7 @@ package com.hamhabocca.dallibocca.login.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.jwt.TokenProvider;
-import com.hamhabocca.dallibocca.login.dto.AccessTokenDTO;
-import com.hamhabocca.dallibocca.login.dto.KakaoProfileDTO;
-import com.hamhabocca.dallibocca.login.dto.OauthTokenDTO;
-import com.hamhabocca.dallibocca.login.dto.RenewTokenDTO;
+import com.hamhabocca.dallibocca.login.dto.*;
 import com.hamhabocca.dallibocca.login.repository.LoginRepository;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.service.MemberService;
@@ -127,12 +124,12 @@ public class LoginService {
 		MemberDTO foundmember = new MemberDTO();
 
 		/* 해당 유저의 가입 이력이 없을 경우 */
-		if (memberService.findBySocialId("KAKAO", kakaoProfileDTO.getId()) == null) {
+		if (memberService.findBySocialId("KAKAO", String.valueOf(kakaoProfileDTO.getId())) == null) {
 
 			MemberDTO newMember = new MemberDTO();
 
 			newMember.setSocialLogin("KAKAO");
-			newMember.setSocialId(kakaoProfileDTO.getId());
+			newMember.setSocialId(String.valueOf(kakaoProfileDTO.getId()));
 			newMember.setEmail(kakaoProfileDTO.getKakao_account().getEmail());
 			newMember.setRefreshToken(oauthToken.getRefresh_token());
 			newMember.setAccessToken(oauthToken.getAccess_token());
@@ -149,7 +146,7 @@ public class LoginService {
 		}
 
 		/* 소셜 아이디로 멤버가 있는지 조회해 가져옴 */
-		foundmember = memberService.findBySocialId("KAKAO", kakaoProfileDTO.getId());
+		foundmember = memberService.findBySocialId("KAKAO", String.valueOf(kakaoProfileDTO.getId()));
 
 		Date accessExpireDate = new Date(foundmember.getAccessTokenExpireDate());
 
@@ -206,6 +203,132 @@ public class LoginService {
 		return renewToken;
 	}
 
-    public void getNaverAccessToken(String code, String state) {
-    }
+    public NaverAccessTokenDTO getNaverAccessToken(String code, String state) {
+
+		RestTemplate rt = new RestTemplate();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", "msMlCJyAKQPSrJaBHdib");
+		params.add("client_secret", "0kcy7pLweV");
+		params.add("code", code);
+		params.add("state", state);
+
+//		params.forEach((key, value) -> {
+//			System.out.println(key + " : " + value);
+//		});
+
+		HttpEntity<MultiValueMap<String, String>> naverTokenRequest =
+				new HttpEntity<>(params, headers);
+
+		ResponseEntity<String> accessTokenResponse = rt.exchange(
+				"https://nid.naver.com/oauth2.0/token",
+				HttpMethod.POST,
+				naverTokenRequest,
+				String.class
+		);
+
+		System.out.println(accessTokenResponse);
+		System.out.println(accessTokenResponse.getHeaders());
+		System.out.println(accessTokenResponse.getBody());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		NaverAccessTokenDTO naverAccessToken = null;
+		try {
+			naverAccessToken = objectMapper.readValue(accessTokenResponse.getBody(), NaverAccessTokenDTO.class);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return naverAccessToken;
+	}
+
+	public AccessTokenDTO getJwtToken(NaverAccessTokenDTO naverAccessToken) {
+
+		NaverProfileDTO naverProfileDTO = findNaverProfile(naverAccessToken.getAccess_token());
+
+		MemberDTO foundmember = new MemberDTO();
+
+		/* 해당 유저의 가입 이력이 없을 경우 */
+		if (memberService.findBySocialId("NAVER", naverProfileDTO.getResponse().getId()) == null) {
+
+			MemberDTO newMember = new MemberDTO();
+
+			newMember.setSocialLogin("NAVER");
+			newMember.setSocialId(naverProfileDTO.getResponse().getId());
+			newMember.setEmail(naverProfileDTO.getResponse().getEmail());
+			newMember.setRefreshToken(naverAccessToken.getRefresh_token());
+			newMember.setAccessToken(naverAccessToken.getAccess_token());
+			newMember.setSignUpDate(LocalDateTime.now());
+			newMember.setRefreshTokenExpireDate((1000 * 60 * 60 * 6) + System.currentTimeMillis());
+			newMember.setAccessTokenExpireDate(naverAccessToken.getExpires_in() + System.currentTimeMillis());
+			newMember.setImageSource("https://api.dicebear.com/6.x/thumbs/svg?seed=" + newMember.getEmail().split("@")[0]);
+
+			if (naverProfileDTO.getResponse().getGender() != null) {
+				newMember.setGender(naverProfileDTO.getResponse().getGender());
+			}
+
+			memberService.registNewUser(newMember);
+		}
+
+		/* 소셜 아이디로 멤버가 있는지 조회해 가져옴 */
+		foundmember = memberService.findBySocialId("NAVER", naverProfileDTO.getResponse().getId());
+
+//		Date accessExpireDate = new Date(foundmember.getAccessTokenExpireDate());
+//
+//		if(accessExpireDate.before(new Date())) {
+//
+//			RenewTokenDTO renewedToken = renewKakaoToken(foundmember);
+//
+//			if(renewedToken.getRefresh_token() != null) {
+//
+//				foundmember.setRefreshToken(renewedToken.getRefresh_token());
+//				foundmember.setRefreshTokenExpireDate(renewedToken.getRefresh_token_expires_in() + System.currentTimeMillis());
+//			}
+//
+//			foundmember.setAccessToken(renewedToken.getAccess_token());
+//			foundmember.setAccessTokenExpireDate(renewedToken.getExpires_in() + System.currentTimeMillis());
+//		}
+
+		return tokenProvider.generateMemberTokenDTO(foundmember);
+	}
+
+	public NaverProfileDTO findNaverProfile(String accessToken) {
+
+		RestTemplate rt = new RestTemplate();
+
+		System.out.println("testtttttttttttttttttttttttttttttttttttttttttttt");
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + accessToken);
+
+		HttpEntity<MultiValueMap<String, String>> naverProfileRequest =
+				new HttpEntity<>(headers);
+
+		ResponseEntity<String> naverProfileResponse = rt.exchange(
+				"https://openapi.naver.com/v1/nid/me",
+				HttpMethod.POST,
+				naverProfileRequest,
+				String.class
+		);
+
+		System.out.println(naverProfileResponse.getBody());
+
+		NaverProfileDTO naverProfileDTO = new NaverProfileDTO();
+		ObjectMapper objectMapper = new ObjectMapper();
+
+		try {
+			naverProfileDTO = objectMapper.readValue(naverProfileResponse.getBody(),
+					NaverProfileDTO.class);
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+
+		return naverProfileDTO;
+	}
+
+
 }

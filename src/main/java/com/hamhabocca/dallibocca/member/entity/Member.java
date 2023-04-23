@@ -42,7 +42,7 @@ public class Member {
     private String socialLogin;
 
     @Column(name = "social_id", nullable = false)
-    private long socialId;
+    private String socialId;
 
     @Column(name = "access_token", nullable = false)
     private String accessToken;
@@ -88,8 +88,7 @@ public class Member {
     public Member() {}
 
     public Member(long memberId, String nickname, String imageSource, int reportCount,
-        String socialLogin,
-        long socialId, String accessToken, long accessTokenExpireDate, String refreshToken,
+        String socialLogin, String socialId, String accessToken, long accessTokenExpireDate, String refreshToken,
         long refreshTokenExpireDate, String email, String gender, String isDeleted,
         LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
         String preferredLocation, String preferredType) {
@@ -203,11 +202,11 @@ public class Member {
     }
 
 
-    public long getSocialId() {
+    public String getSocialId() {
         return socialId;
     }
 
-    public void setSocialId(long socialId) {
+    public void setSocialId(String socialId) {
         this.socialId = socialId;
     }
 

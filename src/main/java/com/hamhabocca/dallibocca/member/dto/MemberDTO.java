@@ -22,7 +22,7 @@ public class MemberDTO {
 
 	private String socialLogin;
 
-	private long socialId;
+	private String socialId;
 
 	private String accessToken;
 
@@ -53,7 +53,7 @@ public class MemberDTO {
 	public MemberDTO() {}
 
 	public MemberDTO(long memberId, String nickname, String imageSource, int reportCount,
-		String socialLogin, long socialId, String accessToken, long accessTokenExpireDate,
+		String socialLogin, String socialId, String accessToken, long accessTokenExpireDate,
 		String refreshToken, long refreshTokenExpireDate, String email, String gender,
 		String isDeleted,
 		LocalDateTime signUpDate, LocalDateTime deletedDate, int level, int mileage,
@@ -111,11 +111,11 @@ public class MemberDTO {
 		this.socialLogin = socialLogin;
 	}
 
-	public long getSocialId() {
+	public String getSocialId() {
 		return socialId;
 	}
 
-	public void setSocialId(long socialId) {
+	public void setSocialId(String socialId) {
 		this.socialId = socialId;
 	}
 
