@@ -65,12 +65,20 @@ public class RallyService {
 
         // 신청 회원 확인
         Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
-
         String id = String.valueOf(authMap.get("memberId"));
         long memberId = Long.parseLong(id);
 
         if (auth.equals("")) {
             throw new RallyException("비회원 접근");
+        }
+
+        // 현재 완주! 가 아닌 랠리 모집 총합
+        int count = rallyRepository.countByMasterIdAndRallyStatusNot(memberId, "완주!");
+
+        System.out.println("==========================" + count + "회");
+
+        if (count >= 3) {
+            throw new RallyException("랠리 모집 횟수 제한 3개까지만");
         }
 
         /* 기본값 설정 */
