@@ -1,11 +1,15 @@
 package com.hamhabocca.dallibocca.review.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hamhabocca.dallibocca.qna.exception.QnaException;
 import com.hamhabocca.dallibocca.review.entity.Review;
 import com.hamhabocca.dallibocca.review.repository.ReviewRepository;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
+import java.util.Date;
+import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,16 +23,18 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
-
+    private final ObjectMapper objectMapper;
     @PersistenceContext
     private EntityManager entityManager;
     private long reviewId;
 
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ModelMapper modelMapper) {
+    public ReviewService(ReviewRepository reviewRepository, ModelMapper modelMapper,
+        ObjectMapper objectMapper) {
         this.reviewRepository = reviewRepository;
         this.modelMapper = modelMapper;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -49,21 +55,31 @@ public class ReviewService {
 
     /*등록*/
     @Transactional
-    public void registNewReview(ReviewDTO newReview) {
-        reviewRepository.save(modelMapper.map(newReview, Review.class));
+    public long registNewReview(ReviewDTO newReview, String auth) throws JsonProcessingException {
+        Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+
+        String id = String.valueOf(authMap.get("memberId"));
+        long memberId = Long.parseLong(id);
+
+        if (auth.equals("")) {
+            throw new QnaException("비회원 접근");
+        }
+
+        newReview.setMemberId(memberId);
+        newReview.setReviewWriteDate(new Date());
+
+        return reviewRepository.save(modelMapper.map(newReview, Review.class)).getReviewId();
     }
 
 
     /*삭제*/
     @Transactional
-    public ReviewDTO removeReview(ReviewDTO deleteInfo, long reviewId) {
+    public void  removeReview( long reviewId) {
 
         Review foundReview = reviewRepository.findById(reviewId).get();
         reviewRepository.delete(foundReview);
 
         ReviewDTO reviewDTO = new ReviewDTO();
-
-        return reviewDTO;
     }
 
     /*수정*/
@@ -76,6 +92,20 @@ public class ReviewService {
         foundReview.setReviewDetail(modifyInfo.getReviewDetail());
 
     }
+
+
+//    public List<ReviewDTO> findReviewListBySearch(ReviewSearchFilter searchQuery) {
+//
+//        // 마이바티스 혼용하기
+//        List<Review> reviewList = reviewMapper.findReviewListBySearch(searchQuery);
+//
+//        return reviewList.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
+//            .collect(
+//                Collectors.toList());
+//    }
+
+
+
 }
 
 

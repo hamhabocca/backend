@@ -1,6 +1,7 @@
 package com.hamhabocca.dallibocca.review.entity;
 
 
+import java.util.Arrays;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -26,29 +27,34 @@ public class Review {
     @Column(name = "REVIEW_TITLE")
     private String reviewTitle;
 
-    @Column(name = "REVIEW_WRITER")
-    private String reviewWriter;
+    @Column(name = "MEMBER_ID")
+    private long memberId;
 
     @Column(name = "REVIEW_DETAIL")
     private String reviewDetail;
 
     @Column(name = "REVIEW_WRITE_DATE")
-    private Date reviewWriteDate;
+    private java.util.Date reviewWriteDate;
 
     @Column(name = "RALLY_ID")
     private long rallyId;
 
+    @Lob // Large object 데이터 타입으로 지정
+    @Column(name = "REVIEW_IMAGE")
+    private byte[] reviewImage;
+
     public Review() {}
 
 
-    public Review(long reviewId, String reviewTitle, String reviewWriter, String reviewDetail,
-        Date reviewWriteDate, long rallyId) {
+    public Review(long reviewId, String reviewTitle, long memberId, String reviewDetail,
+        Date reviewWriteDate, long rallyId, byte[] reviewImage) {
         this.reviewId = reviewId;
         this.reviewTitle = reviewTitle;
-        this.reviewWriter = reviewWriter;
+        this.memberId = memberId;
         this.reviewDetail = reviewDetail;
         this.reviewWriteDate = reviewWriteDate;
         this.rallyId = rallyId;
+        this.reviewImage = reviewImage;
     }
 
     public long getReviewId() {
@@ -67,12 +73,12 @@ public class Review {
         this.reviewTitle = reviewTitle;
     }
 
-    public String getReviewWriter() {
-        return reviewWriter;
+    public long getMemberId() {
+        return memberId;
     }
 
-    public void setReviewWriter(String reviewWriter) {
-        this.reviewWriter = reviewWriter;
+    public void setMemberId(long memberId) {
+        this.memberId = memberId;
     }
 
     public String getReviewDetail() {
@@ -99,15 +105,24 @@ public class Review {
         this.rallyId = rallyId;
     }
 
+    public byte[] getReviewImage() {
+        return reviewImage;
+    }
+
+    public void setReviewImage(byte[] reviewImage) {
+        this.reviewImage = reviewImage;
+    }
+
     @Override
     public String toString() {
         return "Review{" +
             "reviewId=" + reviewId +
             ", reviewTitle='" + reviewTitle + '\'' +
-            ", reviewWriter='" + reviewWriter + '\'' +
+            ", memberId=" + memberId +
             ", reviewDetail='" + reviewDetail + '\'' +
             ", reviewWriteDate=" + reviewWriteDate +
-            ", rallyId='" + rallyId + '\'' +
+            ", rallyId=" + rallyId +
+            ", reviewImage=" + Arrays.toString(reviewImage) +
             '}';
     }
 }

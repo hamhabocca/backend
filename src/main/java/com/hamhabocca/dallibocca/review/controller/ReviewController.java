@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
+import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
+import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
 import com.hamhabocca.dallibocca.rally.service.RallyService;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import com.hamhabocca.dallibocca.review.service.ReviewService;
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import springfox.documentation.spring.web.json.Json;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -42,9 +45,10 @@ public class ReviewController {
 
     @ApiOperation(value = "테스트용 리뷰 추가하기")
     @PostMapping("/reviews")
-    public ResponseEntity<?> registReviewForTesting(ReviewDTO newReview){
+    public ResponseEntity<?> registReviewForTesting(ReviewDTO newReview,  @RequestHeader(value = "Auth") String auth)
+        throws JsonProcessingException {
 
-        reviewService.registNewReview(newReview);
+        long reviewId = reviewService.registNewReview(newReview, auth);
 
         return ResponseEntity
                 .created(URI.create("/api/v1/reviews/regist/" + newReview.getReviewId()))
@@ -96,10 +100,10 @@ public class ReviewController {
             @ApiResponse(code = 400, message = "잘못된 파라미터")
     })
     @DeleteMapping("/reviews/{reviewId}")
-    public ResponseEntity<?> removeReview(@RequestBody ReviewDTO deleteInfo, @PathVariable long reviewId){
+    public ResponseEntity<?> removeReview(@PathVariable long reviewId){
 
 
-        ReviewDTO foundReview = reviewService.removeReview(deleteInfo, reviewId);
+        reviewService.removeReview(reviewId);
 
         return  ResponseEntity
                 .noContent()
@@ -128,7 +132,19 @@ public class ReviewController {
     //--------------------------------------------------------------------------------------------
 
 
-
+//    @GetMapping("/reivews/search")
+//    public ResponseEntity<ResponseMessage> findReviewByFilter(ReviewSearchFilter reviewSearchFilter) {
+//
+//        Map<String, Object> responseMap = new HashMap<>();
+//
+//        System.out.println("컨트롤러에서의..." + reviewSearchFilter);
+//
+//        List<ReviewDTO> reviewList = reviewService.findReviewListBySearch(reviewSearchFilter);
+//        responseMap.put("reviews", reviewList);
+//
+//        return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
+//    }
+//
 
 
 
