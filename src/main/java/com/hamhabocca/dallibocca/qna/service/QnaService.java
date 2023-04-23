@@ -70,7 +70,7 @@ public class QnaService {
 			throw new QnaException("비회원 접근");
 		}
 
-		newQna.setQnaWriter(memberId);
+		newQna.setMemberId(memberId);
 		newQna.setQnaWriteDate(new Date());
 
 		return qnaRepository.save(modelMapper.map(newQna, Qna.class)).getQnaId();
@@ -104,14 +104,10 @@ public class QnaService {
 
 	/* 삭제 */
 	@Transactional
-	public QnaDTO removeQna(QnaDTO modifyInfo, long qnaId) {
+	public void removeQna(long qnaId) {
 
 		Qna foundQna = qnaRepository.findById(qnaId).get();
 		qnaRepository.delete(foundQna);
-
-		QnaDTO qnaDTO = new QnaDTO();
-
-		return qnaDTO;
 	}
 
 	/* 검색 */

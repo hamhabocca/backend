@@ -7,19 +7,19 @@ public class QnaDTO {
 	private long qnaId;
 	private String qnaTitle;
 	private String qnaCategory;
-	private long qnaWriter;
+	private long memberId;
 	private String qnaDetail;
 	private java.util.Date qnaWriteDate;
 
 	public QnaDTO() {
 	}
 
-	public QnaDTO(long qnaId, String qnaTitle, String qnaCategory, long qnaWriter, String qnaDetail,
+	public QnaDTO(long qnaId, String qnaTitle, String qnaCategory, long memberId, String qnaDetail,
 		Date qnaWriteDate) {
 		this.qnaId = qnaId;
 		this.qnaTitle = qnaTitle;
 		this.qnaCategory = qnaCategory;
-		this.qnaWriter = qnaWriter;
+		this.memberId = memberId;
 		this.qnaDetail = qnaDetail;
 		this.qnaWriteDate = qnaWriteDate;
 	}
@@ -48,12 +48,12 @@ public class QnaDTO {
 		this.qnaCategory = qnaCategory;
 	}
 
-	public long getQnaWriter() {
-		return qnaWriter;
+	public long getMemberId() {
+		return memberId;
 	}
 
-	public void setQnaWriter(long qnaWriter) {
-		this.qnaWriter = qnaWriter;
+	public void setMemberId(long memberId) {
+		this.memberId = memberId;
 	}
 
 	public String getQnaDetail() {
@@ -78,7 +78,7 @@ public class QnaDTO {
 			"qnaId=" + qnaId +
 			", qnaTitle='" + qnaTitle + '\'' +
 			", qnaCategory='" + qnaCategory + '\'' +
-			", qnaWriter=" + qnaWriter +
+			", memberId=" + memberId +
 			", qnaDetail='" + qnaDetail + '\'' +
 			", qnaWriteDate=" + qnaWriteDate +
 			'}';
