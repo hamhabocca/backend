@@ -101,13 +101,21 @@ public class JwtFilter extends OncePerRequestFilter {
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
 		String path = request.getRequestURI();
+		String method = request.getMethod();
+
 		if("/api/v1/login/kakaocode".equals(path)) {
 			return true;
 		} else if("/api/v1/login/renew".equals(path)) {
 			return true;
+		} else if("/api/v1/login/navercode".equals(path)) {
+			return true;
 		} else if("/swagger-ui/index.html".equals(path)) {
 			return true;
-		} else if("/swagger-ui.html".equals(path)){
+		} else if("/swagger-ui.html".equals(path)) {
+			return true;
+		} else if("/api/v1/rallies".equals(path) && (method.equals("GET"))) {
+			return true;
+		} else if("/api/v1/rallies/search".equals(path) && (method.equals("GET"))) {
 			return true;
 		} else {
 			return false;

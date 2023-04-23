@@ -2,6 +2,7 @@ package com.hamhabocca.dallibocca.login.controller;
 
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.login.dto.AccessTokenDTO;
+import com.hamhabocca.dallibocca.login.dto.NaverAccessTokenDTO;
 import com.hamhabocca.dallibocca.login.dto.OauthTokenDTO;
 import com.hamhabocca.dallibocca.login.service.LoginService;
 import io.swagger.annotations.Api;
@@ -53,7 +54,6 @@ public class LoginController {
 		/* JWT와 응답 결과를 프론트에 전달*/
 		return ResponseEntity
 				.ok()
-//			.headers(headers)
 				.body(new ResponseMessage(200, "로그인 성공", responseMap));
 	}
 
@@ -73,22 +73,20 @@ public class LoginController {
 		System.out.println("code = " + codeAndState.get("code"));
 		System.out.println("state = " + codeAndState.get("state"));
 
-		System.out.println("Testttttttttttttttttttttttttttttttttttttttt");
-
 		/* 인가 코드로 액세스 토큰 발급 */
-//		OauthTokenDTO oauthToken = loginService.getAccessToken(code.get("code"));
-		loginService.getNaverAccessToken(codeAndState.get("code"), codeAndState.get("state"));
+		NaverAccessTokenDTO naverAccessToken = loginService.getNaverAccessToken(codeAndState.get("code"), codeAndState.get("state"));
+
+		System.out.println("naverAccessToken = " + naverAccessToken);
 
 		/* 액세스 토큰으로 DB 저장or 확인 후 JWT 생성 */
-//		AccessTokenDTO jwtToken = loginService.getJwtToken(oauthToken);
+		AccessTokenDTO jwtToken = loginService.getJwtToken(naverAccessToken);
 
 		Map<String, Object> responseMap = new HashMap<>();
-//		responseMap.put("token", jwtToken);
+		responseMap.put("token", jwtToken);
 
 		/* JWT와 응답 결과를 프론트에 전달*/
 		return ResponseEntity
 				.ok()
-//			.headers(headers)
 				.body(new ResponseMessage(200, "로그인 성공", responseMap));
 	}
 

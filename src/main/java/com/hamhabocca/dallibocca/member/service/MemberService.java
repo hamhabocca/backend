@@ -149,7 +149,7 @@ public class MemberService {
 		}
 	}
 
-	public MemberDTO findBySocialId(String socialLogin, long socialId) {
+	public MemberDTO findBySocialId(String socialLogin, String socialId) {
 
 		Member foundMember = memberRepository.findBySocialId(socialLogin, socialId);
 

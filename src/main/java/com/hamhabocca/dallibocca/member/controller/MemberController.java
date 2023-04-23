@@ -6,6 +6,7 @@ import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.service.MemberService;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
+import com.hamhabocca.dallibocca.rally.dto.RallyForMyPageDTO;
 import com.hamhabocca.dallibocca.rally.dto.RallyMateDTO;
 import com.hamhabocca.dallibocca.rally.service.ParticipateService;
 import com.hamhabocca.dallibocca.rally.service.RallyService;
@@ -14,6 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.ArrayList;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,13 +40,15 @@ public class MemberController {
     private final MemberService memberService;
     private final RallyService rallyService;
     private final ParticipateService participateService;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public MemberController(MemberService memberService, RallyService rallyService, ParticipateService participateService) {
+    public MemberController(MemberService memberService, RallyService rallyService, ParticipateService participateService, ModelMapper modelMapper) {
 
         this.memberService = memberService;
         this.rallyService = rallyService;
         this.participateService = participateService;
+        this.modelMapper = modelMapper;
     }
 
     @ApiOperation(value = "멤버 이름, 프사(예정), 마이페이지로 가는 링크만 id로 조회")
@@ -157,7 +162,7 @@ public class MemberController {
 
     @ApiOperation(value = "멤버 소셜 id로 조회")
     @GetMapping("/members/{socialLogin}/{socialId}")
-    public ResponseEntity<ResponseMessage> findBySocialId(@PathVariable String socialLogin, @PathVariable long socialId) {
+    public ResponseEntity<ResponseMessage> findBySocialId(@PathVariable String socialLogin, @PathVariable String socialId) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -227,10 +232,20 @@ public class MemberController {
         /* 참여 리스트 */
         List<RallyMateDTO> participatedRallyList = participateService.findParticipateRallyList(header);
 
-        List<RallyDTO> finalRallyList = new ArrayList<>();
+        List<RallyForMyPageDTO> finalRallyList = new ArrayList<>();
 
         participatedRallyList.forEach(rally -> {
-            finalRallyList.add(rallyService.findRallyById(rally.getRallyId()));
+
+            RallyDTO foundRally = rallyService.findRallyById(rally.getRallyId());
+            RallyForMyPageDTO rallyForMyPage = modelMapper.map(foundRally, RallyForMyPageDTO.class);
+
+            if(rally.getIsAccepted().equals("Y")) {
+                rallyForMyPage.setIsAccepted("Y");
+            } else if(rally.getIsAccepted().equals("N")) {
+                rallyForMyPage.setIsAccepted("N");
+            }
+
+            finalRallyList.add(rallyForMyPage);
         });
 
         System.out.println("finalRallyList = " + finalRallyList);

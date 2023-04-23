@@ -14,8 +14,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	List<Member> findByNickname(String nickname);
 
-	@Query("SELECT m FROM Member AS m WHERE m.socialLogin LIKE :socialLogin AND m.socialId = :socialId")
-	Member findBySocialId(String socialLogin, long socialId);
+	@Query("SELECT m FROM Member AS m WHERE m.socialLogin LIKE :socialLogin AND m.socialId LIKE :socialId")
+	Member findBySocialId(String socialLogin, String socialId);
 
 //	Object findTopByOrderByMemberIdDesc();
 }
