@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.report.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.report.dto.RallyReportDTO;
@@ -37,16 +38,18 @@ public class RallyReportController {
 
 	@ApiOperation(value = "신고글 추가")
 	@ApiResponses({
-		@ApiResponse(code = 201, message = "[Created]"),
-		@ApiResponse(code = 403, message = "[Forbidden]")
+		@ApiResponse(code = 201, message = "리소스 생성 성공"),
+		@ApiResponse(code = 400, message = "잘못된 요청"),
+		@ApiResponse(code = 403, message = "접근 권한 없음")
 	})
 	@PostMapping("/reports")
-	public ResponseEntity<?> registNewRallyReport(@RequestBody RallyReportDTO newRallyReport) {
+	public ResponseEntity<?> registNewRallyReport(RallyReportDTO newRallyReport, @RequestHeader(value = "Auth") String auth)
+		throws JsonProcessingException {
 
-		rallyReportService.registNewRallyReport(newRallyReport);
+		long reportId = rallyReportService.registNewRallyReport(newRallyReport, auth);
 
 		return ResponseEntity
-			.created(URI.create("/api/v1/reports" + newRallyReport.getReportId()))
+			.created(URI.create("/api/v1/reports" + reportId))
 			.build();
 	}
 

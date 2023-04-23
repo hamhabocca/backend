@@ -1,9 +1,15 @@
 package com.hamhabocca.dallibocca.report.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hamhabocca.dallibocca.qna.exception.QnaException;
 import com.hamhabocca.dallibocca.report.dto.RallyReportDTO;
 import com.hamhabocca.dallibocca.report.entity.RallyReport;
+import com.hamhabocca.dallibocca.report.exception.RallyReportException;
 import com.hamhabocca.dallibocca.report.repository.RallyReportRepository;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +21,35 @@ public class RallyReportService {
 
 	private final RallyReportRepository rallyReportRepository;
 	private final ModelMapper modelMapper;
+	private final ObjectMapper objectMapper;
 
 	@Autowired
 	public RallyReportService(RallyReportRepository rallyReportRepository,
-		ModelMapper modelMapper) {
+		ModelMapper modelMapper, ObjectMapper objectMapper) {
 		this.rallyReportRepository = rallyReportRepository;
 		this.modelMapper = new ModelMapper();
+		this.objectMapper = objectMapper;
 	}
 
+	/* 등록 */
 	@Transactional
-	public void registNewRallyReport(RallyReportDTO newRallyReport) {
+	public long registNewRallyReport(RallyReportDTO newRallyReport, String auth)
+		throws JsonProcessingException {
 
-		rallyReportRepository.save(modelMapper.map(newRallyReport, RallyReport.class));
+		// 신청 회원 확인
+		Map<String, String> authMap = objectMapper.readValue(auth, Map.class);
+
+		String id = String.valueOf(authMap.get("memberId"));
+		long memberId = Long.parseLong(id);
+
+		if (auth.equals("")) {
+			throw new RallyReportException("비회원 접근");
+		}
+
+		newRallyReport.setReportWriter(memberId+"");
+		newRallyReport.setReportDate(new Date());
+
+		return rallyReportRepository.save(modelMapper.map(newRallyReport, RallyReport.class)).getReportId();
 	}
 
 	@Transactional

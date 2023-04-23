@@ -128,9 +128,10 @@ public class QnaController {
 		@ApiResponse(code = 400, message = "잘못된 요청")
 	})
 	@DeleteMapping("/qnas/{qnaId}")
-	public ResponseEntity<?> removeQna(@RequestBody QnaDTO modifyInfo, @PathVariable long qnaId) {
+	public ResponseEntity<?> removeQna(@PathVariable long qnaId) {
 
-		qnaService.removeQna(modifyInfo, qnaId);
+		System.out.println("잘받았니????????????????????????????"+ qnaId);
+		qnaService.removeQna(qnaId);
 
 		return ResponseEntity
 			.noContent()
