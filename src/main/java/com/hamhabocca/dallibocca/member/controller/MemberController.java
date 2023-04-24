@@ -135,8 +135,6 @@ public class MemberController {
     @DeleteMapping("/members/{memberId}")
     public ResponseEntity<?> deleteMember(@PathVariable int memberId) {
 
-
-
         memberService.deleteMember(memberId);
 
         return ResponseEntity

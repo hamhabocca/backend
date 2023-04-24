@@ -6,6 +6,7 @@ import com.hamhabocca.dallibocca.jwt.TokenProvider;
 import com.hamhabocca.dallibocca.login.dto.*;
 import com.hamhabocca.dallibocca.login.repository.LoginRepository;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
+import com.hamhabocca.dallibocca.member.entity.Member;
 import com.hamhabocca.dallibocca.member.service.MemberService;
 import java.util.Date;
 import org.modelmapper.ModelMapper;
@@ -330,15 +331,15 @@ public class LoginService {
 		return naverProfileDTO;
 	}
 
-	public RenewTokenDTO renewNaverToken(MemberDTO foundMember) {
+	public RenewTokenDTO renewNaverToken(Member foundMember) {
 
 		RestTemplate rt = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("client_id", foundMember.getSocialId());
-		params.add("client_secret", "0kcy7pLweV");
+		params.add("client_id", System.getenv("NaverClientId"));
+		params.add("client_secret", System.getenv("NaverClientSecret"));
 		params.add("refresh_token", foundMember.getRefreshToken());
 		params.add("grant_type", "refresh_token");
 
