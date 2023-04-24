@@ -22,7 +22,7 @@
 
   <select id="findRallyListBySearch" resultMap="RallyResultMap" parameterType="com.hamhabocca.dallibocca.rally.dto.SearchFilter">
     SELECT * FROM RALLY
-    WHERE 1 = 1
+    WHERE rally_status not in ('취소됨', '완주!')
     <if test="type != null and type != ''">
       AND rally_type = #{ type }
     </if>

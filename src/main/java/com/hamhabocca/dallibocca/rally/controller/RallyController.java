@@ -139,8 +139,6 @@ public class RallyController {
 
         Map<String, Object> responseMap = new HashMap<>();
 
-        System.out.println("컨트롤러에서의..." + searchFilter);
-
         List<RallyDTO> rallyList = rallyService.findRallyListBySearch(searchFilter);
         responseMap.put("rallyList", rallyList);
 
