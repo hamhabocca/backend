@@ -1,5 +1,6 @@
 package com.hamhabocca.dallibocca.report.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 
 import com.hamhabocca.dallibocca.report.dto.ReviewReportDTO;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/")
 public class ReviewReportController {
 
     private final ReviewReportService reviewReportService;
@@ -39,18 +41,20 @@ public class ReviewReportController {
 
     /*리뷰 신고*/
     @ApiOperation(value = "테스트용 리뷰 신고 추가")
-    @PostMapping( "/regist")
+
     @ApiResponses({
         @ApiResponse(code = 201, message = "신고데이터 생성 성공"),
-        @ApiResponse(code = 400, message = "잘못된 파라미터")
+        @ApiResponse(code = 400, message = "잘못된 파라미터"),
+        @ApiResponse(code = 403, message = "접근 권한 없음")
     })
-    public ResponseEntity<ResponseMessage> registReviewReportForTesting(
-        @RequestBody ReviewReportDTO newReviewReport) {
+    @PostMapping( "/report")
+    public ResponseEntity<?> registReviewReportForTesting(ReviewReportDTO newReviewReport,@RequestHeader(value = "Auth") String auth)
+    throws JsonProcessingException {
 
-        reviewReportService.registNewReviewReport(newReviewReport);
+        long reviewReportId = reviewReportService.registNewReviewReport(newReviewReport, auth);
 
         return ResponseEntity
-            .created(URI.create("/api/v1/regist" + newReviewReport.getReportId()))
+            .created(URI.create("/api/v1/report" +reviewReportId))
             .build();
     }
 
