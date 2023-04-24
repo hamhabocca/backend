@@ -4,10 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
+import com.hamhabocca.dallibocca.qna.dto.SearchFilter;
 import com.hamhabocca.dallibocca.qna.entity.Qna;
 import com.hamhabocca.dallibocca.qna.exception.QnaException;
+import com.hamhabocca.dallibocca.qna.repository.QnaMapper;
 import com.hamhabocca.dallibocca.qna.repository.QnaRepository;
 import com.hamhabocca.dallibocca.rally.exception.RallyException;
+import com.hamhabocca.dallibocca.rally.repository.RallyMapper;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +32,15 @@ public class QnaService {
 	private final ModelMapper modelMapper;
 	private final ObjectMapper objectMapper;
 
+	private final QnaMapper qnaMapper;
+
 	@Autowired
 	public QnaService(QnaRepository qnaRepository, ModelMapper modelMapper,
-		ObjectMapper objectMapper) {
+		ObjectMapper objectMapper, QnaMapper qnaMapper  ) {
 		this.qnaRepository = qnaRepository;
 		this.objectMapper = objectMapper;
 		this.modelMapper = modelMapper;
+		this.qnaMapper = qnaMapper;
 	}
 
 	/* 전체조회 */
@@ -111,11 +117,13 @@ public class QnaService {
 	}
 
 	/* 검색 */
-	public List<QnaDTO> findQnaListBySearch(String qnaTitle) {
+	public List<QnaDTO> findQnaListBySearch(SearchFilter searchQuery) {
 
-		List<Qna> qnaList = qnaRepository.findByQnaTitleLike(qnaTitle);
+		System.out.println("서비스" + searchQuery);
+
+		// 마이바티스 혼용하기
+		List<Qna> qnaList = qnaMapper.findQnaListBySearch(searchQuery);
 
 		return qnaList.stream().map(qna -> modelMapper.map(qna, QnaDTO.class)).collect(Collectors.toList());
-
 	}
 }
