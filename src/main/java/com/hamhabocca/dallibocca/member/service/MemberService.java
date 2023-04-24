@@ -2,11 +2,13 @@ package com.hamhabocca.dallibocca.member.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hamhabocca.dallibocca.login.dto.KakaoProfileDTO;
+import com.hamhabocca.dallibocca.login.dto.RenewTokenDTO;
+import com.hamhabocca.dallibocca.login.service.LoginService;
 import com.hamhabocca.dallibocca.member.dto.MemberDTO;
 import com.hamhabocca.dallibocca.member.dto.MemberSimpleDTO;
 import com.hamhabocca.dallibocca.member.entity.Member;
 import com.hamhabocca.dallibocca.member.repository.MemberRepository;
+import java.util.Date;
 import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
+
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -100,33 +102,123 @@ public class MemberService {
 
 				RestTemplate rt = new RestTemplate();
 
-				HttpHeaders headers = new HttpHeaders();
-				headers.add("Authorization", "Bearer " + foundMember.getAccessToken());
+				/* 카카오 로그인일 때 */
+				if (foundMember.getSocialLogin().equals("KAKAO")) {
 
-				HttpEntity<MultiValueMap<String, String>> kakaoDeactivateRequest =
-					new HttpEntity<>(headers);
+					HttpHeaders headers = new HttpHeaders();
+					headers.add("Authorization", "Bearer " + foundMember.getAccessToken());
 
-				ResponseEntity<String> kakaoDeactivateResponse = rt.exchange(
-					"https://kapi.kakao.com/v1/user/unlink",
-					HttpMethod.POST,
-					kakaoDeactivateRequest,
-					String.class
-				);
+					HttpEntity<MultiValueMap<String, String>> kakaoDeactivateRequest =
+						new HttpEntity<>(headers);
 
-				System.out.println(kakaoDeactivateResponse.getBody());
+					ResponseEntity<String> kakaoDeactivateResponse = rt.exchange(
+						"https://kapi.kakao.com/v1/user/unlink",
+						HttpMethod.POST,
+						kakaoDeactivateRequest,
+						String.class
+					);
 
-				String kakaoDeactivateResult = "";
+					System.out.println(kakaoDeactivateResponse.getBody());
 
-				try {
-					kakaoDeactivateResult = objectMapper.readValue(
-						kakaoDeactivateResponse.getBody(),
-						String.class);
-				} catch (JsonProcessingException e) {
-					throw new RuntimeException(e);
+					String kakaoDeactivateResult = "";
+
+					try {
+						kakaoDeactivateResult = objectMapper.readValue(
+							kakaoDeactivateResponse.getBody(),
+							String.class);
+					} catch (JsonProcessingException e) {
+						throw new RuntimeException(e);
+					}
+
+					foundMember.setIsDeleted("Y");
+					break;
+
+					/* 네이버 로그인일 때 */
+				} else if (foundMember.getSocialLogin().equals("NAVER")) {
+
+					/* 갱신 먼저 */
+					Date expireDate = new Date(foundMember.getAccessTokenExpireDate());
+
+					if (expireDate.before(new Date())) {
+
+						RestTemplate rtForRenew = new RestTemplate();
+
+						HttpHeaders headers = new HttpHeaders();
+
+						MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+						params.add("client_id", System.getenv("NaverClientId"));
+						params.add("client_secret", System.getenv("NaverClientSecret"));
+						params.add("refresh_token", foundMember.getRefreshToken());
+						params.add("grant_type", "refresh_token");
+
+						HttpEntity<MultiValueMap<String, String>> naverRenewRequest =
+							new HttpEntity<>(params, headers);
+
+						ResponseEntity<String> naverRenewResponses = rtForRenew.exchange(
+							"https://nid.naver.com/oauth2.0/token",
+							HttpMethod.GET,
+							naverRenewRequest,
+							String.class
+						);
+
+						ObjectMapper objectMapper = new ObjectMapper();
+						RenewTokenDTO renewToken = null;
+						try {
+							renewToken = objectMapper.readValue(naverRenewResponses.getBody(), RenewTokenDTO.class);
+						} catch (JsonProcessingException e) {
+							e.printStackTrace();
+						}
+
+						if (renewToken.getRefresh_token() != null) {
+
+							foundMember.setRefreshToken(renewToken.getRefresh_token());
+							foundMember.setRefreshTokenExpireDate(
+								(1000 * 60 * 60 * 6) + System.currentTimeMillis());
+						}
+
+						foundMember.setAccessToken(renewToken.getAccess_token());
+						foundMember.setAccessTokenExpireDate(
+							renewToken.getExpires_in() + System.currentTimeMillis());
+
+					}
+
+					/* 업데이트 된 멤버 다시 가져옴 */
+					foundMember = memberRepository.findById(memberId).get();
+
+					/* 탈퇴 요청 */
+					HttpHeaders headers = new HttpHeaders();
+
+					MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+					params.add("client_id", foundMember.getSocialId());
+					params.add("client_secret", System.getenv("NaverClientSecret"));
+					params.add("access_token", foundMember.getAccessToken());
+					params.add("grant_type", "delete");
+
+					HttpEntity<MultiValueMap<String, String>> naverDeactivateRequest =
+						new HttpEntity<>(headers, params);
+
+					ResponseEntity<String> naverDeactivateResponse = rt.exchange(
+						"https://nid.naver.com/oauth2.0/token",
+						HttpMethod.POST,
+						naverDeactivateRequest,
+						String.class
+					);
+
+					System.out.println(naverDeactivateResponse.getBody());
+
+					String naverDeactivateResult = "";
+
+					try {
+						naverDeactivateResult = objectMapper.readValue(
+							naverDeactivateResponse.getBody(),
+							String.class);
+					} catch (JsonProcessingException e) {
+						throw new RuntimeException(e);
+					}
+
+					foundMember.setIsDeleted("Y");
+					break;
 				}
-
-				foundMember.setIsDeleted("Y");
-				break;
 		}
 	}
 
