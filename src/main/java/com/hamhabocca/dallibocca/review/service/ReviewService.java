@@ -3,7 +3,9 @@ package com.hamhabocca.dallibocca.review.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hamhabocca.dallibocca.qna.exception.QnaException;
+import com.hamhabocca.dallibocca.review.dto.ReviewSearchFilter;
 import com.hamhabocca.dallibocca.review.entity.Review;
+import com.hamhabocca.dallibocca.review.repository.ReviewMapper;
 import com.hamhabocca.dallibocca.review.repository.ReviewRepository;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
 import java.util.Date;
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
+
+    private final ReviewMapper reviewMapper;
     private final ObjectMapper objectMapper;
     @PersistenceContext
     private EntityManager entityManager;
@@ -30,11 +34,12 @@ public class ReviewService {
 
 
     @Autowired
-    public ReviewService(ReviewRepository reviewRepository, ModelMapper modelMapper,
+    public ReviewService(ReviewRepository reviewRepository, ReviewMapper reviewMapper, ModelMapper modelMapper,
         ObjectMapper objectMapper) {
         this.reviewRepository = reviewRepository;
         this.modelMapper = modelMapper;
         this.objectMapper = objectMapper;
+        this.reviewMapper = reviewMapper;
     }
 
 
@@ -93,16 +98,15 @@ public class ReviewService {
 
     }
 
+    public List<ReviewDTO> findReviewListBySearch(ReviewSearchFilter reviewSearchQuery) {
 
-//    public List<ReviewDTO> findReviewListBySearch(ReviewSearchFilter searchQuery) {
-//
-//        // 마이바티스 혼용하기
-//        List<Review> reviewList = reviewMapper.findReviewListBySearch(searchQuery);
-//
-//        return reviewList.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
-//            .collect(
-//                Collectors.toList());
-//    }
+        // 마이바티스 혼용하기
+        List<Review> reviews = reviewMapper.findReviewListBySearch(reviewSearchQuery);
+
+        return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
+            .collect(
+                Collectors.toList());
+    }
 
 
 

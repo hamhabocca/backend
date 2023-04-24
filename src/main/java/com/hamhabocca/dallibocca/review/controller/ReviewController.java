@@ -5,10 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hamhabocca.dallibocca.common.ResponseMessage;
 import com.hamhabocca.dallibocca.common.page.Pagination;
 import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
-import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
-import com.hamhabocca.dallibocca.rally.dto.SearchFilter;
-import com.hamhabocca.dallibocca.rally.service.RallyService;
 import com.hamhabocca.dallibocca.review.dto.ReviewDTO;
+import com.hamhabocca.dallibocca.review.dto.ReviewSearchFilter;
 import com.hamhabocca.dallibocca.review.service.ReviewService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -131,20 +129,24 @@ public class ReviewController {
 
     //--------------------------------------------------------------------------------------------
 
+    @ApiOperation(value = "조건에 따른 리뷰 목록 조회 API")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "검색 조회 성공"),
+        @ApiResponse(code = 400, message = "잘못된 요청")
+    })
+    @GetMapping("/reviews/search")
+    public ResponseEntity<ResponseMessage> findReviewByFilter(ReviewSearchFilter reviewSearchFilter) {
 
-//    @GetMapping("/reivews/search")
-//    public ResponseEntity<ResponseMessage> findReviewByFilter(ReviewSearchFilter reviewSearchFilter) {
-//
-//        Map<String, Object> responseMap = new HashMap<>();
-//
-//        System.out.println("컨트롤러에서의..." + reviewSearchFilter);
-//
-//        List<ReviewDTO> reviewList = reviewService.findReviewListBySearch(reviewSearchFilter);
-//        responseMap.put("reviews", reviewList);
-//
-//        return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
-//    }
-//
+        Map<String, Object> responseMap = new HashMap<>();
+
+        System.out.println("컨트롤러에서의..." + reviewSearchFilter);
+
+        List<ReviewDTO> reviews = reviewService.findReviewListBySearch(reviewSearchFilter);
+        responseMap.put("reviews", reviews);
+
+        return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
+    }
+
 
 
 
