@@ -7,6 +7,7 @@ import com.hamhabocca.dallibocca.common.page.PagingButtonInfo;
 import com.hamhabocca.dallibocca.qna.dto.QnaDTO;
 import com.hamhabocca.dallibocca.qna.dto.QnaSimpleDTO;
 
+import com.hamhabocca.dallibocca.qna.dto.SearchFilter;
 import com.hamhabocca.dallibocca.qna.service.QnaService;
 import com.hamhabocca.dallibocca.rally.dto.RallyDTO;
 import io.swagger.annotations.Api;
@@ -144,11 +145,13 @@ public class QnaController {
 		@ApiResponse(code = 400, message = "잘못된 요청")
 	})
 	@GetMapping("/qnas/search")
-	public ResponseEntity<ResponseMessage> findQnasBySearch(String qnaTitle) {
+	public ResponseEntity<ResponseMessage> findQnasBySearch(SearchFilter searchFilter) {
+
+		System.out.println("컨트롤러" + searchFilter);
 
 		Map<String, Object> responseMap = new HashMap<>();
 
-		List<QnaDTO> qnaList = qnaService.findQnaListBySearch(qnaTitle);
+		List<QnaDTO> qnaList = qnaService.findQnaListBySearch(searchFilter);
 		responseMap.put("qnaList", qnaList);
 
 		return ResponseEntity.ok().body(new ResponseMessage(200, "검색 조회 성공", responseMap));
