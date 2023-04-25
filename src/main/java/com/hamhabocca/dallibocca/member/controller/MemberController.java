@@ -96,7 +96,6 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
 
-//        List<MemberDTO> memberList = memberService.findAllMembers();
         Page<MemberDTO> memberList = memberService.findAllMembers(pageable);
 
         Map<String, Object> responseMap = new HashMap<>();

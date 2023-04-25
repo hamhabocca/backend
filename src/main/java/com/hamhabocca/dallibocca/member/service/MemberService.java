@@ -70,7 +70,7 @@ public class MemberService {
 		return member;
 	}
 
-	public /*List<MemberDTO>*/ Page<MemberDTO> findAllMembers(Pageable pageable) {
+	public Page<MemberDTO> findAllMembers(Pageable pageable) {
 
 		pageable = PageRequest.of(pageable.getPageNumber() <= 0 ? 0 : pageable.getPageNumber() - 1,
 			pageable.getPageSize(),
@@ -118,8 +118,6 @@ public class MemberService {
 						String.class
 					);
 
-					System.out.println(kakaoDeactivateResponse.getBody());
-
 					String kakaoDeactivateResult = "";
 
 					try {
@@ -146,8 +144,8 @@ public class MemberService {
 						HttpHeaders headers = new HttpHeaders();
 
 						MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-						params.add("client_id", System.getenv("NaverClientId"));
-						params.add("client_secret", System.getenv("NaverClientSecret"));
+						params.add("client_id", System.getenv("NaverClientIdKey"));
+						params.add("client_secret", System.getenv("NaverClientSecretKey"));
 						params.add("refresh_token", foundMember.getRefreshToken());
 						params.add("grant_type", "refresh_token");
 
@@ -189,8 +187,8 @@ public class MemberService {
 					HttpHeaders headers = new HttpHeaders();
 
 					MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-					params.add("client_id", foundMember.getSocialId());
-					params.add("client_secret", System.getenv("NaverClientSecret"));
+					params.add("client_id", System.getenv("NaverClientIDKey"));
+					params.add("client_secret", System.getenv("NaverClientSecretKey"));
 					params.add("access_token", foundMember.getAccessToken());
 					params.add("grant_type", "delete");
 

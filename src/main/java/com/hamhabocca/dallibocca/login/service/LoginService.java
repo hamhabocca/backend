@@ -48,14 +48,9 @@ public class LoginService {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-//		params.add("client_id", System.getenv("KakaoRestAPIKey"));
-		params.add("client_id", "b6ed15cc6705233690f08417571cc3c0");
+		params.add("client_id", System.getenv("KakaoRestAPIKey"));
 		params.add("redirect_uri", "http://localhost:3000/oauth");
 		params.add("code", code);
-
-//		params.forEach((key, value) -> {
-//			System.out.println(key + " : " + value);
-//		});
 
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
 				new HttpEntity<>(params, headers);
@@ -66,10 +61,6 @@ public class LoginService {
 				kakaoTokenRequest,
 				String.class
 		);
-
-		System.out.println(accessTokenResponse);
-		System.out.println(accessTokenResponse.getHeaders());
-		System.out.println(accessTokenResponse.getBody());
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		OauthTokenDTO oauthToken = null;
@@ -85,9 +76,6 @@ public class LoginService {
 	public KakaoProfileDTO findKakaoProfile(String accessToken) {
 
 		RestTemplate rt = new RestTemplate();
-//		rt.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
-
-		System.out.println("testtttttttttttttttttttttttttttttttttttttttttttt");
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + accessToken);
@@ -102,8 +90,6 @@ public class LoginService {
 				kakaoProfileRequest,
 				String.class
 		);
-
-		System.out.println(kakaoProfileResponse.getBody());
 
 		KakaoProfileDTO kakaoProfileDTO = new KakaoProfileDTO();
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -177,11 +163,8 @@ public class LoginService {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "refresh_token");
-//		params.add("client_id", System.getenv("KakaoRestAPIKey"));
-		params.add("client_id", "b6ed15cc6705233690f08417571cc3c0");
+		params.add("client_id", System.getenv("KakaoRestAPIKey"));
 		params.add("refresh_token", foundMember.getRefreshToken());
-
-		System.out.println("refreshhhhhhhhhh" + foundMember.getRefreshToken());
 
 		HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
 				new HttpEntity<>(params, headers);
@@ -213,14 +196,10 @@ public class LoginService {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("grant_type", "authorization_code");
-		params.add("client_id", "msMlCJyAKQPSrJaBHdib");
-		params.add("client_secret", "0kcy7pLweV");
+		params.add("client_id", System.getenv("NaverClientIDKey"));
+		params.add("client_secret", System.getenv("NaverClientSecretKey"));
 		params.add("code", code);
 		params.add("state", state);
-
-//		params.forEach((key, value) -> {
-//			System.out.println(key + " : " + value);
-//		});
 
 		HttpEntity<MultiValueMap<String, String>> naverTokenRequest =
 				new HttpEntity<>(params, headers);
@@ -231,10 +210,6 @@ public class LoginService {
 				naverTokenRequest,
 				String.class
 		);
-
-		System.out.println(accessTokenResponse);
-		System.out.println(accessTokenResponse.getHeaders());
-		System.out.println(accessTokenResponse.getBody());
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		NaverAccessTokenDTO naverAccessToken = null;
@@ -301,8 +276,6 @@ public class LoginService {
 
 		RestTemplate rt = new RestTemplate();
 
-		System.out.println("testtttttttttttttttttttttttttttttttttttttttttttt");
-
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", "Bearer " + accessToken);
 
@@ -338,8 +311,8 @@ public class LoginService {
 		HttpHeaders headers = new HttpHeaders();
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("client_id", System.getenv("NaverClientId"));
-		params.add("client_secret", System.getenv("NaverClientSecret"));
+		params.add("client_id", System.getenv("NaverClientIdKey"));
+		params.add("client_secret", System.getenv("NaverClientSecretKey"));
 		params.add("refresh_token", foundMember.getRefreshToken());
 		params.add("grant_type", "refresh_token");
 

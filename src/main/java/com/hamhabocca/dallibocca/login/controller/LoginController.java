@@ -35,11 +35,6 @@ public class LoginController {
 	@PostMapping("/kakaocode")
 	public ResponseEntity<?> getKakaoCode(@RequestBody Map<String, String> code) {
 
-		System.out.println("코드 받아서 백엔드 시작됨");
-		System.out.println("code = " + code.get("code"));
-
-		System.out.println("Testttttttttttttttttttttttttttttttttttttttt");
-
 		/* 인가 코드로 액세스 토큰 발급 */
 		OauthTokenDTO oauthToken = loginService.getAccessToken(code.get("code"));
 
@@ -68,10 +63,6 @@ public class LoginController {
 	@ApiOperation(value = "네이버 인가 코드 받아와서 액세스 토큰 발급")
 	@PostMapping("/navercode")
 	public ResponseEntity<?> getNaverCode(@RequestBody Map<String, String> codeAndState) {
-
-		System.out.println("코드 받아서 백엔드 시작됨");
-		System.out.println("code = " + codeAndState.get("code"));
-		System.out.println("state = " + codeAndState.get("state"));
 
 		/* 인가 코드로 액세스 토큰 발급 */
 		NaverAccessTokenDTO naverAccessToken = loginService.getNaverAccessToken(codeAndState.get("code"), codeAndState.get("state"));
