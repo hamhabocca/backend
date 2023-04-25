@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class DaliboccaApplication {
+public class DalliboccaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DaliboccaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DalliboccaApplication.class, args);
+    }
 
 }
