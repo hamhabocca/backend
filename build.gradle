@@ -39,7 +39,3 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
     implementation 'org.apache.httpcomponents:httpclient:4.3.4'
 }
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
