@@ -35,7 +35,7 @@ jobs:
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPO }}/dallibocca ./
-        docker push ${{ secrets.DOCKER_REPO }}/dallibocca
+        docker push ${{ secrets.DOCKER_REPO }}/dallibocca:latest
     - name: Get timestamp
       uses: gerred/actions/current-time@master
       id: current-time
