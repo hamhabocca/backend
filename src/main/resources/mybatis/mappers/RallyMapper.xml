@@ -33,10 +33,10 @@
       AND rally_date like CONCAT(#{date}, '%')
     </if>
     <if test="distance != null and distance != 0">
-      AND rally_distance = #{ distance }
+      AND rally_distance <![CDATA[ <= ]]> #{ distance }
     </if>
     <if test="maximum != null and maximum != 0">
-      AND rally_maximum = #{ maximum }
+      AND rally_maximum <![CDATA[ <= ]]> #{ maximum }
     </if>
   </select>
 
