@@ -59,4 +59,4 @@ jobs:
         version_label: "dallibocca--${{ steps.format-time.outputs.replaced }}"
         region: ap-northeast-2
         deployment_package: Dockerrun.aws.json
-        existing_bucket_name: dallibocca
+        existing_bucket_name: dallibocca-s8payuk56k5dms4n6m4depzhwxoh4apn2a-s3alias
