@@ -13,6 +13,7 @@ import java.util.Map;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +47,7 @@ public class ReviewService {
     /*전체 조회*/
     public List<ReviewDTO> findAllReview(Pageable pageable) {
 
-        List<Review> reviews = reviewRepository.findAllOrderByReviewIdDesc();
+        List<Review> reviews = reviewRepository.findAll(Sort.by(Sort.Direction.DESC, "reviewId"));
 
         return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
             .collect(Collectors.toList());
