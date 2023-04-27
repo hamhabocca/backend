@@ -137,21 +137,27 @@ public class LoginService {
 		/* 소셜 아이디로 멤버가 있는지 조회해 가져옴 */
 		foundmember = memberService.findBySocialId("KAKAO", String.valueOf(kakaoProfileDTO.getId()));
 
-		Date accessExpireDate = new Date(foundmember.getAccessTokenExpireDate());
+		/* 액세스토큰, 리프레시 토큰 업데이트 */
+		foundmember.setRefreshToken(oauthToken.getRefresh_token());
+		foundmember.setAccessToken(oauthToken.getAccess_token());
+		foundmember.setRefreshTokenExpireDate(oauthToken.getRefresh_token_expires_in() + System.currentTimeMillis());
+		foundmember.setAccessTokenExpireDate(oauthToken.getExpires_in() + System.currentTimeMillis());
 
-		if(accessExpireDate.before(new Date())) {
-
-			RenewTokenDTO renewedToken = renewKakaoToken(foundmember);
-
-			if(renewedToken.getRefresh_token() != null) {
-
-				foundmember.setRefreshToken(renewedToken.getRefresh_token());
-				foundmember.setRefreshTokenExpireDate(renewedToken.getRefresh_token_expires_in() + System.currentTimeMillis());
-			}
-
-			foundmember.setAccessToken(renewedToken.getAccess_token());
-			foundmember.setAccessTokenExpireDate(renewedToken.getExpires_in() + System.currentTimeMillis());
-		}
+//		Date accessExpireDate = new Date(foundmember.getAccessTokenExpireDate());
+//
+//		if(accessExpireDate.before(new Date())) {
+//
+//			RenewTokenDTO renewedToken = renewKakaoToken(foundmember);
+//
+//			if(renewedToken.getRefresh_token() != null) {
+//
+//				foundmember.setRefreshToken(renewedToken.getRefresh_token());
+//				foundmember.setRefreshTokenExpireDate(renewedToken.getRefresh_token_expires_in() + System.currentTimeMillis());
+//			}
+//
+//			foundmember.setAccessToken(renewedToken.getAccess_token());
+//			foundmember.setAccessTokenExpireDate(renewedToken.getExpires_in() + System.currentTimeMillis());
+//		}
 
 		return tokenProvider.generateMemberTokenDTO(foundmember);
 	}
