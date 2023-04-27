@@ -45,7 +45,9 @@ public class ReviewService {
 
     /*전체 조회*/
     public List<ReviewDTO> findAllReview(Pageable pageable) {
-        List<Review> reviews = reviewRepository.findAll();
+
+        List<Review> reviews = reviewRepository.findAllOrderByReviewIdDesc();
+
         return reviews.stream().map(review -> modelMapper.map(review, ReviewDTO.class))
             .collect(Collectors.toList());
     }
